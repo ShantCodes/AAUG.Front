@@ -1,19 +1,17 @@
+// src/components/EventCard/EventCard.jsx
+
 import React, { useState } from 'react';
-import { FaHeart } from 'react-icons/fa'; // Import heart icon from react-icons
+import { FaHeart } from 'react-icons/fa';
 import exampleImage from '../../../assets/5793925932325651702.jpg';
 
 const EventCard = ({ title, presenter, caption, initialLikes, imageUrl }) => {
   const [likes, setLikes] = useState(initialLikes);
-  const [isLiked, setIsLiked] = useState(false); // State to track if the item is liked
+  const [isLiked, setIsLiked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const Presenter = () => {
-    return <h3 className="text-lg font-bold mb-3">Shant</h3>;
-  };
-
   const handleLike = () => {
-    setLikes(isLiked ? likes - 1 : likes + 1); // Increment or decrement likes based on state
-    setIsLiked(!isLiked); // Toggle like state
+    setLikes(isLiked ? likes - 1 : likes + 1);
+    setIsLiked(!isLiked);
   };
 
   return (
@@ -31,20 +29,17 @@ const EventCard = ({ title, presenter, caption, initialLikes, imageUrl }) => {
         alt={title}
         className="w-full h-56 sm:h-72 object-cover rounded-t-lg mb-4"
       />
-      <Presenter />
       <div
-        className={`transition-all duration-500 ease-in-out overflow-hidden ${
-          isHovered ? 'max-h-[500px]' : 'max-h-16'
-        }`}
+        className={`transition-all duration-500 ease-in-out overflow-hidden ${isHovered ? 'max-h-[500px]' : 'max-h-16'
+          }`}
       >
         <p className="text-gray-700 mb-5">{caption}</p>
       </div>
       <div className="flex justify-between items-center">
         <button
           onClick={handleLike}
-          className={`p-2 rounded-full ${
-            isLiked ? 'text-red-500' : 'text-gray-500'
-          } transition-colors duration-300`}
+          className={`p-2 rounded-full ${isLiked ? 'text-red-500' : 'text-gray-500'
+            } transition-colors duration-300`}
         >
           <FaHeart size={24} />
         </button>
