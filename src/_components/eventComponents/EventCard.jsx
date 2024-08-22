@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
-import exampleImage from '../../../assets/5793925932325651702.jpg';
 
 const EventCard = ({ title, presenter, caption, initialLikes, imageUrl }) => {
   const [likes, setLikes] = useState(initialLikes);

@@ -1,8 +1,8 @@
 // src/components/EventsFeed/EventsFeed.jsx
 
 import React, { useEffect, useState } from 'react';
-import EventCard from '../_components/EventCard';
-import { fetchEvents } from '../../../services/eventsService/eventsService';
+import EventCard from './EventCard';
+import { getEvents } from '../../services/eventsService/eventsService';
 
 const EventsFeed = () => {
     const [events, setEvents] = useState([]);
@@ -12,7 +12,7 @@ const EventsFeed = () => {
     useEffect(() => {
         const loadEvents = async () => {
             try {
-                const eventsData = await fetchEvents();
+                const eventsData = await getEvents();
                 setEvents(eventsData);
             } catch (error) {
                 setError(error.message);

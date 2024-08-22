@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import LoginButton from '../page/login/_components/LoginButton';
+import LoginButton from './loginComponents/LoginButton';
 import SearchBar from '../_components/SearchBar';
+import AddEventButton from './eventComponents/EventInsert';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,10 +21,14 @@ const Navbar = () => {
             <Link to="/news" className="text-white hover:text-gray-300">
               News
             </Link>
+            <Link to="/Present" className="text-white hover:text-gray-300">
+              Present
+            </Link>
           </div>
         </div>
 
         <div className="hidden md:flex items-center space-x-3">
+          {/* <AddEventButton /> */}
           <SearchBar />
           <LoginButton />
         </div>

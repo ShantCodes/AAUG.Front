@@ -1,16 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './_components/navbar';
-import LoginForm from './page/login/_components/LoginForm';
-import EventsFeed from './page/Events/_components/EventsFeed';
-import SignupForm from './page/login/_components/SignupForm';
+import LoginPage from './page/auth/LoginPage';
+import EventsFeed from './_components/eventComponents/EventsFeed'
+import SignupForm from './_components/loginComponents/SignupForm';
+import EventInsert from './_components/eventComponents/EventInsert';
 
 const NewsPage = () => <div>News Page</div>;
-const LoginPage = () => (
-  <div>
-    <LoginForm />
-  </div>
-);
 
 
 function App() {
@@ -24,6 +20,7 @@ function App() {
           <Route path="/news" element={<NewsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupForm />} />
+          <Route path="/Present" element={<EventInsert />} />
         </Routes>
       </div>
     </Router>
