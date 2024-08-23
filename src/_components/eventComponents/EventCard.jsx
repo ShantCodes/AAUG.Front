@@ -12,7 +12,6 @@ const EventCard = ({ title, presenter, caption, initialLikes, imageUrl }) => {
     setLikes(isLiked ? likes - 1 : likes + 1);
     setIsLiked(!isLiked);
   };
-
   return (
     <div
       className="bg-white shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto transform transition-transform duration-300 hover:scale-105"

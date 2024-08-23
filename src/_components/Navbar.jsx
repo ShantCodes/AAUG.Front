@@ -1,11 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import LoginButton from './loginComponents/LoginButton';
 import SearchBar from '../_components/SearchBar';
-import AddEventButton from './eventComponents/EventInsert';
+import ProfilePicture from './userComponents/ProfilePicture';
+import { getUserInfo } from '../services/authService/authService';
+import LoginButton from './loginComponents/LoginButton';
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  const loadUserInfo = async () => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      try {
+        const userData = await getUserInfo(token);
+        setUserInfo(userData);
+      } catch (error) {
+        console.error('Failed to fetch user info', error);
+        setUserInfo(null); // Handle cases where user data can't be fetched
+      }
+    } else {
+      setUserInfo(null);
+    }
+  };
+
+  useEffect(() => {
+    loadUserInfo();
+  }, []); // Empty dependency array to run only on mount
+
+  // Effect to handle token change
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+      if (event.key === 'jwtToken') {
+        loadUserInfo();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   return (
     <nav className="bg-blue-900 bg-opacity-30 backdrop-blur-md p-4 fixed w-full top-0 z-10">
@@ -28,39 +63,14 @@ const Navbar = () => {
         </div>
 
         <div className="hidden md:flex items-center space-x-3">
-          {/* <AddEventButton /> */}
           <SearchBar />
-          <LoginButton />
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
-          <button
-            type="button"
-            className="text-white focus:outline-none"
-            aria-label="Toggle navigation"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-            </svg>
-          </button>
+          {userInfo ? (
+            <ProfilePicture profilePictureFileId={userInfo.profilePictureFileId} userInfo={userInfo} />
+          ) : (
+            <LoginButton />
+          )}
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden flex flex-col items-center space-y-4 bg-blue-900 bg-opacity-30 backdrop-blur-md p-4 absolute top-16 left-0 w-full z-10">
-          <Link to="/events" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-            Events
-          </Link>
-          <Link to="/news" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-            News
-          </Link>
-          <SearchBar />
-          <LoginButton />
-        </div>
-      )}
     </nav>
   );
 };
