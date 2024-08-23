@@ -1,15 +1,38 @@
-// src/components/EventInsert/EventInsert.jsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { insertEvent } from '../../services/eventsService/eventsService';
+import { getUserInfo } from '../../services/authService/authService';
 
-const EventInsert = () => {
+const EventInsert = ({ userInfo: initialUserInfo }) => {
   const [eventTitle, setEventTitle] = useState('');
   const [eventDetails, setEventDetails] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [presentator, setPresentator] = useState('');
   const [presentatorUserId, setPresentatorUserId] = useState('');
   const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [userInfo, setUserInfo] = useState(initialUserInfo);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!initialUserInfo) {
+        try {
+          const token = localStorage.getItem('token'); // Assumes token is stored in localStorage
+          const fetchedUserInfo = await getUserInfo(token);
+          setUserInfo(fetchedUserInfo);
+        } catch (error) {
+          console.error('Failed to fetch user info', error);
+        }
+      }
+    };
+
+    fetchUserInfo();
+  }, [initialUserInfo]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setPresentator(`${userInfo.nameArmenian} ${userInfo.lastName}`);
+      setPresentatorUserId(userInfo.userId);
+    }
+  }, [userInfo]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,12 +47,11 @@ const EventInsert = () => {
     const result = await insertEvent(formData);
     if (result.success) {
       alert('Event inserted successfully');
-      // Clear form fields after submission
       setEventTitle('');
       setEventDetails('');
       setEventDate('');
-      setPresentator('');
-      setPresentatorUserId('');
+      setPresentator(`${userInfo.nameArmenian} ${userInfo.lastName}`);
+      setPresentatorUserId(userInfo.userId);
       setThumbnailFile(null);
     } else {
       alert('Failed to insert event');
@@ -63,7 +85,7 @@ const EventInsert = () => {
               id="eventDetails"
               value={eventDetails}
               onChange={(e) => setEventDetails(e.target.value)}
-              rows="6" // Adjust this number to make it taller
+              rows="6"
               className="shadow appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
@@ -93,6 +115,7 @@ const EventInsert = () => {
               value={presentator}
               onChange={(e) => setPresentator(e.target.value)}
               className="shadow appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
             />
           </div>
 

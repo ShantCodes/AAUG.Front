@@ -14,14 +14,19 @@ export const getEvents = async () => {
 
 export const insertEvent = async (formData) => {
   try {
+    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+
     await axios.post(`${BASE_URL}/InsertEvent`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}` // Add the token in the Authorization header
       },
     });
+
     return { success: true };
   } catch (error) {
     console.error('There was an error inserting the event!', error);
     return { success: false, error };
   }
 };
+
