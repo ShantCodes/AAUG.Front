@@ -43,7 +43,8 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-blue-900 bg-opacity-30 backdrop-blur-md p-4 fixed w-full top-0 z-10">
+    // <nav className="bg-blue-800 bg-opacity-30 backdrop-blur-md p-4 fixed w-full top-0 z-10">
+    <nav className="bg-opacity-50 backdrop-blur-md bg-gradient-to-r from-indigo-500 to-teal-400 p-4 fixed w-full top-0 z-10">
       <div className="container mx-auto flex justify-between items-center max-w-4xl">
         <div className="flex items-center space-x-3">
           <h1 className="text-white text-3xl md:text-4xl">

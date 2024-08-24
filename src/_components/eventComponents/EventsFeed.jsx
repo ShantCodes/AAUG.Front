@@ -38,6 +38,7 @@ const EventsFeed = () => {
                 {events.map((event, index) => (
                     <EventCard
                         key={event.id}
+                        eventId={event.id}
                         title={event.eventTitle}
                         presenter={event.presentator}
                         caption={event.eventDetails}

@@ -30,3 +30,36 @@ export const insertEvent = async (formData) => {
   }
 };
 
+export const likeEvent = async (eventId, token) => {
+  try {
+    await axios.post(
+      `${BASE_URL}/api/Events/LikeEvent/${eventId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    throw new Error('Failed to like the event');
+  }
+};
+
+
+export const getEventLikes = async (eventId) => {
+  const token = localStorage.getItem('jwtToken');
+  
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/GetEventLikes`,
+      {
+        params: { eventId },        
+      }
+    );
+    return response.data; // Assuming the API returns a list of users
+  } catch (error) {
+    console.error('Error fetching event likes:', error);
+    throw error;
+  }
+};
