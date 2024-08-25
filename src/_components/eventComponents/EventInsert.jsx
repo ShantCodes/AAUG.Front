@@ -59,8 +59,8 @@ const EventInsert = ({ userInfo: initialUserInfo }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto">
+    <div className="flex items-center justify-center min-h-screen bg-gray-700">
+      <div className="bg-white shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto mt-auto">
         <h2 className="text-lg font-bold text-center mb-4">Add Presentation</h2>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="mb-4">

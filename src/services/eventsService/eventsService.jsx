@@ -12,6 +12,16 @@ export const getEvents = async () => {
   }
 };
 
+
+export const getNotApprovedEvents = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/GetAllNotApprovedEventsForAdmins`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch events');
+  }
+};
+
 export const insertEvent = async (formData) => {
   try {
     const token = localStorage.getItem('token'); // Retrieve the token from local storage

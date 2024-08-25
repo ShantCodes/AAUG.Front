@@ -9,11 +9,13 @@ const Navbar = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Load user information from local storage token
   const loadUserInfo = async () => {
     const token = localStorage.getItem('jwtToken');
     if (token) {
       try {
         const userData = await getUserInfo(token);
+        console.log('User Data:', userData); // Debugging line
         setUserInfo(userData);
       } catch (error) {
         console.error('Failed to fetch user info', error);
@@ -24,6 +26,7 @@ const Navbar = () => {
     }
   };
 
+  // Load user info on component mount and when storage changes
   useEffect(() => {
     loadUserInfo();
   }, []);
@@ -42,8 +45,12 @@ const Navbar = () => {
     };
   }, []);
 
+  // Determine if the user has an admin role
+  const isAdmin = userInfo?.role?.toLowerCase() === 'varich' || userInfo?.role?.toLowerCase() === 'king';
+  
+  console.log('Is Admin:', isAdmin); // Debugging line
+
   return (
-    // <nav className="bg-blue-800 bg-opacity-30 backdrop-blur-md p-4 fixed w-full top-0 z-10">
     <nav className="bg-opacity-50 backdrop-blur-md bg-gradient-to-r from-indigo-500 to-teal-400 p-4 fixed w-full top-0 z-10">
       <div className="container mx-auto flex justify-between items-center max-w-4xl">
         <div className="flex items-center space-x-3">
@@ -60,6 +67,11 @@ const Navbar = () => {
             <Link to="/Present" className="text-white hover:text-gray-300">
               Present
             </Link>
+            {isAdmin && (
+              <Link to="/Admin" className="text-white hover:text-gray-300">
+                Admin
+              </Link>
+            )}
           </div>
         </div>
 
@@ -108,6 +120,11 @@ const Navbar = () => {
             <Link to="/Present" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
               Present
             </Link>
+            {isAdmin && (
+              <Link to="/Admin" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+                Admin
+              </Link>
+            )}
             <SearchBar />
           </div>
         </div>

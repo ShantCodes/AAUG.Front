@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FaCrown, FaStar } from 'react-icons/fa'; // Import the crown icon
 
 const UserPopUp = ({ userInfo, onHover, onProfilePictureChange }) => {
   const [file, setFile] = useState(null);
@@ -62,6 +63,22 @@ const UserPopUp = ({ userInfo, onHover, onProfilePictureChange }) => {
         <div className="ml-4">
           <p className="text-sm font-semibold">{`${userInfo.name} ${userInfo.lastName}`}</p>
           <p className="text-xs text-gray-600">{`${userInfo.nameArmenian} ${userInfo.lastNameArmenian}`}</p>
+          <p className="text-2xl text-yellow-600 font-bold">
+            {userInfo.role ? (
+              <>
+                {userInfo.role}
+                {userInfo.role === 'King' && (
+                  <FaCrown className="inline ml-2 text-yellow-600 size-10" />
+                )}
+                {userInfo.role === 'Varich' && (
+                  <FaStar className="inline ml-2 text-yellow-600 size-10" />
+                )}
+              </>
+            ) : (
+              <span></span>
+            )}
+          </p>
+
         </div>
       </div>
       <button

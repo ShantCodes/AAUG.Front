@@ -6,6 +6,8 @@ import EventsFeed from './_components/eventComponents/EventsFeed'
 import SignupForm from './_components/loginComponents/SignupForm';
 import EventInsert from './_components/eventComponents/EventInsert';
 import UserProfileCard from './_components/userComponents/userProfileCard';
+import UsersList from './_components/userComponents/UserList';
+import AdminEventCard from './_components/eventComponents/NotApprovedEvents';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -13,7 +15,7 @@ const NewsPage = () => <div>News Page</div>;
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-gray-700">
         <Navbar />
         <Routes>
           <Route path="/" element={<EventsFeed />} />
@@ -22,7 +24,9 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/Present" element={<EventInsert />} />
-          <Route path="/Test" element={<UserProfileCard />} />
+          {/* <Route path="/Test" element={<UserProfileCard />} /> */}
+          <Route path="/Admin" element={<UsersList />} />
+          <Route path="/Test" element={<AdminEventCard />} />
         </Routes>
       </div>
     </Router>

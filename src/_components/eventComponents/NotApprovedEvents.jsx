@@ -4,7 +4,7 @@ import axios from 'axios';
 import EventLikes from './EventLikes';
 import Popup from './Popup';
 
-const EventCard = ({ eventId, title, presenter, caption, initialLikes, imageUrl, isLiked: initialIsLiked }) => {
+const NotApprovedEvents = ({ eventId, title, presenter, caption, initialLikes, imageUrl, isLiked: initialIsLiked }) => {
   const [likes, setLikes] = useState(initialLikes);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isHovered, setIsHovered] = useState(false);
@@ -88,4 +88,4 @@ const EventCard = ({ eventId, title, presenter, caption, initialLikes, imageUrl,
   );
 };
 
-export default EventCard;
+export default NotApprovedEvents;
