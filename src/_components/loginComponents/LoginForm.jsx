@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import LoginButton from "./LoginButton";
 
 const LoginForm = () => {
     const [username, setUsername] = useState("");
@@ -22,7 +23,7 @@ const LoginForm = () => {
             localStorage.setItem("jwtToken", token);
             console.log("Login successful!");
 
-            navigate('/events', { replace: true });  // Navigates to /events
+            navigate('/', { replace: true });  // Navigates to /events
             window.location.reload();  // Refreshes the page after navigation
 
         } catch (error) {
@@ -54,10 +55,9 @@ const LoginForm = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <div className="mb-6">
-                    <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600">
-                        Login
-                    </button>
+                <div className="flex justify-center mb-6">
+                    
+                    <LoginButton />
                 </div>
                 <div className="text-center mt-4">
                     <a href="/signup" className="text-blue-500 hover:underline">

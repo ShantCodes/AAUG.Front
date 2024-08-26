@@ -39,15 +39,14 @@ const EventCard = ({ eventId, title, presenter, caption, initialLikes, imageUrl,
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto transform transition-all duration-300 ${
-        isHovered ? 'scale-105' : ''
-      }`}
+      className={`bg-white shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto transform transition-all duration-300 ${isHovered ? 'scale-100' : ''
+        }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="mb-4">
-        <h3 className="text-lg font-bold text-center mb-1 text-gray-900 dark:text-gray-100">{title}</h3>
-        <p className="text-gray-700 dark:text-gray-300 text-left">{presenter}</p>
+        <h3 className="text-lg font-bold text-center mb-1 text-gray-900">{title}</h3>
+        <p className="text-gray-700 text-left">{presenter}</p>
       </div>
       <img
         src={imageUrl}
@@ -55,25 +54,23 @@ const EventCard = ({ eventId, title, presenter, caption, initialLikes, imageUrl,
         className="w-full h-56 sm:h-72 object-cover rounded-t-lg mb-4"
       />
       <div
-        className={`transition-all duration-500 ease-in-out overflow-hidden ${
-          isHovered ? 'max-h-[1000px]' : 'max-h-16'
-        }`}
+        className={`transition-all duration-500 ease-in-out overflow-hidden ${isHovered ? 'max-h-[1000px]' : 'max-h-16'
+          }`}
       >
-        <p className="text-gray-700 dark:text-gray-300 mb-5">{caption}</p>
+        <p className="text-gray-700 mb-5">{caption}</p>
       </div>
       <div className="flex justify-between items-center">
         <button
           onClick={handleLike}
-          className={`p-2 rounded-full transition-colors duration-300 ${
-            isLiked ? 'text-red-500' : 'text-gray-500'
-          } dark:text-gray-400`}
+          className={`p-2 rounded-full transition-colors duration-300 ${isLiked ? 'text-red-500' : 'text-gray-500'
+            }`}
         >
           <FaHeart size={24} />
         </button>
-        <span className="text-gray-600 dark:text-gray-400">{likes} Likes</span>
+        <span className="text-gray-600">{likes} Likes</span>
       </div>
       <button
-        className="mt-4 text-blue-500 hover:underline dark:text-blue-300"
+        className="mt-4 text-blue-500 hover:underline"
         onClick={() => setShowPopup(true)}
       >
         See who liked this event

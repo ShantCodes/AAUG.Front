@@ -1,5 +1,3 @@
-// src/components/EventsFeed/EventsFeed.jsx
-
 import React, { useEffect, useState } from 'react';
 import EventCard from './EventCard';
 import { getEvents } from '../../services/eventsService/eventsService';
@@ -62,8 +60,8 @@ const EventsFeed = () => {
     }
 
     return (
-        <div className="flex flex-col items-center p-4 bg-gray-700 max-w-3xl mx-auto">
-            <div className="mt-16">
+        <div className="flex flex-col items-center p-4 bg-gray-100 max-w-3xl mx-auto">
+            <div className="w-full">
                 {events.map((event, index) => (
                     <EventCard
                         key={event.id}
@@ -74,7 +72,6 @@ const EventsFeed = () => {
                         initialLikes={event.likeCount}
                         imageUrl={`http://localhost:37523/api/Media/DownloadFile/${event.thumbNailFileId}`}
                         isLiked={event.isLiked} // Pass the liked status as a prop
-                        className={index === 0 ? 'mt-30' : ''}
                     />
                 ))}
             </div>

@@ -9,13 +9,11 @@ const Navbar = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Load user information from local storage token
   const loadUserInfo = async () => {
     const token = localStorage.getItem('jwtToken');
     if (token) {
       try {
         const userData = await getUserInfo(token);
-        console.log('User Data:', userData); // Debugging line
         setUserInfo(userData);
       } catch (error) {
         console.error('Failed to fetch user info', error);
@@ -26,7 +24,6 @@ const Navbar = () => {
     }
   };
 
-  // Load user info on component mount and when storage changes
   useEffect(() => {
     loadUserInfo();
   }, []);
@@ -45,87 +42,58 @@ const Navbar = () => {
     };
   }, []);
 
-  // Determine if the user has an admin role
   const isAdmin = userInfo?.role?.toLowerCase() === 'varich' || userInfo?.role?.toLowerCase() === 'king';
-  
-  console.log('Is Admin:', isAdmin); // Debugging line
 
   return (
-    <nav className="bg-opacity-50 backdrop-blur-md bg-gradient-to-r from-indigo-500 to-teal-400 p-4 fixed w-full top-0 z-10">
-      <div className="container mx-auto flex justify-between items-center max-w-4xl">
-        <div className="flex items-center space-x-3">
-          <h1 className="text-white text-3xl md:text-4xl">
-            ՀՀԸՄ
-          </h1>
-          <div className="hidden md:flex space-x-3">
-            <Link to="/events" className="text-white hover:text-gray-300">
-              Events
-            </Link>
-            <Link to="/news" className="text-white hover:text-gray-300">
-              News
-            </Link>
-            <Link to="/Present" className="text-white hover:text-gray-300">
-              Present
-            </Link>
-            {isAdmin && (
-              <Link to="/Admin" className="text-white hover:text-gray-300">
-                Admin
-              </Link>
-            )}
+    <nav className="bg-white shadow-md px-4 py-3 fixed w-full top-0 z-10">
+      <div className="container mx-auto flex items-center justify-between max-w-3xl"> {/* Centered search bar */}
+        {/* Left section: Logo */}
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-center w-10 h-10 bg-blue-500 rounded-full">
+            <span className="text-white text-xl font-bold">F</span>
           </div>
+          <span className="text-xl font-bold text-gray-800">ՀՀԸՄ</span>
         </div>
 
+        {/* Center section: Search Bar */}
+        <div className="flex-1 px-4">
+          <SearchBar className="w-full max-w-lg mx-auto" /> {/* Made the search bar wider */}
+        </div>
+
+        {/* Right section: Profile and Icons */}
         <div className="flex items-center space-x-3">
-          <div className="hidden md:flex">
-            <SearchBar />
-          </div>
           {userInfo ? (
             <ProfilePicture profilePictureFileId={userInfo.profilePictureFileId} userInfo={userInfo} />
           ) : (
             <LoginButton />
           )}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white focus:outline-none"
+          <button
+            className="md:hidden flex items-center"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <svg
+              className="w-6 h-6 text-gray-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d={isMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
-                />
-              </svg>
-            </button>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d={isMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
+              />
+            </svg>
+          </button>
         </div>
       </div>
 
+      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="flex flex-col space-y-2 p-4 bg-blue-900 bg-opacity-90 backdrop-blur-md">
-            <Link to="/events" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-              Events
-            </Link>
-            <Link to="/news" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-              News
-            </Link>
-            <Link to="/Present" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-              Present
-            </Link>
-            {isAdmin && (
-              <Link to="/Admin" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-                Admin
-              </Link>
-            )}
-            <SearchBar />
+            <SearchBar className="w-full" />
           </div>
         </div>
       )}
