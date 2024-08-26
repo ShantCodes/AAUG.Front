@@ -19,7 +19,10 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-100">
         <Navbar />
-        
+        <div className="w-64 fixed h-screen overflow-y-auto ml-40">
+          <NavMenu />
+        </div>
+
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/news" element={<NewsPage />} />
@@ -30,7 +33,7 @@ function App() {
           <Route path="/Admin" element={<UsersList />} />
           <Route path="/Test" element={<AdminEventCard />} />
           <Route path="/Menu" element={<NavMenu />} />
-          
+
         </Routes>
       </div>
     </Router>

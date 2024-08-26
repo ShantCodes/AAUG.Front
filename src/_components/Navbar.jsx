@@ -4,6 +4,7 @@ import SearchBar from '../_components/SearchBar';
 import ProfilePicture from './userComponents/ProfilePicture';
 import { getUserInfo } from '../services/authService/authService';
 import LoginButton from './loginComponents/LoginButton';
+import aaugLogo from '../assets/aaugLogo.jpg';
 
 const Navbar = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -49,9 +50,9 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between max-w-3xl"> {/* Centered search bar */}
         {/* Left section: Logo */}
         <div className="flex items-center space-x-2">
-          <div className="flex items-center justify-center w-10 h-10 bg-blue-500 rounded-full">
-            <span className="text-white text-xl font-bold">F</span>
-          </div>
+          <Link to="/" className="flex items-center justify-center w-10 h-10">
+            <img src={aaugLogo} alt="Logo" className="w-full h-full object-cover rounded-full" />
+          </Link>
           <span className="text-xl font-bold text-gray-800">ՀՀԸՄ</span>
         </div>
 

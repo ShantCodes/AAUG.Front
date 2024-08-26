@@ -12,7 +12,7 @@ const EventsFeed = () => {
         const loadEvents = async () => {
             try {
                 const eventsData = await getEvents();
-                
+
                 // Retrieve the JWT token once
                 const token = localStorage.getItem('jwtToken');
 
@@ -60,9 +60,9 @@ const EventsFeed = () => {
     }
 
     return (
-        <div className="flex flex-col items-center p-4 bg-gray-100 max-w-3xl mx-auto">
-            <div className="w-full">
-                {events.map((event, index) => (
+        <div className="w-full max-w-3xl mx-auto">
+            <div className="flex flex-col items-center p-4 bg-gray-100">
+                {events.map((event) => (
                     <EventCard
                         key={event.id}
                         eventId={event.id}

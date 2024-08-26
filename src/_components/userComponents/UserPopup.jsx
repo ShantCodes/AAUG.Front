@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { FaCrown, FaStar } from 'react-icons/fa'; // Import the crown icon
+import { FaCrown, FaStar } from 'react-icons/fa';
 
-const UserPopUp = ({ userInfo, onHover, onProfilePictureChange }) => {
+const UserPopUp = ({ userInfo, onProfilePictureChange }) => {
   const [file, setFile] = useState(null);
   const profilePictureUrl = `http://localhost:37523/api/Media/DownloadFile/${userInfo.profilePictureFileId}`;
   const uploadUrl = 'http://localhost:37523/api/AaugUser/InsertProfilePicture';
@@ -13,7 +13,7 @@ const UserPopUp = ({ userInfo, onHover, onProfilePictureChange }) => {
       setFile(selectedFile);
 
       const formData = new FormData();
-      formData.append('profilePictureFile', selectedFile); // Field name should match API parameter
+      formData.append('profilePictureFile', selectedFile);
 
       try {
         const token = localStorage.getItem('jwtToken');
@@ -23,9 +23,8 @@ const UserPopUp = ({ userInfo, onHover, onProfilePictureChange }) => {
             'Authorization': `Bearer ${token}`,
           },
         });
-        // Notify parent component about the profile picture update
         onProfilePictureChange();
-        setFile(null); // Clear the file after successful upload
+        setFile(null);
       } catch (error) {
         console.error('Upload failed:', error);
       }
@@ -34,14 +33,10 @@ const UserPopUp = ({ userInfo, onHover, onProfilePictureChange }) => {
 
   return (
     <div
-      className="absolute left-0 mt-2 p-4 bg-white rounded shadow-lg w-64 max-w-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      className="bg-white rounded shadow-lg p-4 w-64 max-w-xs"
       style={{
-        transform: 'translateX(-100%)',
         whiteSpace: 'nowrap',
-        right: '100%',
       }}
-      onMouseEnter={onHover}
-      onMouseLeave={onHover}
     >
       <div className="flex items-center mb-2">
         <div className="relative">
@@ -64,7 +59,7 @@ const UserPopUp = ({ userInfo, onHover, onProfilePictureChange }) => {
           <p className="text-sm font-semibold">{`${userInfo.name} ${userInfo.lastName}`}</p>
           <p className="text-xs text-gray-600">{`${userInfo.nameArmenian} ${userInfo.lastNameArmenian}`}</p>
           <p className="text-2xl text-yellow-600 font-bold">
-            {userInfo.role ? (
+            {userInfo.role && (
               <>
                 {userInfo.role}
                 {userInfo.role === 'King' && (
@@ -74,11 +69,8 @@ const UserPopUp = ({ userInfo, onHover, onProfilePictureChange }) => {
                   <FaStar className="inline ml-2 text-yellow-600 size-10" />
                 )}
               </>
-            ) : (
-              <span></span>
             )}
           </p>
-
         </div>
       </div>
       <button
