@@ -34,7 +34,7 @@ const NavMenu = () => {
     const isActive = (path) => location.pathname === path ? 'text-blue-600 bg-gray-200' : '';
 
     return (
-        <div className="w-64 h-screen bg-gray-100 p-4">
+        <div className="w-48 mx-auto justify-end mr-20"> {/* Reduced width and centered using mx-auto */}
             <ul className="space-y-4 mt-24">
                 <li>
                     <Link to="/" className={`flex items-center space-x-2 p-2 rounded-md cursor-pointer transition-colors duration-300 ${isActive('/')}`}>
@@ -43,7 +43,7 @@ const NavMenu = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link to="/" className={`flex items-center space-x-2 p-2 rounded-md cursor-pointer transition-colors duration-300 ${isActive('/events')}`}>
+                    <Link to="/events" className={`flex items-center space-x-2 p-2 rounded-md cursor-pointer transition-colors duration-300 ${isActive('/events')}`}>
                         <AcademicCapIcon className="h-6 w-6 text-green-500 transition-colors duration-300" />
                         <span>Events</span>
                     </Link>
@@ -61,7 +61,7 @@ const NavMenu = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link to="/AboutUs" className={`flex items-center space-x-2 p-2 rounded-md cursor-pointer transition-colors duration-300 ${isActive('/present')}`}>
+                    <Link to="/AboutUs" className={`flex items-center space-x-2 p-2 rounded-md cursor-pointer transition-colors duration-300 ${isActive('/aboutus')}`}>
                         <InformationCircleIcon className="h-6 w-6 text-yellow-500 transition-colors duration-300" />
                         <span>About Us</span>
                     </Link>

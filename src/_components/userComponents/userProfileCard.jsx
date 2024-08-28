@@ -4,7 +4,7 @@ import axios from 'axios';
 const UserProfileCard = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
-  const token = localStorage.getItem('jwtToken'); // Or wherever your token is stored
+  const token = localStorage.getItem('jwtToken');
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -19,7 +19,6 @@ const UserProfileCard = () => {
       } catch (error) {
         if (error.response && error.response.status === 401) {
           console.error('Unauthorized: Invalid or expired token.');
-          // Optionally, handle token refresh or redirection to login
         } else {
           console.error('Error fetching user info:', error);
         }
@@ -30,12 +29,10 @@ const UserProfileCard = () => {
       fetchUserInfo();
     } else {
       console.error('No token found. Please log in.');
-      // Optionally, redirect to the login page
     }
   }, [token]);
 
   const handleProfilePictureChange = () => {
-    // Refetch the user info to get the updated profile picture
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
@@ -57,10 +54,10 @@ const UserProfileCard = () => {
   }
 
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white p-4">
-      <div className="flex items-center">
+    <div className="relative max-w-sm rounded overflow-hidden shadow-lg bg-white p-4">
+      <div className="flex items-center relative">
         <img
-          className="w-12 h-20 rounded-lg object-cover mr-4"
+          className="w-12 h-20 rounded-lg object-cover mr-4 relative"
           src={profilePictureUrl}
           alt="User Profile"
         />
@@ -76,13 +73,13 @@ const UserProfileCard = () => {
             {userInfo.isApproved ? 'Approved' : 'Not Approved'}
           </p>
         </div>
-      </div>
 
-      {/* UserPopUp Component for Profile Picture Upload */}
-      <UserPopUp
-        userInfo={userInfo}
-        onProfilePictureChange={handleProfilePictureChange}
-      />
+        {/* UserPopUp Component for Profile Picture Upload */}
+        <UserPopUp
+          userInfo={userInfo}
+          onProfilePictureChange={handleProfilePictureChange}
+        />
+      </div>
     </div>
   );
 };
@@ -116,7 +113,7 @@ const UserPopUp = ({ userInfo, onProfilePictureChange }) => {
   };
 
   return (
-    <div className="mt-4">
+    <div className="absolute left-0 transform -translate-x-full mt-4 p-4 bg-white border border-gray-300 rounded shadow-lg hover:block hidden group-hover:block">
       <input
         type="file"
         accept="image/*"

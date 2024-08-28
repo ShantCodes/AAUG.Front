@@ -52,7 +52,7 @@ const UsersList = () => {
         {users.map((user) => (
           <div
             key={user.id}
-            className="relative flex items-center bg-gray-900 rounded-lg shadow p-4 hover:bg-gray-800 transition-colors"
+            className="relative flex items-center bg-white rounded-lg shadow p-4 hover:bg-gray-200 transition-colors"
           >
             <img
               src={getProfilePictureUrl(user.profilePictureFileId)}
@@ -60,10 +60,10 @@ const UsersList = () => {
               className="w-24 h-24 rounded-full object-cover mr-4"
             />
             <div className="text-left flex-grow">
-              <h2 className="text-white text-lg font-semibold">{`${user.name} ${user.lastName}`}</h2>
-              <p className="text-gray-300">{`${user.nameArmenian} ${user.lastNameArmenian}`}</p>
-              <p className="text-gray-300">User ID: {user.userId}</p>
-              <p className="text-gray-300">Email: {user.email || 'N/A'}</p>
+              <h2 className="text-black text-lg font-semibold">{`${user.name} ${user.lastName}`}</h2>
+              <p className="text-gray-900">{`${user.nameArmenian} ${user.lastNameArmenian}`}</p>
+              <p className="text-gray-900">User ID: {user.userId}</p>
+              <p className="text-gray-900">Email: {user.email || 'N/A'}</p>
             </div>
             <div className="absolute right-4 top-4 flex flex-col gap-2 opacity-0 hover:opacity-100 transition-opacity">
               <ApproveButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} />

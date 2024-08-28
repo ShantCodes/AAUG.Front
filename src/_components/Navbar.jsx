@@ -5,6 +5,7 @@ import ProfilePicture from './userComponents/ProfilePicture';
 import { getUserInfo } from '../services/authService/authService';
 import LoginButton from './loginComponents/LoginButton';
 import aaugLogo from '../assets/aaugLogo.jpg';
+import NavMenu from './NavMenu'; // Import NavMenu component
 
 const Navbar = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -58,7 +59,7 @@ const Navbar = () => {
 
         {/* Center section: Search Bar */}
         <div className="flex-1 px-4">
-          <SearchBar className="w-full max-w-lg mx-auto" /> {/* Made the search bar wider */}
+          <SearchBar className="hidden md:block w-full max-w-lg mx-auto" />
         </div>
 
         {/* Right section: Profile and Icons */}
@@ -93,8 +94,9 @@ const Navbar = () => {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden">
-          <div className="flex flex-col space-y-2 p-4 bg-blue-900 bg-opacity-90 backdrop-blur-md">
+          <div className="flex flex-col space-y-2 p-4 bg-gray-100 bg-opacity-90 backdrop-blur-md">
             <SearchBar className="w-full" />
+            <NavMenu /> {/* NavMenu will be displayed here on mobile */}
           </div>
         </div>
       )}

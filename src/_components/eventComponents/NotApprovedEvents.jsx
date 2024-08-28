@@ -39,8 +39,8 @@ const NotApprovedEvents = ({ eventId, title, presenter, caption, initialLikes, i
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto transform transition-all duration-300 ${
-        isHovered ? 'scale-105' : ''
+      className={`bg-white shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto transform transition-all duration-300 ${
+        isHovered ? 'scale-100' : ''
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
