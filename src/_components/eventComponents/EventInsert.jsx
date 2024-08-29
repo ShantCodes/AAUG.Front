@@ -34,13 +34,13 @@ const EventInsert = () => {
             },
           });
 
-          const { profilePictureFileId } = response.data;
+          const { profilePictureFileId, name, id } = response.data;
           const pictureUrl = profilePictureFileId
             ? `http://localhost:37523/api/Media/DownloadFile/${profilePictureFileId}`
             : '/default-profile.png';
           setProfilePictureUrl(pictureUrl);
-          setPresentator(response.data.name);  // assuming name is the presentator's name
-          setPresentatorUserId(response.data.id);  // assuming id is the presentator's user ID
+          setPresentator(name);  // assuming name is the presentator's name
+          setPresentatorUserId(id);  // set the id as the PresentatorUserId
         } else {
           setProfilePictureUrl('/default-profile.png');
         }
@@ -75,7 +75,7 @@ const EventInsert = () => {
     formData.append('EventDetails', eventDetails);
     formData.append('EventDate', eventDate ? format(eventDate, 'yyyy-MM-dd') : '');
     formData.append('Presentator', presentator);
-    formData.append('PresentatorUserId', presentatorUserId);
+    formData.append('PresentatorUserId', presentatorUserId);  // send the PresentatorUserId
     formData.append('ThumbNailFile', thumbnailFile);
 
     try {

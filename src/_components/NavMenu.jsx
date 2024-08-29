@@ -34,7 +34,7 @@ const NavMenu = () => {
     const isActive = (path) => location.pathname === path ? 'text-blue-600 bg-gray-200' : '';
 
     return (
-        <div className="w-48 mx-auto justify-end mr-20"> {/* Reduced width and centered using mx-auto */}
+        <div className="w-48 mx-auto justify-end"> {/* Reduced width and centered using mx-auto */}
             <ul className="space-y-4 mt-24">
                 <li>
                     <Link to="/" className={`flex items-center space-x-2 p-2 rounded-md cursor-pointer transition-colors duration-300 ${isActive('/')}`}>

@@ -11,6 +11,7 @@ import AdminEventCard from './_components/eventComponents/NotApprovedEvents';
 import NavMenu from './_components/NavMenu';
 import MainPage from './page/Events/_components/EventsPage';
 import AdminPage from './page/admin/AdminPage';
+import NewsCard from './_components/newsComponents/NewsCard';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -29,8 +30,8 @@ function App() {
       {/* Conditionally render the NavMenu based on screen size */}
       {location.pathname !== '/login' && location.pathname !== '/signup' && (
         <div
-          className={`fixed h-screen overflow-y-auto transition-transform transform ${isNavMenuOpen ? 'translate-x-0' : '-translate-x-full'
-            } md:translate-x-0 md:ml-48 w-64`}
+          className={`fixed top-0 left-0 h-screen overflow-y-auto transition-transform transform ${isNavMenuOpen ? 'translate-x-0' : '-translate-x-full'
+            } md:translate-x-0 md:ml-48 w-64 z-50`}
         >
           <NavMenu />
         </div>
@@ -38,11 +39,11 @@ function App() {
 
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/news" element={<NewsPage />} />
+        <Route path="/news" element={<NewsCard />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/Present" element={<EventInsert />} />
-        <Route path="/Admin" element={<AdminPage   />} />
+        <Route path="/Admin" element={<AdminPage />} />
         <Route path="/Test" element={<AdminEventCard />} />
         <Route path="/Menu" element={<NavMenu />} />
       </Routes>
