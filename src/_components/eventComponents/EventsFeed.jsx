@@ -60,22 +60,20 @@ const EventsFeed = () => {
     }
 
     return (
-        <div className="w-full max-w-[40rem] mx-auto">
-            <div className="flex flex-col items-center bg-gray-100">
-                {events.map((event) => (
-                    <EventCard
-                        key={event.id}
-                        eventId={event.id}
-                        title={event.eventTitle}
-                        presenter={event.presentator}
-                        caption={event.eventDetails}
-                        initialLikes={event.likeCount}
-                        presenterUserId={event.presentatorUserId}
-                        imageUrl={`http://localhost:37523/api/Media/DownloadFile/${event.thumbNailFileId}`}
-                        isLiked={event.isLiked} // Pass the liked status as a prop
-                    />
-                ))}
-            </div>
+        <div className="w-full">
+            {events.map((event) => (
+                <EventCard
+                    key={event.id}
+                    eventId={event.id}
+                    title={event.eventTitle}
+                    presenter={event.presentator}
+                    caption={event.eventDetails}
+                    initialLikes={event.likeCount}
+                    presenterUserId={event.presentatorUserId}
+                    imageUrl={`http://localhost:37523/api/Media/DownloadFile/${event.thumbNailFileId}`}
+                    isLiked={event.isLiked} // Pass the liked status as a prop
+                />
+            ))}
         </div>
     );
 };

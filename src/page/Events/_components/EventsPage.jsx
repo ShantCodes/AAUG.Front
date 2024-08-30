@@ -6,33 +6,34 @@ import NewsCard from '../../../_components/newsComponents/NewsCard';
 
 const DashboardPage = () => {
   return (
-    <div className="relative flex justify-center p-4">
-      <div className="w-full max-w-6xl">
-        {/* Centering the content inside the max-width container */}
-        <div className="flex flex-col items-center">
-          {/* EventInsert positioned below the navbar */}
-          <div className="mt-12 w-full">
-            <EventInsert />
-          </div>
-
-          {/* Flex container for EventsFeed and NewsCard */}
-          <div className="mt-2 w-full flex justify-start relative">
-            {/* NewsCard positioned fixed and hidden on mobile */}
-            <div className="hidden lg:block fixed top-100 left-56 mt-32 mr-4">
-              <NewsCard />
-            </div>
-
-            {/* EventsFeed positioned to the right of NewsCard */}
-            <div className="w-full">
-              <EventsFeed />
-            </div>
+    <div className="flex justify-center lg:px-4">
+      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        {/* Left Sidebar (News) */}
+        <div className="col-span-3 hidden lg:block">
+          <div className="fixed top-96 pt-5 mt-5">
+            <NewsCard />
           </div>
         </div>
-      </div>
 
-      {/* Location component positioned to the right and hidden on mobile */}
-      <div className="hidden lg:block right-24 top-0 mt-16 fixed">
-        <LocationCard />
+        {/* Main Content Area */}
+        <div className="col-span-6">
+          <div className="flex flex-col items-center space-y-4 mt-16">
+            {/* Event Insert */}
+            <EventInsert />
+            
+            {/* Events Feed */}
+            <EventsFeed />
+          </div>
+        </div>
+
+        {/* Right Sidebar (Location) */}
+        <div className="col-span-3 hidden lg:block">
+          <div className="sticky top-20">
+            <LocationCard />
+          </div>
+        </div>
+        
       </div>
     </div>
   );

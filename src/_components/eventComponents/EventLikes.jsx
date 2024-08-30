@@ -31,18 +31,18 @@ const EventLikes = ({ eventId, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex justify-center items-center"
+      className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-lg flex justify-center items-center"
       onClick={onClose} // Close the popup when clicking on the overlay
     >
       <div
-        className="bg-gray-800 p-6 rounded-lg shadow-lg relative"
+        className="bg-transparent p-6 rounded-lg relative"
         onClick={(e) => e.stopPropagation()} // Prevent clicks inside the content from closing the overlay
       >
         <button
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
           onClick={onClose}
         >
-          X
+          
         </button>
         <h3 className="text-lg font-bold text-white mb-4">Likes:</h3>
         {likes.length > 0 ? (

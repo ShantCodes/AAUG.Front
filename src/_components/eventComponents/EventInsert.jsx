@@ -100,7 +100,7 @@ const EventInsert = () => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4">
+    <div className="pt-4">
       <div className={`bg-${submissionSuccess ? 'white' : 'gray-100'} shadow-md rounded-lg p-6 w-full sm:w-[40rem] max-w-screen-sm bg-white`}>
         {submissionSuccess && (
           <div className="text-center mb-4 text-green-600 font-bold">
