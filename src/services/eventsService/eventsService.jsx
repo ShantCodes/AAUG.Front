@@ -13,14 +13,45 @@ export const getEvents = async () => {
 };
 
 
+
 export const getNotApprovedEvents = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/GetAllNotApprovedEventsForAdmins`);
+    // Retrieve the token from local storage (or from your authentication context)
+    const token = localStorage.getItem('jwtToken');
+
+    // Make the request with the token included in the headers
+    const response = await axios.get(`${BASE_URL}/GetAllNotApprovedEventsForAdmins`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch events');
   }
 };
+
+
+
+export const getAllEvents = async () => {
+  try {
+    // Retrieve the token from local storage (or from your authentication context)
+    const token = localStorage.getItem('jwtToken');
+
+    // Make the request with the token included in the headers
+    const response = await axios.get(`${BASE_URL}/GetAllEventsForAdmins`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch events');
+  }
+};
+
 
 export const insertEvent = async (formData) => {
   try {
@@ -59,12 +90,12 @@ export const likeEvent = async (eventId, token) => {
 
 export const getEventLikes = async (eventId) => {
   const token = localStorage.getItem('jwtToken');
-  
+
   try {
     const response = await axios.get(
       `${BASE_URL}/GetEventLikes`,
       {
-        params: { eventId },        
+        params: { eventId },
       }
     );
     return response.data; // Assuming the API returns a list of users
@@ -73,3 +104,21 @@ export const getEventLikes = async (eventId) => {
     throw error;
   }
 };
+
+export const getCurrentUserInfo = async () => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) throw new Error('No token found');
+
+    try {
+        const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching current user info:', error);
+        throw error;
+    }
+};
+

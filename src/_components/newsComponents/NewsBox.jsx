@@ -16,9 +16,17 @@ const NewsBox = () => {
             {news.map((item, index) => (
                 <div
                     key={item.id}
-                    className={`bg-gray-300 shadow-lg rounded-lg p-4 transition-transform duration-300 ease-in-out transform hover:scale-105 w-64`}
-                    onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(null)}
+                    className={`bg-gray-300 shadow-lg rounded-lg p-4 transition-transform duration-300 ease-in-out transform ${
+                        hoveredIndex === index ? 'scale-105' : ''
+                    } w-64`}
+                    onMouseEnter={() => {
+                        console.log(`Mouse entered item ${item.id}`);
+                        setHoveredIndex(index);
+                    }}
+                    onMouseLeave={() => {
+                        console.log(`Mouse left item ${item.id}`);
+                        setHoveredIndex(null);
+                    }}
                 >
                     <h3 className="text-lg font-bold text-gray-800 truncate">
                         {item.newsTitle}

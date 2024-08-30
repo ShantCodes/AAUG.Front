@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import EventCard from './EventCard';
-import { getEvents } from '../../services/eventsService/eventsService';
+import { getEvents, getCurrentUserInfo } from '../../services/eventsService/eventsService';
 import axios from 'axios';
+import {} from "@heroicons/react";
 
 const EventsFeed = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentInfo, setCurrentInfo] = useState(null);
+    const [userRole, setUserRole] = useState(null); // State for user role
 
     useEffect(() => {
-        const loadEvents = async () => {
+        const loadData = async () => {
             try {
+                const userInfo = await getCurrentUserInfo();
+                setCurrentInfo(userInfo);
+                setUserRole(userInfo.role); // Set user role
+
                 const eventsData = await getEvents();
 
-                // Retrieve the JWT token once
                 const token = localStorage.getItem('jwtToken');
 
-                // Create an array of promises to check if the user has liked each event
                 const eventsWithLikeStatus = await Promise.all(
                     eventsData.map(async (event) => {
                         try {
@@ -30,11 +35,10 @@ const EventsFeed = () => {
                             );
                             return {
                                 ...event,
-                                isLiked: response.data.isLiked, // Assuming the API returns { isLiked: true/false }
+                                isLiked: response.data.isLiked,
                             };
                         } catch (likeError) {
                             console.error(`Error checking like status for event ${event.id}:`, likeError);
-                            // If there's an error, assume the event is not liked
                             return { ...event, isLiked: false };
                         }
                     })
@@ -48,8 +52,12 @@ const EventsFeed = () => {
             }
         };
 
-        loadEvents();
+        loadData();
     }, []);
+
+    const handleRemoveEvent = (eventId) => {
+        setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId));
+    };
 
     if (loading) {
         return <p>Loading events...</p>;
@@ -69,9 +77,12 @@ const EventsFeed = () => {
                     presenter={event.presentator}
                     caption={event.eventDetails}
                     initialLikes={event.likeCount}
-                    presenterUserId={event.presentatorUserId}
+                    presentatorUserId={event.presentatorUserId}
                     imageUrl={`http://localhost:37523/api/Media/DownloadFile/${event.thumbNailFileId}`}
-                    isLiked={event.isLiked} // Pass the liked status as a prop
+                    isLiked={event.isLiked}
+                    currentInfo={currentInfo}
+                    userRole={userRole} // Pass user role as a prop
+                    onRemove={handleRemoveEvent} // Pass the remove handler
                 />
             ))}
         </div>

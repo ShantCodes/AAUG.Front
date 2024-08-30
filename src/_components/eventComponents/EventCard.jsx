@@ -3,12 +3,15 @@ import { FaHeart } from 'react-icons/fa';
 import axios from 'axios';
 import EventLikes from './EventLikes';
 import Popup from './Popup';
+import EventEdit from './EventEdit';
+import { TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 
-const EventCard = ({ eventId, title, presenter, caption, presenterUserId, loggedInUserId, initialLikes, imageUrl, isLiked: initialIsLiked }) => {
+const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, initialLikes, imageUrl, isLiked: initialIsLiked, currentInfo, userRole, onRemove }) => {
   const [likes, setLikes] = useState(initialLikes);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   useEffect(() => {
     setIsLiked(initialIsLiked);
@@ -37,10 +40,37 @@ const EventCard = ({ eventId, title, presenter, caption, presenterUserId, logged
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await axios.delete(
+        `http://localhost:37523/api/Events/DeleteEvent/${eventId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log('Event deleted successfully');
+        onRemove(eventId); // Notify parent to remove the event
+      }
+    } catch (error) {
+      console.error('Error deleting the event:', error);
+    }
+  };
+
+  const currentId = currentInfo?.id ? String(currentInfo.id) : null;
+  const presenterId = String(presentatorUserId);
+
+  // Check if the current user has one of the roles that allows editing
+  const canEdit = ["Varich", "King", "Hanxnakhumb"].includes(userRole);
+  const canDelete = ["Varich", "King", "Hanxnakhumb"].includes(userRole);
+
   return (
     <div
-      className={`bg-white shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto transform transition-all duration-300 ${isHovered ? 'scale-100' : ''
-        }`}
+      className={`bg-white shadow-md rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto transform transition-all duration-300 ${isHovered ? 'scale-100' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -54,27 +84,62 @@ const EventCard = ({ eventId, title, presenter, caption, presenterUserId, logged
         className="w-full h-56 sm:h-72 object-cover rounded-t-lg mb-4"
       />
       <div
-        className={`transition-all duration-500 ease-in-out overflow-hidden ${isHovered ? 'max-h-[1000px]' : 'max-h-16'
-          }`}
+        className={`transition-all duration-500 ease-in-out overflow-hidden ${isHovered ? 'max-h-[1000px]' : 'max-h-16'}`}
       >
         <p className="text-gray-700 mb-5">{caption}</p>
       </div>
       <div className="flex justify-between items-center">
         <button
           onClick={handleLike}
-          className={`p-2 rounded-full transition-colors duration-300 ${isLiked ? 'text-red-500' : 'text-gray-500'
-            }`}
+          className={`p-2 rounded-full transition-colors duration-300 ${isLiked ? 'text-red-500' : 'text-gray-500'}`}
         >
           <FaHeart size={24} />
         </button>
         <span className="text-gray-600">{likes} Likes</span>
       </div>
-      <button
-        className="mt-4 text-blue-500 hover:underline"
-        onClick={() => setShowPopup(true)}
-      >
-        See who liked this event
-      </button>
+
+      <div className="flex justify-between items-center mt-4">
+        <button
+          className="text-blue-500 hover:underline"
+          onClick={() => setShowPopup(true)}
+        >
+          See who liked this event
+        </button>
+
+        {(currentId === presenterId || canEdit) && (
+          <div className="flex space-x-2">
+            {canEdit && (
+              <button
+                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition flex items-center"
+                onClick={() => setShowEdit(true)}
+              >
+                Edit
+                <PencilSquareIcon className="h-5 w-5 ml-2" />
+              </button>
+            )}
+            {canDelete && (
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition flex items-center"
+                onClick={handleDelete}
+              >
+                Delete
+                <TrashIcon className="h-5 w-5 ml-2" />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {showEdit && (
+        <EventEdit
+          eventId={eventId}
+          title={title}
+          presenter={presenter}
+          caption={caption}
+          imageUrl={imageUrl}
+          onClose={() => setShowEdit(false)}
+        />
+      )}
 
       {showPopup && (
         <Popup onClose={() => setShowPopup(false)}>
