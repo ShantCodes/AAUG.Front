@@ -106,19 +106,25 @@ export const getEventLikes = async (eventId) => {
 };
 
 export const getCurrentUserInfo = async () => {
-    const token = localStorage.getItem('jwtToken');
-    if (!token) throw new Error('No token found');
+  const token = localStorage.getItem('jwtToken');
+  
+  // If no token, return null or a default value instead of throwing an error
+  if (!token) {
+      console.warn('No token found, user is not logged in.');
+      return null; // or return a default user object if needed
+  }
 
-    try {
-        const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching current user info:', error);
-        throw error;
-    }
+  try {
+      const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching current user info:', error);
+      throw error;
+  }
 };
+
 
