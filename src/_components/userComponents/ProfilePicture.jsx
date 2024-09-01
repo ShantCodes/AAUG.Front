@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import UserPopUp from './UserPopUp';
+import DefaultPicture from '../../assets/polyforms-pfp.webp'; // Import the default picture
 
 const ProfilePicture = ({ userInfo }) => {
-  const [profilePictureFileId, setProfilePictureFileId] = useState(userInfo.profilePictureFileId);
+  const [profilePictureFileId, setProfilePictureFileId] = useState(userInfo?.profilePictureFileId || null);
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    setProfilePictureFileId(userInfo.profilePictureFileId);
-  }, [userInfo.profilePictureFileId]);
+    setProfilePictureFileId(userInfo?.profilePictureFileId || null);
+  }, [userInfo?.profilePictureFileId]);
 
   const handleProfilePictureChange = () => {
-    setProfilePictureFileId(userInfo.profilePictureFileId);
+    setProfilePictureFileId(userInfo?.profilePictureFileId || null);
   };
 
   const handleMouseEnter = () => {
@@ -24,12 +25,12 @@ const ProfilePicture = ({ userInfo }) => {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setIsHovered(false);
-    }, 1000); // 2 seconds delay
+    }, 1000); // 1 second delay
   };
 
   const profilePictureUrl = profilePictureFileId
     ? `http://localhost:37523/api/Media/DownloadFile/${profilePictureFileId}`
-    : '/default-profile.png';
+    : DefaultPicture;
 
   return (
     <div 

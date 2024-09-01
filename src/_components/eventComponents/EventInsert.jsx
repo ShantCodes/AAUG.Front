@@ -9,6 +9,7 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
+import DefaultPicture from '../../assets/polyforms-pfp.webp';
 
 const EventInsert = () => {
   const [eventTitle, setEventTitle] = useState('');
@@ -17,7 +18,7 @@ const EventInsert = () => {
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [photoFile, setPhotoFile] = useState(null);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
-  const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  const [profilePictureUrl, setProfilePictureUrl] = useState(DefaultPicture);
   const [presentator, setPresentator] = useState('');
   const [presentatorUserId, setPresentatorUserId] = useState(null);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
@@ -37,16 +38,16 @@ const EventInsert = () => {
           const { profilePictureFileId, name, id } = response.data;
           const pictureUrl = profilePictureFileId
             ? `http://localhost:37523/api/Media/DownloadFile/${profilePictureFileId}`
-            : '/default-profile.png';
+            : DefaultPicture;  // Use default picture if no profile picture is found
           setProfilePictureUrl(pictureUrl);
-          setPresentator(name);  // assuming name is the presentator's name
-          setPresentatorUserId(id);  // set the id as the PresentatorUserId
+          setPresentator(name);  // Assuming name is the presentator's name
+          setPresentatorUserId(id);  // Set the ID as the PresentatorUserId
         } else {
-          setProfilePictureUrl('/default-profile.png');
+          setProfilePictureUrl(DefaultPicture); // Use default picture if not logged in
         }
       } catch (error) {
         console.error('Error fetching user profile:', error);
-        setProfilePictureUrl('/default-profile.png');
+        setProfilePictureUrl(DefaultPicture); // Use default picture in case of error
       }
     };
 
@@ -75,7 +76,7 @@ const EventInsert = () => {
     formData.append('EventDetails', eventDetails);
     formData.append('EventDate', eventDate ? format(eventDate, 'yyyy-MM-dd') : '');
     formData.append('Presentator', presentator);
-    formData.append('PresentatorUserId', presentatorUserId);  // send the PresentatorUserId
+    formData.append('PresentatorUserId', presentatorUserId);  // Send the PresentatorUserId
     formData.append('ThumbNailFile', thumbnailFile);
 
     try {

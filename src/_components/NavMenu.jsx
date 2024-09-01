@@ -26,7 +26,7 @@ const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
         loadUserInfo();
     }, []);
 
-    const isAdmin = userInfo?.role?.toLowerCase() === 'king' || userInfo?.role?.toLowerCase() === 'varich';
+    const isAdmin = userInfo?.role?.toLowerCase() === 'king' || userInfo?.role?.toLowerCase() === 'varich' || userInfo?.role?.toLowerCase() === 'hanxnakhumb';
 
     const isActive = (path) => (location.pathname === path ? 'text-blue-600 bg-gray-200' : '');
 

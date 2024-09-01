@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const AssignRolesModal = ({ userId, roles, onClose, jwtToken }) => {
+const AssignRolesModal = ({ userId, roles = [], onClose, jwtToken }) => { // Default roles to an empty array
   const [selectedRoleId, setSelectedRoleId] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const handleRoleChange = (event) => {
-    setSelectedRoleId(parseInt(event.target.value));
+    setSelectedRoleId(parseInt(event.target.value, 10));
   };
 
   const handleAssignRole = async () => {
@@ -19,7 +19,7 @@ const AssignRolesModal = ({ userId, roles, onClose, jwtToken }) => {
     try {
       await axios.post(
         `http://localhost:37523/api/AaugUser/AssignRolesToUser/${userId}/${selectedRoleId}`,
-        null, // No body required for this endpoint
+        null,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -27,7 +27,7 @@ const AssignRolesModal = ({ userId, roles, onClose, jwtToken }) => {
           },
         }
       );
-      onClose(); // Close the modal on success
+      onClose();
     } catch (error) {
       setError('Failed to assign role. Please try again.');
     } finally {

@@ -64,8 +64,8 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
   const currentId = currentInfo?.id ? String(currentInfo.id) : null;
   const presenterId = String(presentatorUserId);
 
-  // Check if the current user has one of the roles that allows editing
-  const canEdit = ["Varich", "King", "Hanxnakhumb"].includes(userRole);
+  // Check if the current user has one of the roles that allows editing or if they are the presenter
+  const canEdit = currentId === presenterId || ["Varich", "King", "Hanxnakhumb"].includes(userRole);
   const canDelete = ["Varich", "King", "Hanxnakhumb"].includes(userRole);
 
   return (
@@ -106,8 +106,9 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
           See who liked this event
         </button>
 
-        {(currentId === presenterId || canEdit) && (
+        {(canEdit || canDelete) && (
           <div className="flex space-x-2">
+            {console.log('currentId:', currentId, 'presenterId:', presenterId, 'canEdit:', canEdit)}
             {canEdit && (
               <button
                 className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition flex items-center"
@@ -128,6 +129,7 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
             )}
           </div>
         )}
+
       </div>
 
       {showEdit && (

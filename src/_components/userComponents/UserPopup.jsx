@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { FaCrown, FaStar } from 'react-icons/fa';
+import DefaultPicture from '../../assets/polyforms-pfp.webp'; // Import the default picture
 
 const UserPopUp = ({ userInfo, onProfilePictureChange }) => {
   const [file, setFile] = useState(null);
-  const profilePictureUrl = `http://localhost:37523/api/Media/DownloadFile/${userInfo.profilePictureFileId}`;
+  const profilePictureUrl = userInfo?.profilePictureFileId
+    ? `http://localhost:37523/api/Media/DownloadFile/${userInfo.profilePictureFileId}`
+    : DefaultPicture;
   const uploadUrl = 'http://localhost:37523/api/AaugUser/InsertProfilePicture';
 
   const handleFileChange = async (e) => {
@@ -56,10 +59,16 @@ const UserPopUp = ({ userInfo, onProfilePictureChange }) => {
           </label>
         </div>
         <div className="ml-4">
-          <p className="text-sm font-semibold">{`${userInfo.name} ${userInfo.lastName}`}</p>
-          <p className="text-xs text-gray-600">{`${userInfo.nameArmenian} ${userInfo.lastNameArmenian}`}</p>
+          <p className="text-sm font-semibold">
+            {userInfo ? `${userInfo.name} ${userInfo.lastName}` : 'Guest User'}
+          </p>
+          <p className="text-xs text-gray-600">
+            {userInfo
+              ? `${userInfo.nameArmenian} ${userInfo.lastNameArmenian}`
+              : 'Անհայտ Օգտագործող'}
+          </p>
           <p className="text-2xl text-yellow-600 font-bold">
-            {userInfo.role && (
+            {userInfo?.role && (
               <>
                 {userInfo.role}
                 {userInfo.role === 'King' && (
