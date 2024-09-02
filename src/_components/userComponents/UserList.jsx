@@ -120,9 +120,8 @@ const UsersList = () => {
             key={user.id}
             onMouseEnter={() => handleExpand(user.userId)}
             onMouseLeave={handleCollapse}
-            className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out ${
-              expandedUserId === user.userId ? 'h-44' : 'h-28'
-            } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)}`}
+            className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out ${expandedUserId === user.userId ? 'h-44' : 'h-28'
+              } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)}`}
           >
             <img
               src={getProfilePictureUrl(user.profilePictureFileId)}
@@ -136,9 +135,8 @@ const UsersList = () => {
               <p className="text-gray-900">Email: {user.email || 'N/A'}</p>
             </div>
             {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && ( // Conditionally render buttons
-              <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${
-                expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
-              }`}>
+              <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
+                }`}>
                 <ApproveButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
                 <DeleteButton aaugUserId={user.id} jwtToken={jwtToken} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" />
                 <button
@@ -155,10 +153,11 @@ const UsersList = () => {
 
       {showRolesModal && (
         <AssignRolesModal
-          userId={selectedUserId} // Pass the selected userId
+          userId={selectedUserId}
           roles={roles}
           onClose={() => setShowRolesModal(false)}
           jwtToken={jwtToken}
+          currentUserRoles={users.find(user => user.userId === selectedUserId)?.role || []} // Pass current roles
         />
       )}
     </div>

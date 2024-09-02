@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getEventLikes } from '../../services/eventsService/eventsService';
+import defaultProfilePicture from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
 
 const EventLikes = ({ eventId, onClose }) => {
   const [likes, setLikes] = useState([]);
@@ -42,7 +43,7 @@ const EventLikes = ({ eventId, onClose }) => {
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
           onClick={onClose}
         >
-          
+          {/* You can add an "X" icon or any other close icon here */}
         </button>
         <h3 className="text-lg font-bold text-white mb-4">Likes:</h3>
         {likes.length > 0 ? (
@@ -50,7 +51,9 @@ const EventLikes = ({ eventId, onClose }) => {
             {likes.map((like) => (
               <li key={like.user.id} className="flex items-center mb-2 text-white">
                 <img
-                  src={`http://localhost:37523/api/Media/DownloadFile/${like.user.profilePictureFileId}`}
+                  src={like.user.profilePictureFileId 
+                        ? `http://localhost:37523/api/Media/DownloadFile/${like.user.profilePictureFileId}` 
+                        : defaultProfilePicture}
                   alt={`${like.user.name} ${like.user.lastName}`}
                   className="w-8 h-8 rounded-full mr-3"
                 />
