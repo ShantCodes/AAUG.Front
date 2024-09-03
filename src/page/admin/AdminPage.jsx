@@ -1,10 +1,14 @@
 import React from "react";
 import UsersList from "../../_components/userComponents/UserList";
 import NotApprovedEventsFeed from "../../_components/eventComponents/NotApprovedEventsFeed";
+import NavMenu from "../../_components/NavMenu";
 
 const AdminPage = () => {
     return (
-        <div className="flex justify-end h-screen bg-gray-100"> 
+        <div className="flex justify-end h-screen bg-gray-100">
+            <div>
+                <NavMenu />
+            </div>
             {/* Container for both components */}
             <div className="flex h-full w-3/4">
                 {/* UsersList centered and scrollable */}

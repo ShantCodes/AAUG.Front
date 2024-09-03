@@ -4,41 +4,55 @@ import { getEvents, getCurrentUserInfo } from '../../services/eventsService/even
 
 const EventsFeed = () => {
     const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingEvents, setLoadingEvents] = useState(true);
+    const [loadingUserInfo, setLoadingUserInfo] = useState(true);
     const [error, setError] = useState(null);
     const [currentInfo, setCurrentInfo] = useState(null);
-    const [userRole, setUserRole] = useState(null);
+    const [userRole, setUserRole] = useState('guest'); // Default to 'guest' initially
 
+    // Load events without worrying about user info
     useEffect(() => {
-        const loadData = async () => {
+        const loadEvents = async () => {
             try {
-                // Optionally get user info if needed
-                const userInfo = await getCurrentUserInfo();
-
-                if (userInfo) {
-                    setCurrentInfo(userInfo);
-                    setUserRole(userInfo.role);
-                }
-
-                // Fetch events without worrying about token or like status
                 const eventsData = await getEvents();
                 setEvents(eventsData);
             } catch (error) {
                 console.error('Error loading events:', error);
                 setError('Error loading events. Please try again later.');
             } finally {
-                setLoading(false);
+                setLoadingEvents(false);
             }
         };
 
-        loadData();
+        loadEvents();
     }, []);
 
+    // Load user info if needed
+    useEffect(() => {
+        const loadUserInfo = async () => {
+            try {
+                const userInfo = await getCurrentUserInfo();
+                if (userInfo) {
+                    setCurrentInfo(userInfo);
+                    setUserRole(userInfo.role);
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                // We can optionally set an error for user info specifically
+            } finally {
+                setLoadingUserInfo(false);
+            }
+        };
+
+        loadUserInfo();
+    }, []);
+
+    // Define the handleRemoveEvent function
     const handleRemoveEvent = (eventId) => {
-        setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId));
+        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
     };
 
-    if (loading) {
+    if (loadingEvents) {
         return <p>Loading events...</p>;
     }
 
@@ -59,8 +73,8 @@ const EventsFeed = () => {
                     presentatorUserId={event.presentatorUserId}
                     imageUrl={`http://localhost:37523/api/Media/DownloadFile/${event.thumbNailFileId}`}
                     currentInfo={currentInfo}
-                    userRole={userRole || 'guest'} // Default to 'guest' if userRole is null
-                    onRemove={handleRemoveEvent}
+                    userRole={userRole} // No need to default to 'guest' here as it's already set initially
+                    onRemove={handleRemoveEvent} // Pass the handler to the EventCard
                 />
             ))}
         </div>

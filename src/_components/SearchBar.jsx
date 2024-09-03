@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
+import axios from 'axios'; // Make sure to import axios
 
-const SearchBar = () => {
+const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = (event) => {
+  const handleSearchSubmit = async (event) => {
     event.preventDefault();
-    // Implement the search functionality
-    console.log('Searching for:', searchTerm);
+    if (onSearch) {
+      try {
+        const response = await axios.get(`${BASE_URL}/SearchEvent/${searchTerm}`);
+        onSearch(response.data);
+      } catch (error) {
+        console.error('Failed to search the event:', error);
+      }
+    }
   };
 
   return (
@@ -20,7 +27,7 @@ const SearchBar = () => {
         className={`w-full h-10 pl-10 pr-4 rounded-full bg-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors duration-200 ${
           window.innerWidth < 768 ? 'text-base' : ''
         }`}
-        placeholder="Search..."
+        placeholder="Search events..."
         value={searchTerm}
         onChange={handleSearchChange}
       />

@@ -12,7 +12,15 @@ export const getEvents = async () => {
   }
 };
 
-
+export const searchEvents = async (keyWord) => {
+  try{
+    const response = await axios.get(`${BASE_URL}/SearchEvent/${keyWord}`);
+    return response.data;
+  }
+  catch (error){
+    throw new Error('Failed to search the event');
+  }
+};
 
 export const getNotApprovedEvents = async () => {
   try {

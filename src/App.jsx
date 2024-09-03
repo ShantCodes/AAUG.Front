@@ -13,6 +13,7 @@ import MainPage from './page/Events/_components/EventsPage';
 import AdminPage from './page/admin/AdminPage';
 import NewsCard from './_components/newsComponents/NewsCard';
 import LocationCard from './_components/eventComponents/LocationCard';
+import ProfilePage from './page/profile/ProfilePage';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -46,9 +47,9 @@ function App() {
         <div
           className={`fixed top-0 left-0 h-screen overflow-y-auto transition-transform transform ${
             isNavMenuOpen || !isMobileView ? 'translate-x-0' : '-translate-x-full'
-          } md:translate-x-0 md:ml-48 w-80 z-50`}
+          } md:translate-x-0 md:ml-48 left-6 w-80 z-50 mt-16 top-2`}
         >
-          <NavMenu />
+          {/* <NavMenu /> */}
         </div>
       )}
 
@@ -61,6 +62,7 @@ function App() {
         <Route path="/Admin" element={<AdminPage />} />
         <Route path="/Test" element={<LocationCard />} />
         <Route path="/Menu" element={<NavMenu />} />
+        <Route path="/Profile" element={<ProfilePage />} />
       </Routes>
     </div>
   );

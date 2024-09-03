@@ -5,7 +5,7 @@ import ProfilePicture from './userComponents/ProfilePicture';
 import { getUserInfo } from '../services/authService/authService';
 import LoginButton from './loginComponents/LoginButton';
 import aaugLogo from '../assets/aaugLogo.jpg';
-import NavMenu from './NavMenu'; // Import NavMenu component
+import NavMenu from './NavMenu'; 
 
 const Navbar = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -44,11 +44,9 @@ const Navbar = () => {
     };
   }, []);
 
-  const isAdmin = userInfo?.role?.toLowerCase() === 'varich' || userInfo?.role?.toLowerCase() === 'king';
-
   return (
     <nav className="bg-white shadow-md px-4 py-3 fixed w-full top-0 z-10">
-      <div className="container mx-auto flex items-center justify-between max-w-3xl"> {/* Centered search bar */}
+      <div className="container mx-auto flex items-center justify-between max-w-3xl">
         {/* Left section: Logo */}
         <div className="flex items-center space-x-2">
           <Link to="/" className="flex items-center justify-center w-10 h-10">
@@ -93,11 +91,9 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="flex flex-col space-y-2 p-4 bg-gray-100 bg-opacity-90 backdrop-blur-md">
-            <SearchBar className="w-full" />
-            <NavMenu /> {/* NavMenu will be displayed here on mobile */}
-          </div>
+        <div className="md:hidden bg-gray-100 bg-opacity-90 backdrop-blur-md">
+          <SearchBar className="w-full p-4" />
+          <NavMenu isNavMenuOpen={isMenuOpen} toggleNavMenu={() => setIsMenuOpen(false)} />
         </div>
       )}
     </nav>
