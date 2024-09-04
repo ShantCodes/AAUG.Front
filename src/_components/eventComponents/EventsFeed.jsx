@@ -4,18 +4,30 @@ import { getEvents, getCurrentUserInfo } from '../../services/eventsService/even
 
 const EventsFeed = () => {
     const [events, setEvents] = useState([]);
-    const [loadingEvents, setLoadingEvents] = useState(true);
+    const [loadingEvents, setLoadingEvents] = useState(false);
     const [loadingUserInfo, setLoadingUserInfo] = useState(true);
     const [error, setError] = useState(null);
     const [currentInfo, setCurrentInfo] = useState(null);
-    const [userRole, setUserRole] = useState('guest'); // Default to 'guest' initially
+    const [userRole, setUserRole] = useState('guest');
+    const [pageNumber, setPageNumber] = useState(1);
+    const [hasMoreEvents, setHasMoreEvents] = useState(true);
 
-    // Load events without worrying about user info
     useEffect(() => {
         const loadEvents = async () => {
+            if (loadingEvents || !hasMoreEvents) return;
+
+            setLoadingEvents(true);
             try {
-                const eventsData = await getEvents();
-                setEvents(eventsData);
+                const eventsData = await getEvents(pageNumber);
+                
+                // Avoid duplicating data in case of unexpected re-renders
+                setEvents((prevEvents) => {
+                    const newEvents = eventsData.filter(event => !prevEvents.some(prevEvent => prevEvent.id === event.id));
+                    return [...prevEvents, ...newEvents];
+                });
+
+                // Check if more events are available
+                setHasMoreEvents(eventsData.length > 0);
             } catch (error) {
                 console.error('Error loading events:', error);
                 setError('Error loading events. Please try again later.');
@@ -25,9 +37,8 @@ const EventsFeed = () => {
         };
 
         loadEvents();
-    }, []);
+    }, [pageNumber]);
 
-    // Load user info if needed
     useEffect(() => {
         const loadUserInfo = async () => {
             try {
@@ -38,7 +49,6 @@ const EventsFeed = () => {
                 }
             } catch (error) {
                 console.error('Error loading user info:', error);
-                // We can optionally set an error for user info specifically
             } finally {
                 setLoadingUserInfo(false);
             }
@@ -47,12 +57,25 @@ const EventsFeed = () => {
         loadUserInfo();
     }, []);
 
-    // Define the handleRemoveEvent function
+    useEffect(() => {
+        const handleScroll = () => {
+            if (
+                window.innerHeight + document.documentElement.scrollTop + 100 >= document.documentElement.offsetHeight &&
+                !loadingEvents
+            ) {
+                setPageNumber((prevPage) => prevPage + 1);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [loadingEvents]);
+
     const handleRemoveEvent = (eventId) => {
         setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
     };
 
-    if (loadingEvents) {
+    if (loadingEvents && events.length === 0) {
         return <p>Loading events...</p>;
     }
 
@@ -73,10 +96,13 @@ const EventsFeed = () => {
                     presentatorUserId={event.presentatorUserId}
                     imageUrl={`http://localhost:37523/api/Media/DownloadFile/${event.thumbNailFileId}`}
                     currentInfo={currentInfo}
-                    userRole={userRole} // No need to default to 'guest' here as it's already set initially
-                    onRemove={handleRemoveEvent} // Pass the handler to the EventCard
+                    userRole={userRole}
+                    onRemove={handleRemoveEvent}
                 />
             ))}
+
+            {loadingEvents && <p>Loading more events...</p>}
+            {!hasMoreEvents && <p>No more events to load.</p>}
         </div>
     );
 };

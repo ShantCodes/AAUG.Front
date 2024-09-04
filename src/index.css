@@ -5,3 +5,9 @@
 html, body {
     background-color: #f3f4f6; /* Tailwind's bg-gray-100 equivalent */
 }
+.reserved-date {
+    background-color: red !important;
+    color: white;
+    border-radius: 50%;
+  }
+  

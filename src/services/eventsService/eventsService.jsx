@@ -3,9 +3,9 @@ import BASE_API_URL from "../baseApi";
 
 const BASE_URL = `${BASE_API_URL}/Events`;
 
-export const getEvents = async () => {
+export const getEvents = async (pageNumber, pageSize = 4) => {
   try {
-    const response = await axios.get(`${BASE_URL}/GetAllEvents`);
+    const response = await axios.get(`${BASE_URL}/GetAllEvents/${pageNumber}/${pageSize}`);
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch events');

@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import './eventStyles/EventInsert.css';
 import { format } from 'date-fns';
 import DefaultPicture from '../../assets/polyforms-pfp.webp';
 
@@ -16,13 +17,15 @@ const EventInsert = () => {
   const [eventDetails, setEventDetails] = useState('');
   const [eventDate, setEventDate] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
-  const [photoFile, setPhotoFile] = useState(null);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [profilePictureUrl, setProfilePictureUrl] = useState(DefaultPicture);
   const [presentator, setPresentator] = useState('');
   const [presentatorUserId, setPresentatorUserId] = useState(null);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
-  const [errors, setErrors] = useState({}); // State for error messages
+  const [errors, setErrors] = useState({});
+  const [reservedDates, setReservedDates] = useState([]);
+
+
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -38,20 +41,31 @@ const EventInsert = () => {
           const { profilePictureFileId, name, id } = response.data;
           const pictureUrl = profilePictureFileId
             ? `http://localhost:37523/api/Media/DownloadFile/${profilePictureFileId}`
-            : DefaultPicture;  // Use default picture if no profile picture is found
+            : DefaultPicture;
           setProfilePictureUrl(pictureUrl);
-          setPresentator(name);  // Assuming name is the presentator's name
-          setPresentatorUserId(id);  // Set the ID as the PresentatorUserId
+          setPresentator(name);
+          setPresentatorUserId(id);
         } else {
-          setProfilePictureUrl(DefaultPicture); // Use default picture if not logged in
+          setProfilePictureUrl(DefaultPicture);
         }
       } catch (error) {
         console.error('Error fetching user profile:', error);
-        setProfilePictureUrl(DefaultPicture); // Use default picture in case of error
+        setProfilePictureUrl(DefaultPicture);
+      }
+    };
+
+    const fetchReservedDates = async () => {
+      try {
+        const response = await axios.get('http://localhost:37523/api/Events/GetReservedEventDates');
+        const dates = response.data.map(date => new Date(date));
+        setReservedDates(dates);
+      } catch (error) {
+        console.error('Error fetching reserved dates:', error);
       }
     };
 
     fetchUserProfile();
+    fetchReservedDates();
   }, []);
 
   const validateForm = () => {
@@ -76,7 +90,7 @@ const EventInsert = () => {
     formData.append('EventDetails', eventDetails);
     formData.append('EventDate', eventDate ? format(eventDate, 'yyyy-MM-dd') : '');
     formData.append('Presentator', presentator);
-    formData.append('PresentatorUserId', presentatorUserId);  // Send the PresentatorUserId
+    formData.append('PresentatorUserId', presentatorUserId);
     formData.append('ThumbNailFile', thumbnailFile);
 
     try {
@@ -99,6 +113,8 @@ const EventInsert = () => {
       console.error('Error inserting event:', error);
     }
   };
+
+
 
   return (
     <div className="pt-4">
@@ -154,17 +170,32 @@ const EventInsert = () => {
           </div>
 
           <div className="flex flex-col items-center">
-            <label className="flex items-center text-gray-700 hover:text-blue-500 focus:outline-none cursor-pointer">
+            <label className=" flex items-center text-gray-700 hover:text-blue-500 focus:outline-none cursor-pointer">
               <CalendarIcon className="w-6 h-6" />
               <span className="hidden sm:inline ml-2">Date</span>
               <DatePicker
                 selected={eventDate}
                 onChange={(date) => setEventDate(date)}
                 dateFormat="dd/MM/yyyy"
-                className="hidden"
-                placeholderText="Select Date"
+                placeholderText=""
+                dayClassName={date =>
+                  reservedDates.some(reservedDate =>
+                    date.getFullYear() === reservedDate.getFullYear() &&
+                    date.getMonth() === reservedDate.getMonth() &&
+                    date.getDate() === reservedDate.getDate()
+                  ) ? 'reserved-date' : undefined
+                }
                 disabled={submissionSuccess}
+                style={{
+                  width: '80px', /* Adjust width as needed */
+                  height: '30px', /* Adjust height as needed */
+                  fontSize: '0.75rem', /* Adjust font size as needed */
+                  padding: '0.5rem' /* Adjust padding as needed */
+                }}
               />
+
+
+
             </label>
             {eventDate && (
               <span className="text-sm text-gray-500 mt-1 text-center">
@@ -204,8 +235,8 @@ const EventInsert = () => {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
             disabled={submissionSuccess}
           >
-            Submit
-            <RocketLaunchIcon className="w-4 h-4 ml-2" />
+            <RocketLaunchIcon className="w-5 h-5 mr-2" />
+            Submit Presentation
           </button>
         </div>
       </div>
@@ -214,3 +245,5 @@ const EventInsert = () => {
 };
 
 export default EventInsert;
+
+

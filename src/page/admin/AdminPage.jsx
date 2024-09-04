@@ -5,8 +5,8 @@ import NavMenu from "../../_components/NavMenu";
 
 const AdminPage = () => {
     return (
-        <div className="flex justify-end h-screen bg-gray-100">
-            <div>
+        <div className="flex justify-end h-screen bg-gray-100 mt-16">
+            <div className="z-50">
                 <NavMenu />
             </div>
             {/* Container for both components */}
