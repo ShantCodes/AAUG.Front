@@ -2,18 +2,22 @@ import React from "react";
 import UsersList from "../../_components/userComponents/UserList";
 import NotApprovedEventsFeed from "../../_components/eventComponents/NotApprovedEventsFeed";
 import NavMenu from "../../_components/NavMenu";
+import NotApprovedUserList from "../../_components/userComponents/NotApprovedUserList";
 
 const AdminPage = () => {
     return (
         <div className="flex justify-end h-screen bg-gray-100 mt-16">
             <div className="z-50">
                 <NavMenu />
+                {/* Moved NotApprovedUserList right under NavMenu */}
+                <NotApprovedUserList />
             </div>
+            
             {/* Container for both components */}
             <div className="flex h-full w-3/4">
                 {/* UsersList centered and scrollable */}
                 <div className="flex-1 flex justify-center items-center overflow-y-auto h-full">
-                    <div className=" ml-10 w-full h-full overflow-y-auto ">
+                    <div className=" ml-10 w-full h-full overflow-y-auto">
                         <UsersList />
                     </div>
                 </div>

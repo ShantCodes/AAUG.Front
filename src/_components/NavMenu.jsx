@@ -31,7 +31,7 @@ const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
     const isActive = (path) => (location.pathname === path ? 'text-blue-600 bg-gray-200' : '');
 
     return (
-        <ul className={`space-y-4 p-4 ${isNavMenuOpen ? 'block' : 'hidden'} md:block`}>
+        <ul className={`w-full space-y-4 p-4 ${isNavMenuOpen ? 'block' : 'hidden'} md:block`}>
             <li>
                 <Link
                     to="/"
