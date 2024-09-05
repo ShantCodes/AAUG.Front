@@ -2,30 +2,47 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DeleteButton from './DeleteUserButton';
 import ApproveButton from './ApproveUserButton';
+import AssignRolesModal from './AssignRolesModal';
 import { getUserInfo } from '../../services/authService/authService'; // Import the getUserInfo function
 import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
 
-const NotApprovedUserList = () => {
+const SubscribedUserList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [roles, setRoles] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [showRolesModal, setShowRolesModal] = useState(false);
   const [expandedUserId, setExpandedUserId] = useState(null); // State for expanded user
   const [currentUser, setCurrentUser] = useState(null); // State to store current user info
   const jwtToken = localStorage.getItem('jwtToken');
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUsersAndRoles = async () => {
       try {
         // Fetch current user info
         const userInfo = await getUserInfo(jwtToken);
         setCurrentUser(userInfo);
 
         // Fetch users
-        const usersResponse = await axios.get('http://localhost:37523/api/AaugUser/GetNotApprovedUsers', {
+        const usersResponse = await axios.get('http://localhost:37523/api/AaugUser/GetIsSubApprovedUsers', {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
         });
         setUsers(usersResponse.data);
+
+        // Fetch roles
+        try {
+          const rolesResponse = await axios.get('http://localhost:37523/api/AaugUser/GetAllRoles', {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          });
+          setRoles(rolesResponse.data);
+        } catch (error) {
+          console.warn('Error fetching roles:', error);
+          setRoles([]); // Set roles to empty if the fetch fails
+        }
       } catch (error) {
         console.error('Error fetching users or current user info:', error);
       } finally {
@@ -33,7 +50,7 @@ const NotApprovedUserList = () => {
       }
     };
 
-    fetchUsers();
+    fetchUsersAndRoles();
   }, [jwtToken]);
 
   const handleUserDeleted = (aaugUserId) => {
@@ -77,6 +94,11 @@ const NotApprovedUserList = () => {
 
   const sortedUsers = [...users].sort((a, b) => getUserRolePriority(a.role) - getUserRolePriority(b.role));
 
+  const handleAssignRolesClick = (userId) => {
+    setSelectedUserId(userId);
+    setShowRolesModal(true);
+  };
+
   const handleExpand = (userId) => {
     setExpandedUserId(userId);
   };
@@ -91,7 +113,7 @@ const NotApprovedUserList = () => {
 
   return (
     <div className="max-w-xl p-4 mt-4">
-      <h1 className="text-2xl font-bold mb-6">New signed up</h1>
+      <h1 className="text-2xl font-bold mb-6">Subscribed Users</h1>
       <div className="flex flex-col gap-4">
         {sortedUsers.map((user) => (
           <div
@@ -109,20 +131,37 @@ const NotApprovedUserList = () => {
             <div className="text-left flex-grow">
               <h2 className="text-black text-lg font-semibold">{`${user.name} ${user.lastName}`}</h2>
               <p className="text-gray-900">{`${user.nameArmenian} ${user.lastNameArmenian}`}</p>
+              <p className="text-gray-900">User ID: {user.userId}</p>
               <p className="text-gray-900">Email: {user.email || 'N/A'}</p>
             </div>
-            {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && ( // Conditionally render the Approve and Delete buttons
+            {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && ( // Conditionally render buttons
               <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
                 }`}>
                 <ApproveButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
-                <DeleteButton aaugUserId={user.id} jwtToken={jwtToken} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" />
+                {/* <DeleteButton aaugUserId={user.id} jwtToken={jwtToken} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" /> */}
+                <button
+                  onClick={() => handleAssignRolesClick(user.userId)} // Pass userId here
+                  className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
+                >
+                  Assign Roles
+                </button>
               </div>
             )}
           </div>
         ))}
       </div>
+
+      {showRolesModal && (
+        <AssignRolesModal
+          userId={selectedUserId}
+          roles={roles}
+          onClose={() => setShowRolesModal(false)}
+          jwtToken={jwtToken}
+          currentUserRoles={users.find(user => user.userId === selectedUserId)?.role || []} // Pass current roles
+        />
+      )}
     </div>
   );
 };
 
-export default NotApprovedUserList;
+export default SubscribedUserList;
