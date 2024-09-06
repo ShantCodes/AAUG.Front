@@ -122,46 +122,58 @@ const UsersList = () => {
     <div className="max-w-xl p-4 mt-4">
       <h1 className="text-2xl font-bold mb-6">Users List</h1>
       <div className="flex flex-col gap-4">
-        {sortedUsers.map((user) => (
-          <div
-            key={user.id}
-            onClick={() => handleUserClick(user.id)} // Handle user click
-            onMouseEnter={() => handleExpand(user.userId)}
-            onMouseLeave={handleCollapse}
-            className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out ${expandedUserId === user.userId ? 'h-44' : 'h-28'
-              } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)}`}
-          >
-            <img
-              src={getProfilePictureUrl(user.profilePictureFileId)}
-              alt={`${user.name} ${user.lastName}`}
-              className="w-24 h-24 rounded-full object-cover mr-4"
-            />
-            <div className="text-left flex-grow">
-              <h2 className="text-black text-lg font-semibold flex items-center">
-                {`${user.name} ${user.lastName}`}
-                {user.role.includes('Antam') && ( // Conditionally render CheckBadgeIcon for 'Antam'
-                  <CheckBadgeIcon className="ml-2 h-8 w-8 text-white fill-blue-500" />
+      {sortedUsers.map((user) => (
+  <div
+    key={user.id}
+    onMouseEnter={() => handleExpand(user.userId)}
+    onMouseLeave={handleCollapse}
+    onClick={() => handleUserClick(user.id)} // Add onClick to the entire card
+    className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out ${expandedUserId === user.userId ? 'h-44' : 'h-28'
+      } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`} // Added cursor-pointer for visual feedback
+  >
+    <img
+      src={getProfilePictureUrl(user.profilePictureFileId)}
+      alt={`${user.name} ${user.lastName}`}
+      className="w-24 h-24 rounded-full object-cover mr-4"
+    />
 
-                )}
-              </h2>
-              <p className="text-gray-900">{`${user.nameArmenian} ${user.lastNameArmenian}`}</p>
-              <p className="text-gray-900">User ID: {user.userId}</p>
-              <p className="text-gray-900">Email: {user.email || 'N/A'}</p>
-            </div>
-            {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && (
-              <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
-                }`}>
-                <ApproveButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
-                <button
-                  onClick={() => handleAssignRolesClick(user.userId)}
-                  className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
-                >
-                  Assign Roles
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
+    <div className="text-left flex-grow">
+      <h2 className="text-black text-lg font-semibold flex items-center">
+        {`${user.name} ${user.lastName}`}
+        {user.role.includes('Antam') && ( // Conditionally render CheckBadgeIcon for 'Antam'
+          <CheckBadgeIcon className="ml-2 h-8 w-8 text-white fill-blue-500" />
+        )}
+      </h2>
+      <p className="text-gray-900">{`${user.nameArmenian} ${user.lastNameArmenian}`}</p>
+      <p className="text-gray-900">User ID: {user.userId}</p>
+      <p className="text-gray-900">Email: {user.email || 'N/A'}</p>
+    </div>
+
+    {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && (
+      <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
+        }`}>
+        <ApproveButton
+          aaugUserId={user.id}
+          jwtToken={jwtToken}
+          onUserApproved={handleUserApproved}
+          className="text-sm px-3 py-1"
+          onClick={(e) => e.stopPropagation()} // Prevent propagation for Approve button
+        />
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent propagation for Assign Roles button
+            handleAssignRolesClick(user.userId);
+          }}
+          className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
+        >
+          Assign Roles
+        </button>
+      </div>
+    )}
+  </div>
+))}
+
+
       </div>
 
       {showRolesModal && (
