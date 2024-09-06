@@ -5,6 +5,7 @@ import ApproveButton from './ApproveUserButton';
 import AssignRolesModal from './AssignRolesModal';
 import { getUserInfo } from '../../services/authService/authService'; // Import the getUserInfo function
 import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
+import ApproveSubButton from './ApproveSubButton';
 
 const SubbedNotApprovedUserList = () => {
   const [users, setUsers] = useState([]);
@@ -137,7 +138,7 @@ const SubbedNotApprovedUserList = () => {
             {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && ( // Conditionally render buttons
               <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
                 }`}>
-                <ApproveButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
+                <ApproveSubButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
                 {/* <DeleteButton aaugUserId={user.id} jwtToken={jwtToken} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" /> */}
                 <button
                   onClick={() => handleAssignRolesClick(user.userId)} // Pass userId here

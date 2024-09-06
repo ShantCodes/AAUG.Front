@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { HomeIcon, AcademicCapIcon, NewspaperIcon, Cog6ToothIcon, UserIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, FireIcon ,AcademicCapIcon, NewspaperIcon, Cog6ToothIcon, UserIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { getUserInfo } from '../services/authService/authService';
 
 const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
@@ -31,7 +31,7 @@ const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
     const isActive = (path) => (location.pathname === path ? 'text-blue-600 bg-gray-200' : '');
 
     return (
-        <ul className={`w-full space-y-4 p-4 ${isNavMenuOpen ? 'block' : 'hidden'} md:block`}>
+        <ul className={` w-full space-y-4 p-4 ${isNavMenuOpen ? 'block' : 'hidden'} md:block`}>
             <li>
                 <Link
                     to="/"
@@ -78,6 +78,18 @@ const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
                 >
                     <UserIcon className="h-6 w-6 text-red-500 transition-colors duration-300" />
                     <span>Profile</span>
+                </Link>
+            </li>
+            <li>
+                <Link
+                    to="/Subscribe"
+                    className={`flex items-center space-x-2 p-2 rounded-md cursor-pointer transition-colors duration-300 ${isActive(
+                        '/Subscribe'
+                    )}`}
+                    onClick={toggleNavMenu}
+                >
+                    <FireIcon className="h-6 w-6 text-red-500 transition-colors duration-300" />
+                    <span>Subscribe</span>
                 </Link>
             </li>
             <li>

@@ -14,6 +14,8 @@ import AdminPage from './page/admin/AdminPage';
 import NewsCard from './_components/newsComponents/NewsCard';
 import LocationCard from './_components/eventComponents/LocationCard';
 import ProfilePage from './page/profile/ProfilePage';
+import SubscribePage from './page/profile/SubscribePage';
+import ExpandProfileForAdmins from './_components/userComponents/ExpandProfileForAdmins';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -60,9 +62,11 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/Present" element={<EventInsert />} />
         <Route path="/Admin" element={<AdminPage />} />
-        <Route path="/Test" element={<LocationCard />} />
+        <Route path="/Subscribe" element={<SubscribePage />} />
         <Route path="/Menu" element={<NavMenu />} />
         <Route path="/Profile" element={<ProfilePage />} />
+        <Route path="/ExpandProfile" element={<ExpandProfileForAdmins />} />
+
       </Routes>
     </div>
   );

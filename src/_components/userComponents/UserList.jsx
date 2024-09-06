@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import DeleteButton from './DeleteUserButton';
 import ApproveButton from './ApproveUserButton';
 import AssignRolesModal from './AssignRolesModal';
 import { getUserInfo } from '../../services/authService/authService'; // Import the getUserInfo function
 import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
+import { CheckBadgeIcon } from '@heroicons/react/24/outline'; // Import the CheckBadgeIcon
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
@@ -15,6 +17,7 @@ const UsersList = () => {
   const [expandedUserId, setExpandedUserId] = useState(null); // State for expanded user
   const [currentUser, setCurrentUser] = useState(null); // State to store current user info
   const jwtToken = localStorage.getItem('jwtToken');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchUsersAndRoles = async () => {
@@ -107,6 +110,10 @@ const UsersList = () => {
     setExpandedUserId(null);
   };
 
+  const handleUserClick = (aaugUserId) => {
+    navigate('/ExpandProfile', { state: { aaugUserId, jwtToken } }); // Navigate to ExpandProfile with userId and jwtToken
+  };
+
   if (loading) {
     return <p className="text-center text-gray-600">Loading users...</p>;
   }
@@ -118,6 +125,7 @@ const UsersList = () => {
         {sortedUsers.map((user) => (
           <div
             key={user.id}
+            onClick={() => handleUserClick(user.id)} // Handle user click
             onMouseEnter={() => handleExpand(user.userId)}
             onMouseLeave={handleCollapse}
             className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out ${expandedUserId === user.userId ? 'h-44' : 'h-28'
@@ -129,18 +137,23 @@ const UsersList = () => {
               className="w-24 h-24 rounded-full object-cover mr-4"
             />
             <div className="text-left flex-grow">
-              <h2 className="text-black text-lg font-semibold">{`${user.name} ${user.lastName}`}</h2>
+              <h2 className="text-black text-lg font-semibold flex items-center">
+                {`${user.name} ${user.lastName}`}
+                {user.role.includes('Antam') && ( // Conditionally render CheckBadgeIcon for 'Antam'
+                  <CheckBadgeIcon className="ml-2 h-8 w-8 text-white fill-blue-500" />
+
+                )}
+              </h2>
               <p className="text-gray-900">{`${user.nameArmenian} ${user.lastNameArmenian}`}</p>
               <p className="text-gray-900">User ID: {user.userId}</p>
               <p className="text-gray-900">Email: {user.email || 'N/A'}</p>
             </div>
-            {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && ( // Conditionally render buttons
+            {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && (
               <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
                 }`}>
                 <ApproveButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
-                {/* <DeleteButton aaugUserId={user.id} jwtToken={jwtToken} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" /> */}
                 <button
-                  onClick={() => handleAssignRolesClick(user.userId)} // Pass userId here
+                  onClick={() => handleAssignRolesClick(user.userId)}
                   className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
                 >
                   Assign Roles
@@ -157,7 +170,7 @@ const UsersList = () => {
           roles={roles}
           onClose={() => setShowRolesModal(false)}
           jwtToken={jwtToken}
-          currentUserRoles={users.find(user => user.userId === selectedUserId)?.role || []} // Pass current roles
+          currentUserRoles={users.find(user => user.userId === selectedUserId)?.role || []}
         />
       )}
     </div>

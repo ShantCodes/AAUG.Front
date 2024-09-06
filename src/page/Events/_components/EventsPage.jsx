@@ -12,10 +12,10 @@ const DashboardPage = () => {
 
         {/* Left Sidebar (News) */}
         <div className="col-span-3 hidden lg:block">
-          <div className="fixed  pt-5 mt-14 z-50">
+          <div className="fixed  pt-5 mt-14 z-50 mb-10">
             <NavMenu />
           </div>
-          <div className="fixed top-96 pt-5 mt-5 z-50">
+          <div className="fixed top-96 pt-5 mt-20 z-50">
             <NewsCard />
           </div>
         </div>
