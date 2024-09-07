@@ -11,6 +11,7 @@ const ExpandProfileForAdmins = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [fullScreenImage, setFullScreenImage] = useState(null); // State to control full-screen image
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -48,6 +49,14 @@ const ExpandProfileForAdmins = () => {
       : ''; // Return empty string if no fileId
   };
 
+  const openImageFullScreen = (imageUrl) => {
+    setFullScreenImage(imageUrl);
+  };
+
+  const closeFullScreenImage = () => {
+    setFullScreenImage(null);
+  };
+
   if (loading) {
     return <p className="text-center text-gray-600">Loading user profile...</p>;
   }
@@ -72,11 +81,12 @@ const ExpandProfileForAdmins = () => {
         <h1 className="text-4xl font-bold mb-2">{`${user.name} ${user.lastName}`}</h1>
         <p className="text-lg text-gray-900 mb-4">User ID: {user.id}</p>
 
-        {/* Short Bio */}
+        {/* Armenian Names */}
         <p className="text-center max-w-2xl text-lg text-gray-950 mb-4">
-          Backend developer at EIED <br />
-          Member of Iran sport climbing national team <br />
-          Athlete - Software engineer
+          {user.email} <br />
+          {user.lastNameArmenian} <br />
+          {user.nameArmenian} <br />
+          Phone: +98 912 345 6789 {/* Replace with actual phone number if available */}
         </p>
 
         {/* Stats */}
@@ -96,15 +106,16 @@ const ExpandProfileForAdmins = () => {
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-4 mb-8">
+        {/* <div className="flex gap-4 mb-8">
           <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
             Edit Profile
           </button>
           <button className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600">
             View Archive
           </button>
-        </div>
+        </div> */}
       </div>
+
       {/* User Details */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* National Card */}
@@ -114,7 +125,8 @@ const ExpandProfileForAdmins = () => {
             <img
               src={getFileUrl(user.nationalCardFileId)}
               alt="National Card"
-              className="w-full h-auto border border-gray-500 rounded"
+              className="w-full h-auto border border-gray-500 rounded cursor-pointer"
+              onClick={() => openImageFullScreen(getFileUrl(user.nationalCardFileId))}
             />
           ) : (
             <p className="text-gray-500">N/A</p>
@@ -128,7 +140,8 @@ const ExpandProfileForAdmins = () => {
             <img
               src={getFileUrl(user.universityCardFileId)}
               alt="University Card"
-              className="w-full h-auto border border-gray-500 rounded"
+              className="w-full h-auto border border-gray-500 rounded cursor-pointer"
+              onClick={() => openImageFullScreen(getFileUrl(user.universityCardFileId))}
             />
           ) : (
             <p className="text-gray-500">N/A</p>
@@ -142,7 +155,8 @@ const ExpandProfileForAdmins = () => {
             <img
               src={getFileUrl(user.receiptFileId)}
               alt="Receipt"
-              className="w-full h-auto border border-gray-500 rounded"
+              className="w-full h-auto border border-gray-500 rounded cursor-pointer"
+              onClick={() => openImageFullScreen(getFileUrl(user.receiptFileId))}
             />
           ) : (
             <p className="text-gray-500">N/A</p>
@@ -150,6 +164,19 @@ const ExpandProfileForAdmins = () => {
         </div>
       </div>
 
+      {/* Full-screen image preview */}
+      {fullScreenImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          onClick={closeFullScreenImage}
+        >
+          <img
+            src={fullScreenImage}
+            alt="Full Screen Preview"
+            className="max-w-full max-h-full"
+          />
+        </div>
+      )}
 
       <div className="mt-8 text-center">
         <button
