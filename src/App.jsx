@@ -16,6 +16,7 @@ import LocationCard from './_components/eventComponents/LocationCard';
 import ProfilePage from './page/profile/ProfilePage';
 import SubscribePage from './page/profile/SubscribePage';
 import ExpandProfileForAdmins from './_components/userComponents/ExpandProfileForAdmins';
+import EditProfileForm from './_components/userComponents/EditProfileForm';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -66,6 +67,7 @@ function App() {
         <Route path="/Menu" element={<NavMenu />} />
         <Route path="/Profile" element={<ProfilePage />} />
         <Route path="/ExpandProfile" element={<ExpandProfileForAdmins />} />
+        <Route path="/EditProfile" element={<EditProfileForm />} />
 
       </Routes>
     </div>

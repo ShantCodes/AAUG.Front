@@ -1,6 +1,7 @@
 import React from "react";
-import ProfileEditForm from "../../_components/userComponents/ProfileEditForm"; // Adjust the path as necessary
+import ProfileEditForm from "../../_components/userComponents/ProfilePreview"; // Adjust the path as necessary
 import NavMenu from "../../_components/NavMenu";
+import ProfilePreview from "../../_components/userComponents/ProfilePreview";
 
 const ProfilePage = () => {
     return (
@@ -11,7 +12,7 @@ const ProfilePage = () => {
                     <NavMenu />
                 </div>
                 <div className="md:ml-8 w-full">
-                    <ProfileEditForm />
+                    <ProfilePreview />
                 </div>
             </div>
         </div>

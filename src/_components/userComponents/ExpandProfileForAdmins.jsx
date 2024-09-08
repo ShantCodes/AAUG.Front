@@ -90,20 +90,7 @@ const ExpandProfileForAdmins = () => {
         </p>
 
         {/* Stats */}
-        <div className="flex gap-6 justify-center mb-6">
-          <div className="text-center">
-            <span className="font-bold text-xl">71</span>
-            <p className="text-gray-400">Posts</p>
-          </div>
-          <div className="text-center">
-            <span className="font-bold text-xl">1,219</span>
-            <p className="text-gray-400">Followers</p>
-          </div>
-          <div className="text-center">
-            <span className="font-bold text-xl">656</span>
-            <p className="text-gray-400">Following</p>
-          </div>
-        </div>
+        
 
         {/* Buttons */}
         {/* <div className="flex gap-4 mb-8">
