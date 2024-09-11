@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import SignupButton from "./SignupButton";
 
 const SignupForm = () => {
@@ -14,6 +15,9 @@ const SignupForm = () => {
         email: "",
     });
 
+    const [error, setError] = useState(""); // Error state for signup
+    const navigate = useNavigate(); // For navigation
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -24,35 +28,53 @@ const SignupForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Create FormData object
-        const form = new FormData();
-        form.append("Username", formData.username);
-        form.append("Password", formData.password);
-        form.append("ConfirmPassword", formData.confirmPassword);
-        form.append("Name", formData.name);
-        form.append("LastName", formData.lastName);
-        form.append("NameArmenian", formData.nameArmenian);
-        form.append("LastNameArmenian", formData.lastNameArmenian);
-        form.append("Email", formData.email);
+        const signupData = new FormData();
+        signupData.append("Username", formData.username);
+        signupData.append("Password", formData.password);
+        signupData.append("ConfirmPassword", formData.confirmPassword);
+        signupData.append("Name", formData.name);
+        signupData.append("LastName", formData.lastName);
+        signupData.append("NameArmenian", formData.nameArmenian);
+        signupData.append("LastNameArmenian", formData.lastNameArmenian);
+        signupData.append("Email", formData.email);
 
         try {
-            const response = await axios.post("http://localhost:37523/api/Authentication/Register", form, {
+            // Make the signup request
+            await axios.post("http://localhost:37523/api/Authentication/Register", signupData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            // Handle success (e.g., redirect to login or display a success message)
-            console.log(response.data);
+
+            // Automatic login after successful signup
+            const loginData = new FormData();
+            loginData.append("username", formData.username);
+            loginData.append("password", formData.password);
+
+            const loginResponse = await axios.post("http://localhost:37523/api/Authentication/login", loginData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            const token = loginResponse.data; // Retrieve the token from the response
+            localStorage.setItem("jwtToken", token); // Store the token in localStorage
+            console.log("Login after signup successful!");
+
+            navigate('/', { replace: true }); // Redirect to home page after login
+            window.location.reload(); // Reload to update the page with the logged-in state
+
         } catch (error) {
-            // Handle error (e.g., display an error message)
-            console.error(error);
+            setError("Signup failed. Please try again.");
+            console.error(error.response ? error.response.data : error.message);
         }
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-700">
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-10 w-80 h-auto mt-32 w-1/4">
+            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-10 w-80 h-auto">
                 <h2 className="text-2xl font-bold text-center mb-8">Signup</h2>
+                {error && <p className="text-red-500 mb-4">{error}</p>}
                 <div className="mb-6">
                     <input
                         type="text"
@@ -133,7 +155,7 @@ const SignupForm = () => {
                         placeholder="Email"
                     />
                 </div>
-                <div className="mb-6">
+                <div className="flex justify-center mb-6">
                     <SignupButton />
                 </div>
                 <div className="text-center mt-4">
