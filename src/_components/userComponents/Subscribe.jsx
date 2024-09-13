@@ -1,9 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const SubscribeForm = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [message, setMessage] = useState('');
+    const [receiptFileId, setReceiptFileId] = useState(null);
+    const [receiptFileUrl, setReceiptFileUrl] = useState('');
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    // Fetch current user profile
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const token = localStorage.getItem("jwtToken");
+
+            try {
+                const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentAaugUserFull', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                const { receiptFileId } = response.data;
+                setReceiptFileId(receiptFileId);
+                if (receiptFileId) {
+                    const fileUrl = `http://localhost:37523/api/Media/DownloadFile/${receiptFileId}`;
+                    setReceiptFileUrl(fileUrl);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
@@ -36,6 +64,10 @@ const SubscribeForm = () => {
         }
     };
 
+    const handleExpand = () => {
+        setIsExpanded(!isExpanded);
+    };
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <form
@@ -43,6 +75,12 @@ const SubscribeForm = () => {
                 className="bg-white p-6 rounded-lg shadow-lg w-96"
             >
                 <h2 className="text-2xl font-semibold mb-4 text-center">Upload File</h2>
+                <p>
+                    GIVE ME YO MONEEEEEEEHHHHHHH
+                </p>
+                <p>
+                    1234 5678 91011 1213
+                </p>
 
                 <div className="mb-4">
                     <label htmlFor="fileInput" className="block text-sm font-medium text-gray-700 mb-2">
@@ -68,6 +106,33 @@ const SubscribeForm = () => {
                 <p className="mt-4 text-center text-lg font-semibold">
                     {message}
                 </p>
+            )}
+
+            {/* Display receipt file */}
+            {receiptFileUrl && (
+                <div className="mt-8">
+                    <h3 className="text-xl font-semibold mb-4 text-center">Receipt File</h3>
+                    {isExpanded ? (
+                        <img
+                            src={receiptFileUrl}
+                            alt="Receipt"
+                            className="border border-gray-300 shadow-lg w-full max-w-4xl"
+                        />
+                    ) : (
+                        <img
+                            src={receiptFileUrl}
+                            alt="Receipt"
+                            className="border border-gray-300 shadow-lg w-48 cursor-pointer"
+                            onClick={handleExpand}
+                        />
+                    )}
+                    <button
+                        className="mt-2 text-blue-500 underline"
+                        onClick={handleExpand}
+                    >
+                        {isExpanded ? 'Collapse' : 'Expand'}
+                    </button>
+                </div>
             )}
         </div>
     );
