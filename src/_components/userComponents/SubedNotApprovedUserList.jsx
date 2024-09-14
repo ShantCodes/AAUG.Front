@@ -145,14 +145,7 @@ const SubbedNotApprovedUserList = () => {
             {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && ( // Conditionally render buttons
               <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
                 }`}>
-                <ApproveSubButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
-                {/* <DeleteButton aaugUserId={user.id} jwtToken={jwtToken} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" /> */}
-                {/* <button
-                  onClick={() => handleAssignRolesClick(user.userId)} // Pass userId here
-                  className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
-                >
-                  Assign Roles
-                </button> */}
+                <ApproveSubButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />                
               </div>
             )}
           </div>
