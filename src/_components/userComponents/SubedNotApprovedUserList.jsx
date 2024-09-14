@@ -6,6 +6,7 @@ import AssignRolesModal from './AssignRolesModal';
 import { getUserInfo } from '../../services/authService/authService'; // Import the getUserInfo function
 import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
 import ApproveSubButton from './ApproveSubButton';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const SubbedNotApprovedUserList = () => {
   const [users, setUsers] = useState([]);
@@ -16,6 +17,7 @@ const SubbedNotApprovedUserList = () => {
   const [expandedUserId, setExpandedUserId] = useState(null); // State for expanded user
   const [currentUser, setCurrentUser] = useState(null); // State to store current user info
   const jwtToken = localStorage.getItem('jwtToken');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchUsersAndRoles = async () => {
@@ -108,21 +110,26 @@ const SubbedNotApprovedUserList = () => {
     setExpandedUserId(null);
   };
 
+  const handleUserClick = (aaugUserId) => {
+    navigate('/ExpandProfile', { state: { aaugUserId, jwtToken } }); // Navigate to ExpandProfile with userId and jwtToken
+  };
+
   if (loading) {
     return <p className="text-center text-gray-600">Loading users...</p>;
   }
 
   return (
     <div className="max-w-xl p-4 mt-4">
-      <h1 className="text-2xl font-bold mb-6">Subbed, waiting for approvment</h1>
+      <h1 className="text-2xl font-bold mb-6">Subbed, waiting for approval</h1>
       <div className="flex flex-col gap-4">
         {sortedUsers.map((user) => (
           <div
             key={user.id}
             onMouseEnter={() => handleExpand(user.userId)}
             onMouseLeave={handleCollapse}
+            onClick={() => handleUserClick(user.id)} // Add onClick to the entire card
             className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out ${expandedUserId === user.userId ? 'h-44' : 'h-28'
-              } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)}`}
+              } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`} // Added cursor-pointer for visual feedback
           >
             <img
               src={getProfilePictureUrl(user.profilePictureFileId)}
@@ -140,12 +147,12 @@ const SubbedNotApprovedUserList = () => {
                 }`}>
                 <ApproveSubButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
                 {/* <DeleteButton aaugUserId={user.id} jwtToken={jwtToken} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" /> */}
-                <button
+                {/* <button
                   onClick={() => handleAssignRolesClick(user.userId)} // Pass userId here
                   className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
                 >
                   Assign Roles
-                </button>
+                </button> */}
               </div>
             )}
           </div>
