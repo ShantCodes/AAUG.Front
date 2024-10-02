@@ -9,25 +9,42 @@ const SlideShow = () => {
   const [progress, setProgress] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [modalIndex, setModalIndex] = useState(0); 
+  const [imageCache, setImageCache] = useState([]); // Store the downloaded images
 
   const SLIDE_DURATION = 4000; // 4 seconds for each slide
   const PROGRESS_INTERVAL = 100; // Progress update interval
 
+  // Fetch slide data and pre-fetch images
   useEffect(() => {
     const fetchSlides = async () => {
       try {
         const response = await axios.get("http://localhost:37523/api/SlideShow/GetSlideShowWithTitle");
-        setSlides(response.data.slideShowGetViewModels);
+        const slideData = response.data.slideShowGetViewModels;
+        setSlides(slideData);
         setMainTitle(response.data.description);
+
+        // Pre-fetch and cache the images
+        const imagePromises = slideData.map(async (slide) => {
+          const imageResponse = await axios.get(`http://localhost:37523/api/Media/DownloadFile/${slide.mediaFileId}`, {
+            responseType: "blob",
+          });
+          const imageUrl = URL.createObjectURL(imageResponse.data); // Convert Blob to URL
+          return imageUrl;
+        });
+
+        // Wait for all images to be downloaded and set them in the cache
+        const cachedImages = await Promise.all(imagePromises);
+        setImageCache(cachedImages);
       } catch (error) {
         console.error("Error fetching slideshow data", error);
       }
     };
+
     fetchSlides();
   }, []);
 
   useEffect(() => {
-    if (slides.length === 0) return; // Prevents running if there are no slides
+    if (slides.length === 0 || imageCache.length === 0) return; // Prevent running if there are no slides or images
 
     const totalProgressSteps = SLIDE_DURATION / PROGRESS_INTERVAL;
     let progressCounter = 0;
@@ -49,7 +66,7 @@ const SlideShow = () => {
       clearInterval(slideInterval);
       clearInterval(progressInterval);
     };
-  }, [slides]);
+  }, [slides, imageCache]);
 
   const handleImageClick = (index) => {
     setModalIndex(index);
@@ -66,10 +83,10 @@ const SlideShow = () => {
     setModalIndex((prevIndex) => (prevIndex === slides.length - 1 ? 0 : prevIndex + 1));
   };
 
-  if (slides.length === 0) return <div>Loading slideshow...</div>;
+  if (slides.length === 0 || imageCache.length === 0) return <div>Loading slideshow...</div>;
 
-  const { mediaFileId, description } = slides[currentIndex];
-  const imageUrl = `http://localhost:37523/api/Media/DownloadFile/${mediaFileId}`;
+  const { description } = slides[currentIndex];
+  const imageUrl = imageCache[currentIndex]; // Use the cached image URL
 
   return (
     <div className="w-full max-w-lg mx-auto p-2 bg-white shadow-lg rounded-lg overflow-hidden">
@@ -106,7 +123,7 @@ const SlideShow = () => {
               &#10094;
             </button>
             <img
-              src={`http://localhost:37523/api/Media/DownloadFile/${slides[modalIndex].mediaFileId}`}
+              src={imageCache[modalIndex]} // Use cached image URL for the modal
               alt={slides[modalIndex].description}
               className="max-w-full max-h-screen"
             />
