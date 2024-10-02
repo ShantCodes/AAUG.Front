@@ -17,6 +17,7 @@ import ProfilePage from './page/profile/ProfilePage';
 import SubscribePage from './page/profile/SubscribePage';
 import ExpandProfileForAdmins from './_components/userComponents/ExpandProfileForAdmins';
 import EditProfileForm from './_components/userComponents/EditProfileForm';
+import SlideShow from './_components/slideShowComponents/SlideShow';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -68,6 +69,7 @@ function App() {
         <Route path="/Profile" element={<ProfilePage />} />
         <Route path="/ExpandProfile" element={<ExpandProfileForAdmins />} />
         <Route path="/EditProfile" element={<EditProfileForm />} />
+        <Route path="/test" element={<SlideShow />} />
 
       </Routes>
     </div>

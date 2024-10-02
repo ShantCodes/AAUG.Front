@@ -4,6 +4,7 @@ import EventInsert from '../../../_components/eventComponents/EventInsert';
 import LocationCard from '../../../_components/eventComponents/LocationCard';
 import NewsCard from '../../../_components/newsComponents/NewsCard';
 import NavMenu from '../../../_components/NavMenu';
+import SlideShow from '../../../_components/slideShowComponents/SlideShow'; // Import the SlideShow component
 
 const DashboardPage = () => {
   return (
@@ -12,10 +13,10 @@ const DashboardPage = () => {
 
         {/* Left Sidebar (News) */}
         <div className="col-span-3 hidden lg:block">
-          <div className="fixed  pt-5 mt-14 z-50 mb-10">
+          <div className="fixed pt-5 mt-14 mb-10">
             <NavMenu />
           </div>
-          <div className="fixed top-96 pt-5 mt-20 z-50">
+          <div className="fixed top-96 pt-5 mt-20">
             <NewsCard />
           </div>
         </div>
@@ -31,9 +32,13 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Right Sidebar (Location) */}
+        {/* Right Sidebar (SlideShow and Location) */}
         <div className="col-span-3 hidden lg:block">
-          <div className="sticky top-20">
+          <div className="sticky top-20 space-y-6"> {/* Add space between SlideShow and LocationCard */}
+            {/* SlideShow Component */}
+            <SlideShow />
+
+            {/* LocationCard Component */}
             <LocationCard />
           </div>
         </div>
