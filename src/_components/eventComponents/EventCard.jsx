@@ -111,16 +111,17 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
             {console.log('currentId:', currentId, 'presenterId:', presenterId, 'canEdit:', canEdit)}
             {canEdit && (
               <button
-                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition flex items-center"
+                className="border border-yellow-500 text-yellow-500 px-4 py-2 rounded hover:bg-yellow-100 transition flex items-center"
                 onClick={() => setShowEdit(true)}
               >
                 Edit
                 <PencilSquareIcon className="h-5 w-5 ml-2" />
               </button>
+
             )}
             {canDelete && (
               <button
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition flex items-center"
+                className="border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-100 transition flex items-center"
                 onClick={handleDelete}
               >
                 Delete

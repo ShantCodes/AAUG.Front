@@ -2,22 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './_components/navbar';
 import LoginPage from './page/auth/LoginPage';
-import EventsFeed from './_components/eventComponents/EventsFeed';
 import SignupForm from './_components/loginComponents/SignupForm';
 import EventInsert from './_components/eventComponents/EventInsert';
-import UserProfileCard from './_components/userComponents/userProfileCard';
-import UsersList from './_components/userComponents/UserList';
-import AdminEventCard from './_components/eventComponents/NotApprovedEvents';
+
 import NavMenu from './_components/NavMenu';
 import MainPage from './page/Events/_components/EventsPage';
 import AdminPage from './page/admin/AdminPage';
 import NewsCard from './_components/newsComponents/NewsCard';
-import LocationCard from './_components/eventComponents/LocationCard';
 import ProfilePage from './page/profile/ProfilePage';
 import SubscribePage from './page/profile/SubscribePage';
 import ExpandProfileForAdmins from './_components/userComponents/ExpandProfileForAdmins';
 import EditProfileForm from './_components/userComponents/EditProfileForm';
-import SlideShow from './_components/slideShowComponents/SlideShow';
+import SlideSelectionPage from './page/admin/SlideSelectionPage';
+import SlideSelection from './_components/slideShowComponents/SlideSelection';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -69,7 +66,7 @@ function App() {
         <Route path="/Profile" element={<ProfilePage />} />
         <Route path="/ExpandProfile" element={<ExpandProfileForAdmins />} />
         <Route path="/EditProfile" element={<EditProfileForm />} />
-        <Route path="/test" element={<SlideShow />} />
+        <Route path="/SlideSelectionPage" element={<SlideSelectionPage />} />
 
       </Routes>
     </div>

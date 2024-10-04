@@ -61,3 +61,10 @@
 .slide-image.prev {
   transform: translateX(-100%); /* Slide in from the left */
 }
+
+/* SlideShow.css */
+.title-container {
+  flex: 1; /* Allow the title to take up available space */
+  display: flex; /* Use flexbox to center items */
+  justify-content: center; /* Center horizontally */
+}

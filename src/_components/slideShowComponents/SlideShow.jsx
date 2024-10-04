@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Update import
 import "./SlideShow.css"; // Import the CSS for animations
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 const SlideShow = () => {
   const [slides, setSlides] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mainTitle, setMainTitle] = useState("");
   const [progress, setProgress] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false); 
-  const [modalIndex, setModalIndex] = useState(0); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalIndex, setModalIndex] = useState(0);
   const [imageCache, setImageCache] = useState([]); // Store the downloaded images
+  const [userRole, setUserRole] = useState(""); // New state to hold user role
 
   const SLIDE_DURATION = 4000; // 4 seconds for each slide
   const PROGRESS_INTERVAL = 100; // Progress update interval
+
+  const navigate = useNavigate(); // Initialize navigate
 
   // Fetch slide data and pre-fetch images
   useEffect(() => {
@@ -43,12 +48,31 @@ const SlideShow = () => {
     fetchSlides();
   }, []);
 
+  // Fetch user info to check role
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const token = localStorage.getItem("jwtToken"); // Get the token from local storage
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:37523/api/AaugUser/GetCurrentUserInfo", {
+            headers: { Authorization: `Bearer ${token}` }, // Include the token in the headers
+          });
+          setUserRole(response.data.role); // Set the user role
+        } catch (error) {
+          console.error("Error fetching user role", error);
+        }
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
   useEffect(() => {
     if (slides.length === 0 || imageCache.length === 0) return; // Prevent running if there are no slides or images
 
     const totalProgressSteps = SLIDE_DURATION / PROGRESS_INTERVAL;
     let progressCounter = 0;
-    
+
     const slideInterval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
       progressCounter = 0; // Reset progress counter on slide change
@@ -83,6 +107,10 @@ const SlideShow = () => {
     setModalIndex((prevIndex) => (prevIndex === slides.length - 1 ? 0 : prevIndex + 1));
   };
 
+  const handleEdit = () => {
+    navigate("/SlideselectionPage"); // Navigate to edit page
+  };
+
   if (slides.length === 0 || imageCache.length === 0) return <div>Loading slideshow...</div>;
 
   const { description } = slides[currentIndex];
@@ -90,7 +118,20 @@ const SlideShow = () => {
 
   return (
     <div className="w-full max-w-lg mx-auto p-2 bg-white shadow-lg rounded-lg overflow-hidden">
-      <h2 className="text-lg font-bold mb-2 text-center">{mainTitle}</h2>
+      <div className="flex justify-between items-center mb-2">
+        <div className="title-container"> {/* Center the title here */}
+          <h2 className="text-lg font-bold">{mainTitle}</h2>
+        </div>
+        {userRole === "King" || userRole === "Varich" ? (
+          <button
+            onClick={handleEdit}
+            className="border border-yellow-500 text-yellow-500 rounded px-2 py-1 hover:bg-yellow-100 transition flex items-center"
+          >
+            <PencilSquareIcon className="h-5 w-5 " />
+          </button>
+        ) : null}
+      </div>
+
       <div className="relative w-full h-48 overflow-hidden rounded-lg">
         <img
           key={currentIndex}
