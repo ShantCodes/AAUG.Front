@@ -9,11 +9,11 @@ import SlideShow from '../../../_components/slideShowComponents/SlideShow'; // I
 const DashboardPage = () => {
   return (
     <div className="flex justify-center lg:px-4">
-      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-4 bg-white shadow-2xl shadow-gray-200">
 
         {/* Left Sidebar (News) */}
         <div className="col-span-3 hidden lg:block">
-          <div className="fixed pt-5 mt-14 mb-10 z-50">
+          <div className="fixed pt-5 mt-14 mb-10  ">
             <NavMenu />
           </div>
           <div className="fixed top-96 pt-5 mt-20">

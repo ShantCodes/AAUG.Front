@@ -117,7 +117,7 @@ const SlideShow = () => {
   const imageUrl = imageCache[currentIndex]; // Use the cached image URL
 
   return (
-    <div className="w-full max-w-lg mx-auto p-2 bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="w-full max-w-lg mx-auto p-2 border border-gray-100 bg-white shadow-lg rounded-lg overflow-hidden z-50">
       <div className="flex justify-between items-center mb-2">
         <div className="title-container"> {/* Center the title here */}
           <h2 className="text-lg font-bold">{mainTitle}</h2>
@@ -149,7 +149,7 @@ const SlideShow = () => {
         />
       </div>
       {isModalOpen && (
-        <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50" onClick={closeModal}>
+        <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-[999]" onClick={closeModal}>
           <div className="modal-content relative flex items-center justify-center">
             <span className="close-modal absolute top-0 right-0 text-white text-3xl cursor-pointer" onClick={closeModal}>
               &times;

@@ -84,7 +84,7 @@ const EventsFeed = () => {
     }
 
     return (
-        <div className="w-full">
+        <div className="w-full ">
             {events.map((event) => (
                 <EventCard
                     key={event.id}

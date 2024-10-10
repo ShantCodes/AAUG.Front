@@ -3,7 +3,7 @@ import Location from "../Location";
 
 const LocationCard = () => {
     return (
-        <div className="bg-gray-300 border border-gray-300 rounded-lg shadow-md p-1 max-w-sm mx-auto mt-4">
+        <div className="bg-gray-200 border border-gray-200 rounded-lg shadow-md p-1 max-w-sm mx-auto mt-4">
             <div className="mb-4">
                 <Location />
             </div>

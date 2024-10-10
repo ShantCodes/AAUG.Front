@@ -41,14 +41,14 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white">
       <Navbar toggleNavMenu={toggleNavMenu} />
 
       {location.pathname !== '/login' && location.pathname !== '/signup' && (
         <div
           className={`fixed top-0 left-0 h-screen overflow-y-auto transition-transform transform ${
             isNavMenuOpen || !isMobileView ? 'translate-x-0' : '-translate-x-full'
-          } md:translate-x-0 md:ml-48 left-6 w-80 z-50 mt-16 top-2`}
+          } md:translate-x-0 md:ml-48 left-6 w-80  mt-16 top-2`}
         >
           {/* <NavMenu /> */}
         </div>

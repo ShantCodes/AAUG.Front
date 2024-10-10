@@ -118,7 +118,7 @@ const EventInsert = () => {
 
   return (
     <div className="pt-4">
-      <div className={`bg-${submissionSuccess ? 'white' : 'gray-100'} shadow-md rounded-lg p-6 w-full sm:w-[40rem] max-w-screen-sm bg-white`}>
+      <div className={`bg-${submissionSuccess ? 'white' : 'gray-100'} shadow-xl border border-gray-100 rounded-lg p-6 w-full sm:w-[40rem] max-w-screen-sm bg-white`}>
         {submissionSuccess && (
           <div className="text-center mb-4 text-green-600 font-bold">
             Your Presentation has been submitted, waiting for approval.

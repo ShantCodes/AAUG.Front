@@ -16,7 +16,7 @@ const NewsBox = () => {
             {news.map((item, index) => (
                 <div
                     key={item.id}
-                    className={`bg-gray-300 shadow-lg rounded-lg p-4 transition-transform duration-300 ease-in-out transform ${
+                    className={`bg-gray-200 shadow-lg rounded-lg p-4 transition-transform duration-300 ease-in-out transform ${
                         hoveredIndex === index ? 'scale-105' : ''
                     } w-64`}
                     onMouseEnter={() => {
