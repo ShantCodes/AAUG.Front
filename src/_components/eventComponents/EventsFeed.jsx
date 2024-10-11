@@ -19,7 +19,7 @@ const EventsFeed = () => {
             setLoadingEvents(true);
             try {
                 const eventsData = await getEvents(pageNumber);
-                
+
                 // Avoid duplicating data in case of unexpected re-renders
                 setEvents((prevEvents) => {
                     const newEvents = eventsData.filter(event => !prevEvents.some(prevEvent => prevEvent.id === event.id));
@@ -84,7 +84,7 @@ const EventsFeed = () => {
     }
 
     return (
-        <div className="w-full ">
+        <div className="w-full">
             {events.map((event) => (
                 <EventCard
                     key={event.id}
@@ -100,11 +100,11 @@ const EventsFeed = () => {
                     onRemove={handleRemoveEvent}
                 />
             ))}
-
             {loadingEvents && <p>Loading more events...</p>}
             {!hasMoreEvents && <p>No more events to load.</p>}
         </div>
     );
+
 };
 
 export default EventsFeed;

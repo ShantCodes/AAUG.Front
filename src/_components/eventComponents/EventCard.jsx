@@ -70,7 +70,7 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
 
   return (
     <div
-      className={`bg-white shadow-xl border border-gray-100 rounded-lg p-6 mb-8 w-full sm:w-[40rem] h-auto transform transition-all duration-300 ${isHovered ? 'scale-100' : ''}`}
+      className="bg-white shadow-xl border border-gray-100 rounded-lg p-6 mb-8 transform transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -114,7 +114,7 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
                 className="border border-yellow-500 text-yellow-500 px-4 py-2 rounded hover:bg-yellow-100 transition flex items-center"
                 onClick={() => setShowEdit(true)}
               >
-                
+
                 <PencilSquareIcon className="h-5 w-5" />
               </button>
 
@@ -124,7 +124,7 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
                 className="border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-100 transition flex items-center"
                 onClick={handleDelete}
               >
-                
+
                 <TrashIcon className="h-5 w-5" />
               </button>
             )}
