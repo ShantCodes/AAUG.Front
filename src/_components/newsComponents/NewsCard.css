@@ -1,0 +1,31 @@
+.news-card {
+    position: relative; /* Reference point for absolute positioning */
+    overflow: hidden; /* Prevent overflow of the animated lines */
+}
+
+.line {
+    position: absolute;
+    height: 4px; /* Set height for the lines */
+    width: 200px; /* Set width for visibility */
+    background-color: red; /* Line color */
+    opacity: 0; /* Start invisible */
+    z-index: -1; /* Place lines behind the content */
+}
+
+@keyframes line-animation {
+    0% {
+        opacity: 0; /* Start invisible */
+        transform: translate(50px, -50px); /* Start from the top right */
+    }
+    30% {
+        opacity: 1; /* Fade in */
+        transform: translate(0px, 0px); /* Move towards center */
+    }
+    60% {
+        transform: translate(-50px, 50px); /* Move towards bottom left */
+    }
+    100% {
+        opacity: 0; /* Fade out */
+        transform: translate(-100px, 100px); /* Move out of view */
+    }
+}

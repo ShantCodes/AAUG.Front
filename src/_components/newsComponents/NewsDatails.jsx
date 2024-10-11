@@ -30,10 +30,10 @@ const NewsDetails = () => {
                 <>
                     {/* Blurred Background Image */}
                     <div
-                        className="absolute inset-0 w-full h-full bg-cover bg-center filter blur-xl "
+                        className="absolute inset-0 w-full h-full bg-cover bg-gray-400 bg-center filter blur-3xl "
                         style={{
                             // backgroundImage: `url(http://localhost:37523/api/Media/DownloadFile/${newsItem.newsFileId})`,
-                            background: "black",
+                            // background: "black",
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                         }}

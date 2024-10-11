@@ -1,19 +1,27 @@
-/* NewsBox.css */
-
-/* Animation keyframes for title color change */
-@keyframes title-animation {
-    0% {
-        color: white; /* Initial color */
-    }
-    50% {
-        color: red; /* Change color to red */
-    }
-    100% {
-        color: white; /* End color */
-    }
+@keyframes diagonalLine {
+  0% {
+    transform: translate(100vw, -100vh);
+    opacity: 1; /* Fully visible */
+  }
+  50% {
+    opacity: 1; /* Remain fully visible */
+    transform: translate(50vw, 0); /* Slow down in the middle */
+  }
+  100% {
+    transform: translate(-100vw, 100vh);
+    opacity: 0; /* Fade out at the end */
+  }
 }
 
-/* Class to apply the animation */
-.animate-title {
-    animation: title-animation 6s linear infinite; /* Animation duration of 6 seconds */
+.line {
+  position: absolute;
+  height: 2px; /* Line thickness */
+  background-color: rgba(255, 255, 255, 0.6); /* Line color */
+  opacity: 0; /* Start invisible */
+  z-index: 1; /* Ensure lines are above the background */
+}
+
+.animate {
+  opacity: 1; /* Make lines visible */
+  animation: diagonalLine 3s linear forwards; /* Animation duration */
 }
