@@ -1,0 +1,19 @@
+/* NewsBox.css */
+
+/* Animation keyframes for title color change */
+@keyframes title-animation {
+    0% {
+        color: white; /* Initial color */
+    }
+    50% {
+        color: red; /* Change color to red */
+    }
+    100% {
+        color: white; /* End color */
+    }
+}
+
+/* Class to apply the animation */
+.animate-title {
+    animation: title-animation 6s linear infinite; /* Animation duration of 6 seconds */
+}

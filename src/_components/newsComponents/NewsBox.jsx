@@ -1,38 +1,57 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const NewsBox = () => {
     const [news, setNews] = useState([]);
     const [hoveredIndex, setHoveredIndex] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get("http://localhost:37523/api/News/GetNewsData")
+        axios.get("http://localhost:37523/api/News/GetNewsTeaser")
             .then(response => setNews(response.data))
             .catch(error => console.error("Error fetching news:", error));
     }, []);
+
+    const handleCardClick = (id) => {
+        navigate(`/news/${id}`);
+    };
+
+    const getBackgroundImageUrl = (newsFileId) => {
+        return newsFileId 
+            ? `url(http://localhost:37523/api/Media/DownloadFile/${newsFileId})`
+            : "none";
+    };
 
     return (
         <div className="flex flex-col items-center gap-4">
             {news.map((item, index) => (
                 <div
                     key={item.id}
-                    className={`bg-gray-200 shadow-lg rounded-lg p-4 transition-transform duration-300 ease-in-out transform ${
+                    className={`relative bg-gray-200 shadow-lg rounded-lg p-4 transition-transform duration-300 ease-in-out transform ${
                         hoveredIndex === index ? 'scale-105' : ''
-                    } w-64`}
-                    onMouseEnter={() => {
-                        console.log(`Mouse entered item ${item.id}`);
-                        setHoveredIndex(index);
-                    }}
-                    onMouseLeave={() => {
-                        console.log(`Mouse left item ${item.id}`);
-                        setHoveredIndex(null);
-                    }}
+                    } w-64 cursor-pointer overflow-hidden`}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    onClick={() => handleCardClick(item.id)}
                 >
-                    <h3 className="text-lg font-bold text-gray-800 truncate">
+                    {/* Blurred background */}
+                    <div
+                        className="absolute inset-0 bg-cover bg-center filter blur-sm opacity-50"
+                        style={{
+                            backgroundImage: getBackgroundImageUrl(item.newsFileId),
+                            zIndex: -2
+                        }}
+                    ></div>
+
+                    {/* Dark overlay */}
+                    <div className="absolute inset-0 bg-black opacity-20 z-0"></div>
+
+                    <h3 className="text-lg font-bold truncate relative z-10 text-white">
                         {item.newsTitle}
                     </h3>
                     {hoveredIndex === index && (
-                        <p className="text-sm text-gray-600 mt-2">
+                        <p className={`text-sm mt-2 relative z-10 ${hoveredIndex !== null ? 'animate-text' : ''} text-white`}>
                             {item.newsDetails.substring(0, 50)}...
                         </p>
                     )}
