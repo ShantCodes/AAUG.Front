@@ -42,7 +42,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-stone-50">
       <Navbar toggleNavMenu={toggleNavMenu} />
 
       {location.pathname !== '/login' && location.pathname !== '/signup' && (

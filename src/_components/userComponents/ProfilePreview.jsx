@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ResetPasswordModal from '../loginComponents/ResetPasswordModal'; // Import the modal component
 import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import default profile picture if needed
 
 const ProfilePreview = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    // const { aaugUserId, jwtToken } = location.state || {};
-
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [fullScreenImage, setFullScreenImage] = useState(null); // State to control full-screen image
+    const [isResetPasswordModalOpen, setResetPasswordModalOpen] = useState(false); // Modal state
     const jwtToken = localStorage.getItem("jwtToken");
 
     useEffect(() => {
         const fetchUser = async () => {
-
             try {
                 const response = await axios.get(`http://localhost:37523/api/AaugUser/GetCurrentAaugUserFull`, {
                     headers: {
@@ -85,20 +84,16 @@ const ProfilePreview = () => {
                     {user.nameArmenian} <br />
                     Phone: +98 912 345 6789 {/* Replace with actual phone number if available */}
                 </p>
-
-                {/* Stats */}
-
-
-                {/* Buttons */}
-                {/* <div className="flex gap-4 mb-8">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-            Edit Profile
-          </button>
-          <button className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600">
-            View Archive
-          </button>
-        </div> */}
             </div>
+
+            {/* Reset Password Button */}
+            <button
+                onClick={() => setResetPasswordModalOpen(true)} // Open modal
+                className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-red-700 mb-4"
+            >
+                Reset Password
+            </button>
+
             <button
                 onClick={() => navigate('/EditProfile', { state: { user, jwtToken } })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
@@ -106,9 +101,7 @@ const ProfilePreview = () => {
                 Edit Profile
             </button>
 
-
-            {/* User Details */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
                 {/* National Card */}
                 <div>
                     <p className="text-lg font-semibold mb-2">National Card:</p>
@@ -169,15 +162,12 @@ const ProfilePreview = () => {
                 </div>
             )}
 
-            <div className="mt-8 text-center">
-                <button
-                    onClick={() => navigate('/EditProfile', { state: { user, jwtToken } })}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                >
-                    Edit Profile
-                </button>
-
-            </div>
+            {/* Reset Password Modal */}
+            <ResetPasswordModal
+                isOpen={isResetPasswordModalOpen}
+                onClose={() => setResetPasswordModalOpen(false)} // Close modal
+                jwtToken={jwtToken}
+            />
         </div>
     );
 };

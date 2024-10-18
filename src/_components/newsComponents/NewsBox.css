@@ -25,3 +25,18 @@
   opacity: 1; /* Make lines visible */
   animation: diagonalLine 3s linear forwards; /* Animation duration */
 }
+@keyframes slide {
+  0% {
+      transform: translateX(0);
+  }
+  50% {
+      transform: translateX(-100%);
+  }
+  100% {
+      transform: translateX(0);
+  }
+}
+
+.animate-slide {
+  animation: slide 5s linear infinite;
+}

@@ -9,7 +9,7 @@ import SlideShow from '../../../_components/slideShowComponents/SlideShow'; // I
 const DashboardPage = () => {
   return (
     <div className="flex justify-center lg:px-4">
-      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-4 bg-gray-50 shadow-2xl shadow-gray-200">
+      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-4 bg-stone-50 shadow-md shadow-gray-200">
 
         {/* Left Sidebar (News) */}
         <div className="col-span-3 hidden lg:block">
@@ -36,10 +36,13 @@ const DashboardPage = () => {
         <div className="col-span-3 hidden lg:block">
           <div className="sticky top-20 space-y-6"> {/* Add space between SlideShow and LocationCard */}
             {/* SlideShow Component */}
-            <SlideShow />
-
+            <div className="mr-2">
+              <SlideShow />
+            </div>
             {/* LocationCard Component */}
-            <LocationCard />
+            <div className="mr-2">
+              <LocationCard />
+            </div>
           </div>
         </div>
 

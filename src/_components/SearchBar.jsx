@@ -1,54 +1,65 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Make sure to import axios
+import axios from 'axios';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = async (event) => {
-    event.preventDefault();
-    if (onSearch) {
+  const handleSearchClick = async () => {
+    console.log("Search icon clicked."); // Debugging log
+    if (searchTerm) { // Ensure the search term is provided
       try {
-        const response = await axios.get(`${BASE_URL}/SearchEvent/${searchTerm}`);
+        const url = `http://localhost:37523/api/Events/SearchEvent/${encodeURIComponent(searchTerm)}`;
+        console.log(`Fetching from: ${url}`); // Check URL
+        const response = await axios.get(url);
+        console.log('API Response:', response.data); // Log response data
         onSearch(response.data);
       } catch (error) {
         console.error('Failed to search the event:', error);
       }
+    } else {
+      console.warn('Search term is empty.'); // Warn if no term is provided
     }
   };
 
   return (
-    <form onSubmit={handleSearchSubmit} className="relative w-full">
-      <input
-        type="text"
-        className={`w-full h-10 pl-10 pr-4 rounded-full bg-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors duration-200 ${
-          window.innerWidth < 768 ? 'text-base' : ''
-        }`}
-        placeholder="Search events..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
-      <button
-        type="submit"
-        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
-      >
-        <svg
-          className="w-5 h-5"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
+    <div className="flex w-full space-x-2">
+      <div className="relative flex-grow transition-all duration-300">
+        <input
+          type="text"
+          className={`w-full h-10 pl-10 pr-10 rounded-full bg-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors duration-200`}
+          placeholder="Search events..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => {
+            if (searchTerm === '') {
+              setIsFocused(false); // Only blur if the search term is empty
+            }
+          }}
+        />
+        {/* Only show the icon inside the input field when not focused */}
+        {!isFocused && (
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 cursor-pointer transition-all duration-300">
+            <MagnifyingGlassIcon className={`w-5 h-5 text-gray-500`} />
+          </div>
+        )}
+      </div>
+      {/* Search button appears when focused */}
+      {isFocused && (
+        <button
+          className="flex items-center h-10 px-4 rounded-full bg-blue-500 text-white transition duration-200"
+          onClick={handleSearchClick}
         >
-          <path
-            fillRule="evenodd"
-            d="M12.9 14.32a7.5 7.5 0 111.42-1.42l4.35 4.36a1 1 0 01-1.42 1.42l-4.36-4.35zM7.5 13a5.5 5.5 0 100-11 5.5 5.5 0 000 11z"
-            clipRule="evenodd"
-          />
-        </svg>
-      </button>
-    </form>
+          <MagnifyingGlassIcon className={`w-5 h-5`} />
+        </button>
+      )}
+    </div>
   );
 };
 

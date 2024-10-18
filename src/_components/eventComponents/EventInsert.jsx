@@ -29,25 +29,26 @@ const EventInsert = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      try {
-        const token = localStorage.getItem('jwtToken');
-        if (token) {
-          const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        setProfilePictureUrl(DefaultPicture);
+        return; // Exit early if there's no token
+      }
 
-          const { profilePictureFileId, name, id } = response.data;
-          const pictureUrl = profilePictureFileId
-            ? `http://localhost:37523/api/Media/DownloadFile/${profilePictureFileId}`
-            : DefaultPicture;
-          setProfilePictureUrl(pictureUrl);
-          setPresentator(name);
-          setPresentatorUserId(id);
-        } else {
-          setProfilePictureUrl(DefaultPicture);
-        }
+      try {
+        const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const { profilePictureFileId, name, id } = response.data;
+        const pictureUrl = profilePictureFileId
+          ? `http://localhost:37523/api/Media/DownloadFile/${profilePictureFileId}`
+          : DefaultPicture;
+        setProfilePictureUrl(pictureUrl);
+        setPresentator(name);
+        setPresentatorUserId(id);
       } catch (error) {
         console.error('Error fetching user profile:', error);
         setProfilePictureUrl(DefaultPicture);
@@ -67,6 +68,7 @@ const EventInsert = () => {
     fetchUserProfile();
     fetchReservedDates();
   }, []);
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -118,7 +120,7 @@ const EventInsert = () => {
 
   return (
     <div className="pt-4 ">
-      <div className={`bg-${submissionSuccess ? 'white' : 'gray-100'} shadow-xl border border-gray-100 rounded-lg p-6 w-full sm:w-[40rem] max-w-screen-sm bg-white`}>
+      <div className={`bg-${submissionSuccess ? 'white' : 'gray-100'} shadow-md border border-gray-200 rounded-lg p-6 w-full sm:w-[40rem] max-w-screen-sm bg-white`}>
         {submissionSuccess && (
           <div className="text-center mb-4 text-green-600 font-bold">
             Your Presentation has been submitted, waiting for approval.
@@ -135,7 +137,7 @@ const EventInsert = () => {
             placeholder="What's on your mind?"
             value={eventTitle}
             onChange={(e) => setEventTitle(e.target.value)}
-            className={`w-full py-2 px-3 border ${errors.eventTitle ? 'border-red-500' : 'border-gray-300'} rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+            className={`w-full py-2 px-3 border ${errors.eventTitle ? 'border-red-500' : 'border-gray-300'} rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer`}
             disabled={submissionSuccess}
           />
           {errors.eventTitle && <p className="text-red-500 text-sm">{errors.eventTitle}</p>}
@@ -230,7 +232,7 @@ const EventInsert = () => {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
             disabled={submissionSuccess}
           >
-            Submit 
+            Submit
             <RocketLaunchIcon className="w-5 h-5 ml-3" />
           </button>
         </div>

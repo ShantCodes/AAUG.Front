@@ -70,7 +70,7 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
 
   return (
     <div
-      className="bg-white shadow-xl border border-gray-100 rounded-lg p-6 mb-8 transform transition-all duration-300"
+      className="bg-white shadow-md border border-gray-200 rounded-lg p-6 mb-8 transform transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

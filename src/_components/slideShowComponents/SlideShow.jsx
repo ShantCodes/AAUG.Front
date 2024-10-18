@@ -1,8 +1,9 @@
+// SlideShow.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Update import
-import "./SlideShow.css"; // Import the CSS for animations
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { useNavigate } from "react-router-dom";
+import "./SlideShow.css";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 const SlideShow = () => {
   const [slides, setSlides] = useState([]);
@@ -11,15 +12,14 @@ const SlideShow = () => {
   const [progress, setProgress] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalIndex, setModalIndex] = useState(0);
-  const [imageCache, setImageCache] = useState([]); // Store the downloaded images
-  const [userRole, setUserRole] = useState(""); // New state to hold user role
+  const [imageCache, setImageCache] = useState([]);
+  const [userRole, setUserRole] = useState("");
 
-  const SLIDE_DURATION = 4000; // 4 seconds for each slide
-  const PROGRESS_INTERVAL = 100; // Progress update interval
+  const SLIDE_DURATION = 4000;
+  const PROGRESS_INTERVAL = 100;
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // Initialize navigate
-
-  // Fetch slide data and pre-fetch images
+  // Fetch slides and images
   useEffect(() => {
     const fetchSlides = async () => {
       try {
@@ -28,16 +28,13 @@ const SlideShow = () => {
         setSlides(slideData);
         setMainTitle(response.data.description);
 
-        // Pre-fetch and cache the images
         const imagePromises = slideData.map(async (slide) => {
           const imageResponse = await axios.get(`http://localhost:37523/api/Media/DownloadFile/${slide.mediaFileId}`, {
             responseType: "blob",
           });
-          const imageUrl = URL.createObjectURL(imageResponse.data); // Convert Blob to URL
-          return imageUrl;
+          return URL.createObjectURL(imageResponse.data);
         });
 
-        // Wait for all images to be downloaded and set them in the cache
         const cachedImages = await Promise.all(imagePromises);
         setImageCache(cachedImages);
       } catch (error) {
@@ -48,19 +45,18 @@ const SlideShow = () => {
     fetchSlides();
   }, []);
 
-  // Fetch user info to check role
   useEffect(() => {
     const fetchUserRole = async () => {
-      const token = localStorage.getItem("jwtToken"); // Get the token from local storage
-      if (token) {
-        try {
-          const response = await axios.get("http://localhost:37523/api/AaugUser/GetCurrentUserInfo", {
-            headers: { Authorization: `Bearer ${token}` }, // Include the token in the headers
-          });
-          setUserRole(response.data.role); // Set the user role
-        } catch (error) {
-          console.error("Error fetching user role", error);
-        }
+      const token = localStorage.getItem("jwtToken");
+      if (!token) return;
+
+      try {
+        const response = await axios.get("http://localhost:37523/api/AaugUser/GetCurrentUserInfo", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserRole(response.data.role);
+      } catch (error) {
+        console.error("Error fetching user role", error);
       }
     };
 
@@ -68,15 +64,15 @@ const SlideShow = () => {
   }, []);
 
   useEffect(() => {
-    if (slides.length === 0 || imageCache.length === 0) return; // Prevent running if there are no slides or images
+    if (!slides.length || !imageCache.length) return;
 
     const totalProgressSteps = SLIDE_DURATION / PROGRESS_INTERVAL;
     let progressCounter = 0;
 
     const slideInterval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
-      progressCounter = 0; // Reset progress counter on slide change
-      setProgress(0); // Reset progress
+      progressCounter = 0;
+      setProgress(0);
     }, SLIDE_DURATION);
 
     const progressInterval = setInterval(() => {
@@ -108,18 +104,18 @@ const SlideShow = () => {
   };
 
   const handleEdit = () => {
-    navigate("/SlideselectionPage"); // Navigate to edit page
+    navigate("/SlideselectionPage");
   };
 
-  if (slides.length === 0 || imageCache.length === 0) return <div>Loading slideshow...</div>;
+  if (!slides.length || !imageCache.length) return <div>Loading slideshow...</div>;
 
   const { description } = slides[currentIndex];
-  const imageUrl = imageCache[currentIndex]; // Use the cached image URL
+  const imageUrl = imageCache[currentIndex];
 
   return (
-    <div className="w-full max-w-lg mx-auto p-2 border border-gray-100 bg-white shadow-lg rounded-lg overflow-hidden z-50">
+    <div className="w-full max-w-lg mx-auto p-2 border border-gray-200 bg-white shadow-md rounded-lg overflow-hidden z-50">
       <div className="flex justify-between items-center mb-2">
-        <div className="title-container"> {/* Center the title here */}
+        <div className="title-container">
           <h2 className="text-lg font-bold">{mainTitle}</h2>
         </div>
         {userRole === "King" || userRole === "Varich" ? (
@@ -137,8 +133,9 @@ const SlideShow = () => {
           key={currentIndex}
           src={imageUrl}
           alt={description}
-          className="slide-image object-cover w-full h-full transition-transform duration-1000 ease-in-out cursor-pointer"
+          className="slide-image object-cover w-full h-full transition-opacity duration-1000 ease-in-out opacity-0"
           onClick={() => handleImageClick(currentIndex)}
+          style={{ opacity: 1 }}
         />
       </div>
       <p className="mt-2 text-center text-gray-700 text-sm">{description}</p>
@@ -164,7 +161,7 @@ const SlideShow = () => {
               &#10094;
             </button>
             <img
-              src={imageCache[modalIndex]} // Use cached image URL for the modal
+              src={imageCache[modalIndex]}
               alt={slides[modalIndex].description}
               className="max-w-full max-h-screen"
             />
