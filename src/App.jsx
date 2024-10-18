@@ -16,6 +16,7 @@ import EditProfileForm from './_components/userComponents/EditProfileForm';
 import SlideSelectionPage from './page/admin/SlideSelectionPage';
 import SlideSelection from './_components/slideShowComponents/SlideSelection';
 import NewsDetails from './_components/newsComponents/NewsDatails';
+import { SearchProvider } from './untils/SearchContext';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -47,9 +48,8 @@ function App() {
 
       {location.pathname !== '/login' && location.pathname !== '/signup' && (
         <div
-          className={`fixed top-0 left-0 h-screen overflow-y-auto transition-transform transform ${
-            isNavMenuOpen || !isMobileView ? 'translate-x-0' : '-translate-x-full'
-          } md:translate-x-0 md:ml-48 left-6 w-80  mt-16 top-2`}
+          className={`fixed top-0 left-0 h-screen overflow-y-auto transition-transform transform ${isNavMenuOpen || !isMobileView ? 'translate-x-0' : '-translate-x-full'
+            } md:translate-x-0 md:ml-48 left-6 w-80  mt-16 top-2`}
         >
           {/* <NavMenu /> */}
         </div>
@@ -79,7 +79,9 @@ function App() {
 function AppWrapper() {
   return (
     <Router>
-      <App />
+      <SearchProvider>
+        <App />
+      </SearchProvider>
     </Router>
   );
 }

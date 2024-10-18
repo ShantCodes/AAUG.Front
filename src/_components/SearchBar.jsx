@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { SearchContext } from '../untils/SearchContext'; // Ensure the path is correct
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const { setSearchResults } = useContext(SearchContext); // Get setSearchResults from context
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
   const handleSearchClick = async () => {
-    console.log("Search icon clicked."); // Debugging log
-    if (searchTerm) { // Ensure the search term is provided
+    console.log("Search icon clicked.");
+    if (searchTerm) {
       try {
         const url = `http://localhost:37523/api/Events/SearchEvent/${encodeURIComponent(searchTerm)}`;
-        console.log(`Fetching from: ${url}`); // Check URL
+        console.log(`Fetching from: ${url}`);
         const response = await axios.get(url);
-        console.log('API Response:', response.data); // Log response data
-        onSearch(response.data);
+        console.log('API Response:', response.data);
+        setSearchResults(response.data); // Update the search results in context
       } catch (error) {
         console.error('Failed to search the event:', error);
       }
     } else {
-      console.warn('Search term is empty.'); // Warn if no term is provided
+      console.warn('Search term is empty.');
+      setSearchResults(null); // Send null result to the provider when search term is empty
     }
   };
 
@@ -40,6 +43,7 @@ const SearchBar = ({ onSearch }) => {
           onBlur={() => {
             if (searchTerm === '') {
               setIsFocused(false); // Only blur if the search term is empty
+              setSearchResults(null); // Send null result when losing focus and term is empty
             }
           }}
         />
