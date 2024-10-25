@@ -1,0 +1,77 @@
+/* SearchBar.css */
+.search-bar-container {
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+
+.search-input-container {
+  position: relative;
+  flex-grow: 1;
+  transition: all 0.3s ease;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 9999px;
+  background-color: #e5e7eb; /* gray-200 */
+  transition: background-color 0.2s ease;
+}
+
+.search-input:focus {
+  background-color: #ffffff; /* white */
+  outline: none;
+  ring: 2px solid #3b82f6; /* blue-500 */
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.search-button {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 9999px;
+  background-color: #3b82f6; /* blue-500 */
+  color: white;
+  transition: transform 0.5s ease, opacity 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.search-bar-container.focused .search-button {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.search-bar-container.focused .search-icon {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Animating state */
+.animating .search-icon {
+  transform: translateX(60px);
+  opacity: 0;
+}
+
+.animating .search-button {
+  transform: translateX(-60px);
+}
+
+/* Hide the button when not focused */
+.hidden {
+  display: none;
+}

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FaHeart } from 'react-icons/fa';
-import axios from 'axios';
+import { TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { likeEvent, deleteEvent } from '../../services/eventsService/eventsService'; // Import the service
 import EventLikes from './EventLikes';
 import Popup from './Popup';
 import EventEdit from './EventEdit';
-import { TrashIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 
 const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, initialLikes, imageUrl, isLiked: initialIsLiked, currentInfo, userRole, onRemove }) => {
   const [likes, setLikes] = useState(initialLikes);
@@ -19,17 +19,7 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
 
   const handleLike = async () => {
     try {
-      const token = localStorage.getItem('jwtToken');
-
-      const response = await axios.post(
-        `http://localhost:37523/api/Events/LikeEvent/${eventId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await likeEvent(eventId);
 
       if (response.status === 200) {
         setLikes(prevLikes => isLiked ? prevLikes - 1 : prevLikes + 1);
@@ -42,15 +32,7 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
 
   const handleDelete = async () => {
     try {
-      const token = localStorage.getItem('jwtToken');
-      const response = await axios.delete(
-        `http://localhost:37523/api/Events/DeleteEvent/${eventId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await deleteEvent(eventId);
 
       if (response.status === 200) {
         console.log('Event deleted successfully');
@@ -64,7 +46,6 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
   const currentId = currentInfo?.id ? String(currentInfo.id) : null;
   const presenterId = String(presentatorUserId);
 
-  // Check if the current user has one of the roles that allows editing or if they are the presenter
   const canEdit = currentId === presenterId || ["Varich", "King", "Hanxnakhumb"].includes(userRole);
   const canDelete = ["Varich", "King", "Hanxnakhumb"].includes(userRole);
 
@@ -114,23 +95,19 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
                 className="border border-yellow-500 text-yellow-500 px-4 py-2 rounded hover:bg-yellow-100 transition flex items-center"
                 onClick={() => setShowEdit(true)}
               >
-
                 <PencilSquareIcon className="h-5 w-5" />
               </button>
-
             )}
             {canDelete && (
               <button
                 className="border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-100 transition flex items-center"
                 onClick={handleDelete}
               >
-
                 <TrashIcon className="h-5 w-5" />
               </button>
             )}
           </div>
         )}
-
       </div>
 
       {showEdit && (

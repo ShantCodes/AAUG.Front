@@ -18,7 +18,7 @@ const NewsBox = () => {
     };
 
     const getBackgroundImageUrl = (newsFileId) => {
-        return newsFileId 
+        return newsFileId
             ? `url(http://localhost:37523/api/Media/DownloadFile/${newsFileId})`
             : "none";
     };
@@ -28,9 +28,8 @@ const NewsBox = () => {
             {news.map((item, index) => (
                 <div
                     key={item.id}
-                    className={`relative bg-gray-200 shadow-lg rounded-lg p-4 transition-transform duration-300 ease-in-out transform ${
-                        hoveredIndex === index ? 'scale-105' : ''
-                    } w-64 cursor-pointer overflow-hidden`}
+                    className={`relative bg-gray-200 shadow-lg rounded-lg p-4 transition-transform duration-300 ease-in-out transform ${hoveredIndex === index ? 'scale-105' : ''
+                        } w-64 cursor-pointer overflow-hidden`}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
                     onClick={() => handleCardClick(item.id)}
@@ -47,11 +46,17 @@ const NewsBox = () => {
                     {/* Dark overlay */}
                     <div className="absolute inset-0 bg-black opacity-20 z-0"></div>
 
-                    <h3 className="text-lg font-bold truncate relative z-10 text-white">
+                    {/* News Title with Text Outline */}
+                    <h3 className="text-lg font-bold truncate relative z-10 text-white" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}>
                         {item.newsTitle}
                     </h3>
+
                     {hoveredIndex === index && (
-                        <p className={`text-sm mt-2 relative z-10 ${hoveredIndex !== null ? 'animate-text' : ''} text-white`}>
+                        <p
+                            className={`text-sm mt-2 relative z-10 text-white ${hoveredIndex !== null ? 'animate-text' : ''
+                                }`}
+                            style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}
+                        >
                             {item.newsDetails.substring(0, 50)}...
                         </p>
                     )}
@@ -59,6 +64,7 @@ const NewsBox = () => {
             ))}
         </div>
     );
+
 };
 
 export default NewsBox;

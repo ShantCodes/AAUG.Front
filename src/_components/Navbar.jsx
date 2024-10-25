@@ -4,7 +4,7 @@ import SearchBar from '../_components/SearchBar';
 import ProfilePicture from './userComponents/ProfilePicture';
 import { getUserInfo } from '../services/authService/authService';
 import LoginButton from './loginComponents/LoginButton';
-import aaugLogo from '../assets/aaugLogo.jpg';
+import aaugLogo from '../assets/AAUG-transparent2.png';
 import NavMenu from './NavMenu'; 
 
 const Navbar = () => {
@@ -50,7 +50,7 @@ const Navbar = () => {
         {/* Left section: Logo */}
         <div className="flex items-center space-x-2">
           <Link to="/" className="flex items-center justify-center w-10 h-10">
-            <img src={aaugLogo} alt="Logo" className="w-full h-full object-cover rounded-full" />
+            <img src={aaugLogo} alt="Logo" className="w-fit h-fit object-cover rounded-full" />
           </Link>
           <span className="text-xl font-bold text-gray-800">ՀՀԸՄ</span>
         </div>

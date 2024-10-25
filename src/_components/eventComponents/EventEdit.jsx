@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { updateEvent } from '../../services/eventsService/eventsService';
 
 const EventEdit = ({ eventId, title, presenter, caption, imageUrl, onClose }) => {
   const [formData, setFormData] = useState({
@@ -21,7 +21,6 @@ const EventEdit = ({ eventId, title, presenter, caption, imageUrl, onClose }) =>
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('jwtToken');
 
     try {
       const formDataToSend = new FormData();
@@ -29,12 +28,7 @@ const EventEdit = ({ eventId, title, presenter, caption, imageUrl, onClose }) =>
         formDataToSend.append(key, formData[key]);
       }
 
-      await axios.put(`http://localhost:37523/api/Events/EditEventAsync`, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      await updateEvent(formDataToSend); // Call the service function
 
       alert('Event updated successfully');
       onClose(); // Close the form after successful submission
