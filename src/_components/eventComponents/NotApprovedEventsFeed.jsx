@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NotApprovedEvents from './NotApprovedEvents';
 import { getNotApprovedEvents } from '../../services/eventsService/eventsService';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService'
 
 const NotApprovedEventsFeed = () => {
     const [events, setEvents] = useState([]);
@@ -47,7 +48,7 @@ const NotApprovedEventsFeed = () => {
                         caption={event.eventDetails}
                         initialLikes={event.likeCount}
                         presenterUserId={event.presentatorUserId}
-                        imageUrl={`http://localhost:37523/api/Media/DownloadFile/${event.thumbNailFileId}`}
+                        imageUrl={downloadFile(event.thumbNailFileId)}
                         isLiked={false}
                         onRemove={removeEvent} // Pass the removeEvent function
                     />

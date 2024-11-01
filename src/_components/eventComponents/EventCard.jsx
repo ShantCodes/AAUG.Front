@@ -6,6 +6,7 @@ import EventLikes from './EventLikes';
 import Popup from './Popup';
 import EventEdit from './EventEdit';
 
+
 const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, initialLikes, imageUrl, isLiked: initialIsLiked, currentInfo, userRole, onRemove }) => {
   const [likes, setLikes] = useState(initialLikes);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
@@ -31,17 +32,13 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
   };
 
   const handleDelete = async () => {
-    try {
-      const response = await deleteEvent(eventId);
-
-      if (response.status === 200) {
-        console.log('Event deleted successfully');
-        onRemove(eventId); // Notify parent to remove the event
-      }
-    } catch (error) {
-      console.error('Error deleting the event:', error);
+    const success = await deleteEvent(eventId);
+    if (success) {
+      console.log('Event deleted successfully');
+      onRemove(eventId); // Notify parent to remove the event
     }
   };
+
 
   const currentId = currentInfo?.id ? String(currentInfo.id) : null;
   const presenterId = String(presentatorUserId);

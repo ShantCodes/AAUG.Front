@@ -1,5 +1,7 @@
 import axios from "axios";
 import BASE_API_URL from "../baseApi";
+import { format } from 'date-fns';
+
 
 const BASE_URL = `${BASE_API_URL}/Events`;
 
@@ -98,39 +100,28 @@ export const getEventLikes = async (eventId) => {
   }
 };
 
-export const getCurrentUserInfo = async () => {
-  const token = localStorage.getItem('jwtToken');
+// export const getCurrentUserInfo = async () => {
+//   const token = localStorage.getItem('jwtToken');
 
-  // If no token, return null or a default value instead of throwing an error
-  if (!token) {
-    console.warn('No token found, user is not logged in.');
-    return null; // or return a default user object if needed
-  }
+//   // If no token, return null or a default value instead of throwing an error
+//   if (!token) {
+//     console.warn('No token found, user is not logged in.');
+//     return null; // or return a default user object if needed
+//   }
 
-  try {
-    const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching current user info:', error);
-    throw error;
-  }
-};
+//   try {
+//     const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error fetching current user info:', error);
+//     throw error;
+//   }
+// };
 
-export const deleteEvent = async (eventId) => {
-  const token = localStorage.getItem('jwtToken');
-  return axios.delete(
-    `${BASE_URL}/DeleteEvent/${eventId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-};
 
 export const likeEvent = async (eventId) => {
   const token = localStorage.getItem('jwtToken');
@@ -179,29 +170,88 @@ export const fetchUserProfile = async () => {
   }
 };
 
-export const fetchReservedDates = async () => {
+export const getReservedDates = async () => {
+  const response = await axios.get(`${BASE_URL}/GetReservedEventDates`);
+  return response.data.map(date => new Date(date));
+};
+
+export const getCurrentUserInfo = async (token) => {
   try {
-    const response = await axios.get(`${BASE_URL}/Events/GetReservedEventDates`);
-    return response.data.map(date => new Date(date));
+    const response = await axios.get(`${BASE_URL}/AaugUser/GetCurrentUserInfo`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
   } catch (error) {
-    console.error('Error fetching reserved dates:', error);
-    return [];
+    console.error('Error fetching user profile:', error);
+    throw error;
   }
 };
 
 export const insertEvent = async (eventData) => {
   const token = localStorage.getItem('jwtToken');
+  const formData = new FormData();
+  formData.append('EventTitle', eventData.eventTitle);
+  formData.append('EventDetails', eventData.eventDetails);
+  formData.append('EventDate', eventData.eventDate ? format(eventData.eventDate, 'yyyy-MM-dd') : '');
+  formData.append('Presentator', eventData.presentator);
+  formData.append('PresentatorUserId', eventData.presentatorUserId);
+  formData.append('ThumbNailFile', eventData.thumbnailFile);
+
   try {
-    const response = await axios.post(`${BASE_URL}/Events/InsertEvent`, eventData, {
+    const response = await axios.post(`${BASE_URL}/InsertEvent`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log('Insert event response:', response);
     return response;
   } catch (error) {
-    console.error('Error inserting event:', error);
+    console.error('Error inserting event:', error.response ? error.response.data : error.message);
     throw error;
+  }
+  return response;
+};
+
+
+
+
+// not approved events
+export const approveEvent = async (eventId, token) => {
+  try {
+
+    const jwttoken = localStorage.getItem('jwtToken');
+    const response = await axios.put(
+      `${BASE_URL}/ApproveEvent/${eventId}/true`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${jwttoken}`,
+        },
+      }
+    );
+    return response.status === 200;
+  } catch (error) {
+    console.error('Error approving the event:', error);
+    throw error;
+  }
+};
+
+export const deleteEvent = async (eventId) => {
+  try {
+    const jwttoken = localStorage.getItem('jwtToken');
+    const response = await axios.delete(
+      `${BASE_URL}/DeleteEvent/${eventId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${jwttoken}`,
+        },
+      }
+    );
+    return response.status === 200; // Return true if successful
+  } catch (error) {
+    console.error('Error deleting the event:', error);
+    return false; // Return false if there's an error
   }
 };
 

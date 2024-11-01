@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { approveEvent, deleteEvent } from '../../services/eventsService/eventsService';
 import EventEdit from './EventEdit';
 import { TrashIcon, HandThumbUpIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 
@@ -15,17 +15,8 @@ const NotApprovedEvents = ({ eventId, title, presenter, caption, imageUrl, initi
   const handleApprove = async () => {
     try {
       const token = localStorage.getItem('jwtToken');
-      const response = await axios.put(
-        `http://localhost:37523/api/Events/ApproveEvent/${eventId}/true`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
+      const success = await approveEvent(eventId, token);
+      if (success) {
         console.log('Event approved successfully');
         onRemove(eventId); // Remove the event from the list
       }
@@ -37,16 +28,8 @@ const NotApprovedEvents = ({ eventId, title, presenter, caption, imageUrl, initi
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('jwtToken');
-      const response = await axios.delete(
-        `http://localhost:37523/api/Events/DeleteEvent/${eventId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
+      const success = await deleteEvent(eventId, token);
+      if (success) {
         console.log('Event deleted successfully');
         onRemove(eventId); // Remove the event from the list
       }

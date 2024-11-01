@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import EventCard from './EventCard';
-import { getEvents, getCurrentUserInfo } from '../../services/eventsService/eventsService';
+import { getEvents } from '../../services/eventsService/eventsService';
+import { getUserProfile } from '../../services/userService/userSerice';
 import { SearchContext } from '../../untils/SearchContext';
 
 const EventsFeed = () => {
@@ -71,7 +72,7 @@ const EventsFeed = () => {
   useEffect(() => {
     const loadUserInfo = async () => {
       try {
-        const userInfo = await getCurrentUserInfo();
+        const userInfo = await getUserProfile();
         if (userInfo) {
           setCurrentInfo(userInfo);
           setUserRole(userInfo.role);
@@ -106,6 +107,7 @@ const EventsFeed = () => {
   const handleRemoveEvent = (eventId) => {
     setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
   };
+
 
   if (loadingEvents && events.length === 0) {
     return <p>Loading events...</p>;

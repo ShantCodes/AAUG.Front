@@ -5,12 +5,14 @@ import {
   CalendarIcon,
   RocketLaunchIcon,
 } from '@heroicons/react/24/outline';
-import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './eventStyles/EventInsert.css';
-import { format } from 'date-fns';
 import DefaultPicture from '../../assets/polyforms-pfp.webp';
+import { insertEvent, getReservedDates } from '../../services/eventsService/eventsService';
+import { getUserProfile } from '../../services/userService/userSerice';
+import { getProfilePictureUrl } from '../../services/downloadFileService/downloadFileService';
+import { format } from 'date-fns';
 
 const EventInsert = () => {
   const [eventTitle, setEventTitle] = useState('');
@@ -25,28 +27,12 @@ const EventInsert = () => {
   const [errors, setErrors] = useState({});
   const [reservedDates, setReservedDates] = useState([]);
 
-
-
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const token = localStorage.getItem('jwtToken');
-      if (!token) {
-        setProfilePictureUrl(DefaultPicture);
-        return; // Exit early if there's no token
-      }
-
       try {
-        const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const { profilePictureFileId, name, id } = response.data;
-        const pictureUrl = profilePictureFileId
-          ? `http://localhost:37523/api/Media/DownloadFile/${profilePictureFileId}`
-          : DefaultPicture;
-        setProfilePictureUrl(pictureUrl);
+        const userData = await getUserProfile();
+        const { profilePictureFileId, name, id } = userData;
+        setProfilePictureUrl(profilePictureFileId ? getProfilePictureUrl(profilePictureFileId) : DefaultPicture);
         setPresentator(name);
         setPresentatorUserId(id);
       } catch (error) {
@@ -57,8 +43,7 @@ const EventInsert = () => {
 
     const fetchReservedDates = async () => {
       try {
-        const response = await axios.get('http://localhost:37523/api/Events/GetReservedEventDates');
-        const dates = response.data.map(date => new Date(date));
+        const dates = await getReservedDates();
         setReservedDates(dates);
       } catch (error) {
         console.error('Error fetching reserved dates:', error);
@@ -68,7 +53,6 @@ const EventInsert = () => {
     fetchUserProfile();
     fetchReservedDates();
   }, []);
-
 
   const validateForm = () => {
     const newErrors = {};
@@ -87,26 +71,17 @@ const EventInsert = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('EventTitle', eventTitle);
-    formData.append('EventDetails', eventDetails);
-    formData.append('EventDate', eventDate ? format(eventDate, 'yyyy-MM-dd') : '');
-    formData.append('Presentator', presentator);
-    formData.append('PresentatorUserId', presentatorUserId);
-    formData.append('ThumbNailFile', thumbnailFile);
+    const eventData = {
+      eventTitle,
+      eventDetails,
+      eventDate,
+      presentator,
+      presentatorUserId,
+      thumbnailFile,
+    };
 
     try {
-      const response = await axios.post(
-        'http://localhost:37523/api/Events/InsertEvent',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-          },
-        }
-      );
-
+      const response = await insertEvent(eventData);
       if (response.status === 200) {
         setSubmissionSuccess(true);
         console.log('Event inserted successfully:', response.data);
