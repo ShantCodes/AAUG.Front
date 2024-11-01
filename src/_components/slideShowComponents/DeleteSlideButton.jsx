@@ -1,21 +1,11 @@
 import React from 'react';
-import axios from 'axios';
 import { TrashIcon } from '@heroicons/react/24/outline';
-
+import { deleteSlide } from '../../services/slideShow/SlideShowService';
 
 const DeleteSlideButton = ({ slideId, onSlideDeleted }) => {
-    const BASE_URL = 'http://localhost:37523';
-
     const handleDelete = async () => {
         try {
-            const token = localStorage.getItem('jwtToken');
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
-
-            await axios.delete(`${BASE_URL}/api/SlideShow/DeleteSlide/${slideId}`, config);
+            await deleteSlide(slideId);
             onSlideDeleted(slideId); // Notify parent component to remove the slide from state
         } catch (error) {
             console.error('Error deleting slide:', error);
@@ -30,7 +20,6 @@ const DeleteSlideButton = ({ slideId, onSlideDeleted }) => {
             <TrashIcon className="h-6 w-6" />
         </button>
     );
-    
 };
 
 export default DeleteSlideButton;

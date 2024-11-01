@@ -1,9 +1,11 @@
 // SlideShow.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./SlideShow.css";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { fetchSlidesWithTitle } from "../../services/slideShow/SlideShowService";
+import { downloadFile } from "../../services/downloadFileService/downloadFileService";
+import { fetchUserRole } from "../../services/userService/userSerice";
 
 const SlideShow = () => {
   const [slides, setSlides] = useState([]);
@@ -19,26 +21,18 @@ const SlideShow = () => {
   const PROGRESS_INTERVAL = 100;
   const navigate = useNavigate();
 
-  // Fetch slides and images
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const response = await axios.get("http://localhost:37523/api/SlideShow/GetSlideShowWithTitle");
-        const slideData = response.data.slideShowGetViewModels;
-        setSlides(slideData);
-        setMainTitle(response.data.description);
+        const data = await fetchSlidesWithTitle();
+        setSlides(data.slideShowGetViewModels);
+        setMainTitle(data.description);
 
-        const imagePromises = slideData.map(async (slide) => {
-          const imageResponse = await axios.get(`http://localhost:37523/api/Media/DownloadFile/${slide.mediaFileId}`, {
-            responseType: "blob",
-          });
-          return URL.createObjectURL(imageResponse.data);
-        });
-
+        const imagePromises = data.slideShowGetViewModels.map((slide) => downloadFile(slide.mediaFileId));
         const cachedImages = await Promise.all(imagePromises);
         setImageCache(cachedImages);
       } catch (error) {
-        console.error("Error fetching slideshow data", error);
+        console.error("Error loading slides:", error);
       }
     };
 
@@ -46,21 +40,16 @@ const SlideShow = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUserRole = async () => {
-      const token = localStorage.getItem("jwtToken");
-      if (!token) return;
-
+    const fetchRole = async () => {
       try {
-        const response = await axios.get("http://localhost:37523/api/AaugUser/GetCurrentUserInfo", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserRole(response.data.role);
+        const role = await fetchUserRole();
+        setUserRole(role);
       } catch (error) {
-        console.error("Error fetching user role", error);
+        console.error("Error fetching user role:", error);
       }
     };
 
-    fetchUserRole();
+    fetchRole();
   }, []);
 
   useEffect(() => {

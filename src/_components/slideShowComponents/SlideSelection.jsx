@@ -1,23 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import DeleteButton from './DeleteSlideButton'; // Adjust the import based on your file structure
+import { getSlidesForAdmin } from '../../services/slideShow/SlideShowService'; // Adjust import based on your file structure
+import DeleteButton from './DeleteSlideButton';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 
 const SlideSelection = ({ selectedSlideIds, setSelectedSlideIds }) => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
-  const BASE_URL = 'http://localhost:37523';
 
   useEffect(() => {
     const fetchSlides = async () => {
       try {
         const token = localStorage.getItem('jwtToken');
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        const response = await axios.get(`${BASE_URL}/api/SlideShow/GetSlideShowsFrAdmins`, config);
+        const response = await getSlidesForAdmin(token);
         setSlides(response.data);
       } catch (error) {
         console.error('Error fetching slides:', error);
@@ -27,7 +21,7 @@ const SlideSelection = ({ selectedSlideIds, setSelectedSlideIds }) => {
     };
 
     fetchSlides();
-  }, [BASE_URL]);
+  }, []);
 
   const handleCardClick = (id) => {
     setSelectedSlideIds((prevIds) => {
@@ -54,17 +48,17 @@ const SlideSelection = ({ selectedSlideIds, setSelectedSlideIds }) => {
             <div
               key={slide.id}
               className={`border p-4 rounded-lg shadow-lg flex flex-col ${selectedSlideIds.includes(slide.id) ? 'bg-green-600' : slide.isActive ? 'bg-green-200' : 'bg-white'}`}
-              onClick={() => handleCardClick(slide.id)} // Handle selection
+              onClick={() => handleCardClick(slide.id)}
             >
               <h2 className="text-lg font-semibold">{slide.description}</h2>
               {slide.mediaFileId && (
                 <img
-                  src={`${BASE_URL}/api/Media/DownloadFile/${slide.mediaFileId}`}
+                  src={`${downloadFile(slide.mediaFileId)}`}
                   alt={slide.description}
                   className="mt-2 w-full h-auto rounded-lg"
                 />
               )}
-              <div className="flex justify-end mt-4"> {/* Align button to the right */}
+              <div className="flex justify-end mt-4">
                 <DeleteButton slideId={slide.id} onSlideDeleted={handleSlideDeleted} />
               </div>
             </div>

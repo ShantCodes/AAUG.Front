@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { insertSlideShow } from '../../services/slideShow/SlideShowService';
 
 const InsertSlidePopup = ({ isOpen, onClose }) => {
   const [file, setFile] = useState(null);
   const [description, setDescription] = useState('');
 
-  if (!isOpen) return null; // Ensure modal is only rendered when open
+  if (!isOpen) return null;
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -23,26 +23,11 @@ const InsertSlidePopup = ({ isOpen, onClose }) => {
 
     try {
       const token = localStorage.getItem('jwtToken');
-      const formData = new FormData();
-      formData.append('MediaFile', file);
-      formData.append('Description', description);
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-
-      const response = await axios.post(
-        'http://localhost:37523/api/SlideShow/InsertSlideShows',
-        formData,
-        config
-      );
+      const response = await insertSlideShow(file, description, token);
       console.log('File uploaded successfully:', response.data);
 
       alert('File uploaded successfully');
-      onClose(); // Close modal after file upload
+      onClose();
     } catch (error) {
       console.error('Error uploading file:', error.response ? error.response.data : error.message);
     }
@@ -53,12 +38,12 @@ const InsertSlidePopup = ({ isOpen, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg z-50">
         <h2 className="text-lg font-bold mb-4">Upload Slide</h2>
 
-        <input 
-          type="file" 
-          onChange={handleFileChange} 
+        <input
+          type="file"
+          onChange={handleFileChange}
           className="mb-4 border p-2 w-full"
         />
-        
+
         <input
           type="text"
           value={description}

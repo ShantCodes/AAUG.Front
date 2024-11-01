@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { insertSlideShow } from '../../services/slideShow/SlideShowService';
 
 const InsertSlideButton = () => {
-    const [file, setFile] = useState(null);  // State for selected file
-    const [description, setDescription] = useState('');  // State for description
+    const [file, setFile] = useState(null);
+    const [description, setDescription] = useState('');
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -21,26 +21,8 @@ const InsertSlideButton = () => {
 
         try {
             const token = localStorage.getItem('jwtToken');
-            const formData = new FormData();
-            formData.append('MediaFile', file);
-            formData.append('Description', description);
-
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            };
-
-            // API call to insert the file
-            const response = await axios.post(
-                'http://localhost:37523/api/SlideShow/InsertSlideShows',
-                formData,
-                config
-            );
+            const response = await insertSlideShow(file, description, token);
             console.log('File uploaded successfully:', response.data);
-
-            // Optionally, handle UI update after file upload
             alert('File uploaded successfully');
         } catch (error) {
             console.error('Error uploading file:', error.response ? error.response.data : error.message);
