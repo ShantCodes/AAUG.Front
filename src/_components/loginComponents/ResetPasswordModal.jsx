@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { resetPassword } from "../../services/authService/authService"; // Adjust the path as needed
 
 const ResetPasswordModal = ({ isOpen, onClose, jwtToken }) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -20,20 +20,7 @@ const ResetPasswordModal = ({ isOpen, onClose, jwtToken }) => {
     setSuccessMessage('');
 
     try {
-      const response = await axios.post(
-        'http://localhost:37523/api/Authentication/resetpassword',
-        {
-          currentPassword, // Send current password
-          password: newPassword, // Use 'password' as per the view model
-          confirmPassword, // Include confirmPassword as per the model
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      await resetPassword(jwtToken, currentPassword, newPassword, confirmPassword);
       setSuccessMessage('Password reset successfully!');
     } catch (err) {
       setError('Failed to reset password.');
@@ -94,8 +81,7 @@ const ResetPasswordModal = ({ isOpen, onClose, jwtToken }) => {
         <div className="flex justify-between">
           <button
             onClick={handlePasswordReset}
-            className={`bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 ${loading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+            className={`bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={loading}
           >
             {loading ? 'Resetting...' : 'Reset Password'}

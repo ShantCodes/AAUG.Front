@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HomeIcon, FireIcon ,AcademicCapIcon, NewspaperIcon, Cog6ToothIcon, UserIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
-import { getUserInfo } from '../services/authService/authService';
+import { getUserProfile } from '../services/userService/userSerice';
 
 const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
     const [userInfo, setUserInfo] = useState(null);
@@ -11,7 +11,7 @@ const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
         const token = localStorage.getItem('jwtToken');
         if (token) {
             try {
-                const userData = await getUserInfo(token);
+                const userData = await getUserProfile(token);
                 setUserInfo(userData);
             } catch (error) {
                 console.error('Failed to fetch user info', error);

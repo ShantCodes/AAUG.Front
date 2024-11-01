@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SearchBar from '../_components/SearchBar';
 import ProfilePicture from './userComponents/ProfilePicture';
-import { getUserInfo } from '../services/authService/authService';
+import { getUserProfile } from '../services/userService/userSerice';
 import LoginButton from './loginComponents/LoginButton';
 import aaugLogo from '../assets/AAUG-transparent2.png';
 import NavMenu from './NavMenu'; 
@@ -15,7 +15,7 @@ const Navbar = () => {
     const token = localStorage.getItem('jwtToken');
     if (token) {
       try {
-        const userData = await getUserInfo(token);
+        const userData = await getUserProfile(token);
         setUserInfo(userData);
       } catch (error) {
         console.error('Failed to fetch user info', error);

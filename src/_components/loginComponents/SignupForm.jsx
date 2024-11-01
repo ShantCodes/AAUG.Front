@@ -1,7 +1,9 @@
+// SignupForm.js
+
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SignupButton from "./SignupButton";
+import { signup, login } from "../../services/authService/authService"; // Import the service functions
 
 const SignupForm = () => {
     const [formData, setFormData] = useState({
@@ -28,34 +30,12 @@ const SignupForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const signupData = new FormData();
-        signupData.append("Username", formData.username);
-        signupData.append("Password", formData.password);
-        signupData.append("ConfirmPassword", formData.confirmPassword);
-        signupData.append("Name", formData.name);
-        signupData.append("LastName", formData.lastName);
-        signupData.append("NameArmenian", formData.nameArmenian);
-        signupData.append("LastNameArmenian", formData.lastNameArmenian);
-        signupData.append("Email", formData.email);
-
         try {
-            // Make the signup request
-            await axios.post("http://localhost:37523/api/Authentication/Register", signupData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            // Call the signup service function
+            await signup(formData);
 
             // Automatic login after successful signup
-            const loginData = new FormData();
-            loginData.append("username", formData.username);
-            loginData.append("password", formData.password);
-
-            const loginResponse = await axios.post("http://localhost:37523/api/Authentication/login", loginData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            const loginResponse = await login(formData.username, formData.password);
 
             const token = loginResponse.data; // Retrieve the token from the response
             localStorage.setItem("jwtToken", token); // Store the token in localStorage

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DeleteButton from './DeleteUserButton';
 import ApproveButton from './ApproveUserButton';
-import { getUserInfo } from '../../services/authService/authService'; // Import the getUserInfo function
+import { getUserProfile } from '../../services/userService/userSerice'; // Import the getUserInfo function
 import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
 
 const NotApprovedUserList = () => {
@@ -16,7 +16,7 @@ const NotApprovedUserList = () => {
     const fetchUsers = async () => {
       try {
         // Fetch current user info
-        const userInfo = await getUserInfo(jwtToken);
+        const userInfo = await getUserProfile(jwtToken);
         setCurrentUser(userInfo);
 
         // Fetch users

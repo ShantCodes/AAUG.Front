@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import DeleteButton from './DeleteUserButton';
 import ApproveButton from './ApproveUserButton';
 import AssignRolesModal from './AssignRolesModal';
-import { getUserInfo } from '../../services/authService/authService'; // Import the getUserInfo function
+import { getUserProfile } from '../../services/userService/userSerice'; // Import the getUserInfo function
 import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
 import { CheckBadgeIcon } from '@heroicons/react/24/outline'; // Import the CheckBadgeIcon
 
@@ -23,7 +23,7 @@ const UsersList = () => {
     const fetchUsersAndRoles = async () => {
       try {
         // Fetch current user info
-        const userInfo = await getUserInfo(jwtToken);
+        const userInfo = await getUserProfile(jwtToken);
         setCurrentUser(userInfo);
 
         // Fetch users

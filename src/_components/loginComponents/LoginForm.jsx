@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { login } from "../../services/authService/authService"; // Adjust the path as needed
 import LoginButton from "./LoginButton";
 
 const LoginForm = () => {
@@ -12,19 +12,13 @@ const LoginForm = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("password", password);
-
         try {
-            const response = await axios.post("http://localhost:37523/api/Authentication/login", formData);
-
-            const token = response.data;
+            const token = await login(username, password);
             localStorage.setItem("jwtToken", token);
             console.log("Login successful!");
 
-            navigate('/', { replace: true });  // Navigates to /events
-            window.location.reload();  // Refreshes the page after navigation
+            navigate("/", { replace: true });
+            window.location.reload();
 
         } catch (error) {
             setError("Login failed. Please check your username and password.");
@@ -56,7 +50,6 @@ const LoginForm = () => {
                     />
                 </div>
                 <div className="flex justify-center mb-6">
-                    
                     <LoginButton />
                 </div>
                 <div className="text-center mt-4">
