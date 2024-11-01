@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import { getNewsById } from "../../services/newsService/NewsService";
+import { downloadFile } from "../../services/downloadFileService/downloadFileService";
 
 const NewsDetails = () => {
     const { id } = useParams();
@@ -9,11 +10,8 @@ const NewsDetails = () => {
     useEffect(() => {
         const fetchNewsItem = async () => {
             try {
-                const token = localStorage.getItem("jwtToken");
-                const response = await axios.get(`http://localhost:37523/api/News/GetNewsById/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setNewsItem(response.data);
+                const data = await getNewsById(id);
+                setNewsItem(data);
             } catch (error) {
                 console.error("Error fetching news item:", error);
             }
@@ -30,10 +28,8 @@ const NewsDetails = () => {
                 <>
                     {/* Blurred Background Image */}
                     <div
-                        className="absolute inset-0 w-full h-full bg-cover bg-gray-400 bg-center filter blur-3xl "
+                        className="absolute inset-0 w-full h-full bg-cover bg-gray-400 bg-center filter blur-3xl"
                         style={{
-                            // backgroundImage: `url(http://localhost:37523/api/Media/DownloadFile/${newsItem.newsFileId})`,
-                            // background: "black",
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                         }}
@@ -42,7 +38,7 @@ const NewsDetails = () => {
                     {/* Main Image */}
                     <div className="relative w-full h-64 lg:h-96 group transition-all duration-500 ease-in-out hover:h-screen overflow-hidden">
                         <img
-                            src={`http://localhost:37523/api/Media/DownloadFile/${newsItem.newsFileId}`}
+                            src={downloadFile(newsItem.newsFileId)}
                             alt={newsItem.newsTitle}
                             className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
                         />

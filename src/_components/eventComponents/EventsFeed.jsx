@@ -3,6 +3,7 @@ import EventCard from './EventCard';
 import { getEvents } from '../../services/eventsService/eventsService';
 import { getUserProfile } from '../../services/userService/userSerice';
 import { SearchContext } from '../../untils/SearchContext';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 
 const EventsFeed = () => {
   const [events, setEvents] = useState([]);
@@ -128,7 +129,7 @@ const EventsFeed = () => {
           caption={event.eventDetails}
           initialLikes={event.likeCount}
           presentatorUserId={event.presentatorUserId}
-          imageUrl={`http://localhost:37523/api/Media/DownloadFile/${event.thumbNailFileId}`}
+          imageUrl={downloadFile(event.thumbNailFileId)}
           currentInfo={currentInfo}
           userRole={userRole}
           onRemove={handleRemoveEvent}

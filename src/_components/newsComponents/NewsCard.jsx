@@ -1,36 +1,28 @@
 import React, { useEffect, useState } from "react";
 import NewsBox from "./NewsBox";
-import { BookOpenIcon } from '@heroicons/react/24/outline';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
-import axios from 'axios'; // Import axios for making API calls
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
-
+import { BookOpenIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { useNavigate } from 'react-router-dom';
+import { getUserProfile } from "../../services/userService/userSerice";
 
 const NewsCard = () => {
     const [userRole, setUserRole] = useState(null);
-    const navigate = useNavigate(); // Create a navigate function for navigation
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem("jwtToken"); // Check for the token
+        const fetchUserRole = async () => {
+            try {
+                const userInfo = await getUserProfile();
+                setUserRole(userInfo.role);
+            } catch (error) {
+                console.error("Error fetching user info:", error);
+            }
+        };
 
-        if (token) {
-            axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Include token in headers
-                },
-            })
-                .then((response) => {
-                    const role = response.data.role; // Get the user's role from the response
-                    setUserRole(role); // Set the user role in state
-                })
-                .catch((error) => {
-                    console.error("Error fetching user info:", error); // Handle errors
-                });
-        }
-    }, []); // Empty dependency array to run once on mount
+        fetchUserRole();
+    }, []);
 
     const handleNavigate = () => {
-        navigate('/NewsDashboardPage'); // Navigate to the NewsDashboardPage
+        navigate('/NewsDashboardPage');
     };
 
     return (
@@ -50,7 +42,6 @@ const NewsCard = () => {
                 <NewsBox />
             </div>
         </div>
-
     );
 };
 
