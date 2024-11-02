@@ -1,29 +1,27 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import axios from 'axios';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { SearchContext } from '../untils/SearchContext'; // Corrected path
+import { SearchContext } from '../untils/SearchContext';
+import { searchEvents } from '../services/searchService/SearchService';
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [showButton, setShowButton] = useState(false); // State for button appearance
-  const [isTransitioning, setIsTransitioning] = useState(false); // State for icon-to-button transition
+  const [showButton, setShowButton] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const { setSearchResults } = useContext(SearchContext);
   const iconRef = useRef(null);
 
   useEffect(() => {
     let timer;
     if (isFocused) {
-      // Start icon-to-button transition
       setIsTransitioning(true);
-      timer = setTimeout(() => setShowButton(true), 500); // Add delay for button appearance
+      timer = setTimeout(() => setShowButton(true), 500);
     } else {
-      // Reverse the transition and hide the button
       setShowButton(false);
-      setTimeout(() => setIsTransitioning(false), 300); // Reverse transition smoothly
+      setTimeout(() => setIsTransitioning(false), 300);
     }
-    return () => clearTimeout(timer); // Cleanup the timer on unmount
+    return () => clearTimeout(timer);
   }, [isFocused]);
 
   const handleSearchChange = (event) => {
@@ -32,18 +30,17 @@ const SearchBar = () => {
 
   const handleSearchClick = async () => {
     if (searchTerm) {
-      setIsAnimating(true); // Start animation
+      setIsAnimating(true);
       setTimeout(async () => {
         try {
-          const url = `http://localhost:37523/api/Events/SearchEvent/${encodeURIComponent(searchTerm)}`;
-          const response = await axios.get(url);
-          setSearchResults(response.data);
+          const results = await searchEvents(searchTerm);
+          setSearchResults(results);
         } catch (error) {
           console.error('Failed to search the event:', error);
         } finally {
-          setIsAnimating(false); // End animation
+          setIsAnimating(false);
         }
-      }, 300); // Duration to match the CSS for the animation
+      }, 300);
     } else {
       setSearchResults(null);
     }
@@ -51,7 +48,6 @@ const SearchBar = () => {
 
   return (
     <div className="flex w-full space-x-2 relative">
-      {/* Conditionally adjust the width of the input field based on focus */}
       <div className={`relative transition-all duration-700 ease-in-out ${isFocused ? 'w-[90%]' : 'w-full'}`}>
         <input
           type="text"
@@ -67,7 +63,6 @@ const SearchBar = () => {
             }
           }}
         />
-        {/* Animate icon transition into button */}
         <div
           ref={iconRef}
           className={`absolute top-1/2 transform -translate-y-1/2 cursor-pointer transition-all duration-700 
@@ -77,7 +72,6 @@ const SearchBar = () => {
           <MagnifyingGlassIcon className="w-5 h-5 text-gray-700 stroke-current stroke-2" />
         </div>
       </div>
-      {/* Delayed appearance of the search button */}
       <button
         className={`flex items-center h-10 rounded-full bg-blue-500 text-white transition-all duration-500 ease-in-out
         ${showButton ? 'w-auto px-4 translate-x-0 scale-100 pointer-events-auto' : 'w-0 px-0 -translate-x-full scale-0 pointer-events-none'}
@@ -86,9 +80,6 @@ const SearchBar = () => {
       >
         <MagnifyingGlassIcon className="w-5 h-5 stroke-current stroke-2" />
       </button>
-
-
-
     </div>
   );
 };
