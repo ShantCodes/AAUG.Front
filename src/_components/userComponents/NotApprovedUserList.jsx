@@ -1,31 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import DeleteButton from './DeleteUserButton';
 import ApproveButton from './ApproveUserButton';
-import { getUserProfile } from '../../services/userService/userSerice'; // Import the getUserInfo function
-import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
+import { getUserProfile, getNotApprovedUsers } from '../../services/userService/userSerice';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
+import defaultProfilePic from '../../assets/polyforms-pfp.webp';
 
 const NotApprovedUserList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedUserId, setExpandedUserId] = useState(null); // State for expanded user
-  const [currentUser, setCurrentUser] = useState(null); // State to store current user info
-  const jwtToken = localStorage.getItem('jwtToken');
+  const [expandedUserId, setExpandedUserId] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
-        // Fetch current user info
-        const userInfo = await getUserProfile(jwtToken);
+        const userInfo = await getUserProfile();
         setCurrentUser(userInfo);
 
-        // Fetch users
-        const usersResponse = await axios.get('http://localhost:37523/api/AaugUser/GetNotApprovedUsers', {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        });
-        setUsers(usersResponse.data);
+        const usersData = await getNotApprovedUsers();
+        setUsers(usersData);
       } catch (error) {
         console.error('Error fetching users or current user info:', error);
       } finally {
@@ -33,8 +26,8 @@ const NotApprovedUserList = () => {
       }
     };
 
-    fetchUsers();
-  }, [jwtToken]);
+    fetchData();
+  }, []);
 
   const handleUserDeleted = (aaugUserId) => {
     setUsers(users.filter(user => user.id !== aaugUserId));
@@ -45,17 +38,15 @@ const NotApprovedUserList = () => {
   };
 
   const getProfilePictureUrl = (fileId) => {
-    return fileId
-      ? `http://localhost:37523/api/Media/DownloadFile/${fileId}`
-      : defaultProfilePic; // Use the default profile picture if fileId is not available
+    return fileId ? downloadFile(fileId) : defaultProfilePic;
   };
 
   const getBackgroundColor = (roles) => {
-    if (roles.includes('Varich')) return 'bg-purple-200'; // Purple
-    if (roles.includes('King')) return 'bg-yellow-200'; // Gold
-    if (roles.includes('Hanxnakhumb')) return 'bg-sky-300'; // Blue
-    if (roles.includes('Antam')) return 'bg-green-200'; // Green
-    return 'bg-white'; // Default
+    if (roles.includes('Varich')) return 'bg-purple-200';
+    if (roles.includes('King')) return 'bg-yellow-200';
+    if (roles.includes('Hanxnakhumb')) return 'bg-sky-300';
+    if (roles.includes('Antam')) return 'bg-green-200';
+    return 'bg-white';
   };
 
   const rolePriority = {
@@ -63,7 +54,7 @@ const NotApprovedUserList = () => {
     Varich: 2,
     Hanxnakhumb: 3,
     Antam: 4,
-    Default: 5
+    Default: 5,
   };
 
   const getUserRolePriority = (roles) => {
@@ -111,11 +102,13 @@ const NotApprovedUserList = () => {
               <p className="text-gray-900">{`${user.nameArmenian} ${user.lastNameArmenian}`}</p>
               <p className="text-gray-900">Email: {user.email || 'N/A'}</p>
             </div>
-            {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && ( // Conditionally render the Approve and Delete buttons
-              <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
-                }`}>
-                <ApproveButton aaugUserId={user.id} jwtToken={jwtToken} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
-                <DeleteButton aaugUserId={user.id} jwtToken={jwtToken} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" />
+            {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && (
+              <div
+                className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
+                  }`}
+              >
+                <ApproveButton aaugUserId={user.id} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
+                <DeleteButton aaugUserId={user.id} onUserDeleted={handleUserDeleted} className="text-sm px-3 py-1" />
               </div>
             )}
           </div>
