@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import DeleteButton from './DeleteUserButton';
 import ApproveButton from './ApproveUserButton';
 import AssignRolesModal from './AssignRolesModal';
-import { getUserProfile } from '../../services/userService/userSerice'; // Import the getUserInfo function
-import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import the default profile picture
-import { CheckBadgeIcon } from '@heroicons/react/24/outline'; // Import the CheckBadgeIcon
+import { getApprovedUsers, getAllRoles, getUserProfile } from '../../services/userService/userSerice';
+import defaultProfilePic from '../../assets/polyforms-pfp.webp';
+import { CheckBadgeIcon } from '@heroicons/react/24/outline';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
@@ -14,47 +14,33 @@ const UsersList = () => {
   const [roles, setRoles] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [showRolesModal, setShowRolesModal] = useState(false);
-  const [expandedUserId, setExpandedUserId] = useState(null); // State for expanded user
-  const [currentUser, setCurrentUser] = useState(null); // State to store current user info
-  const jwtToken = localStorage.getItem('jwtToken');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [expandedUserId, setExpandedUserId] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsersAndRoles = async () => {
       try {
         // Fetch current user info
-        const userInfo = await getUserProfile(jwtToken);
+        const userInfo = await getUserProfile();
         setCurrentUser(userInfo);
 
         // Fetch users
-        const usersResponse = await axios.get('http://localhost:37523/api/AaugUser/GetApprovedUsers', {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        });
-        setUsers(usersResponse.data);
+        const usersData = await getApprovedUsers();
+        setUsers(usersData);
 
         // Fetch roles
-        try {
-          const rolesResponse = await axios.get('http://localhost:37523/api/AaugUser/GetAllRoles', {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          });
-          setRoles(rolesResponse.data);
-        } catch (error) {
-          console.warn('Error fetching roles:', error);
-          setRoles([]); // Set roles to empty if the fetch fails
-        }
+        const rolesData = await getAllRoles();
+        setRoles(rolesData);
       } catch (error) {
-        console.error('Error fetching users or current user info:', error);
+        console.error('Error fetching users or roles:', error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUsersAndRoles();
-  }, [jwtToken]);
+  }, []);
 
   const handleUserDeleted = (aaugUserId) => {
     setUsers(users.filter(user => user.id !== aaugUserId));
@@ -65,17 +51,15 @@ const UsersList = () => {
   };
 
   const getProfilePictureUrl = (fileId) => {
-    return fileId
-      ? `http://localhost:37523/api/Media/DownloadFile/${fileId}`
-      : defaultProfilePic; // Use the default profile picture if fileId is not available
+    return fileId ? downloadFile(fileId) : defaultProfilePic;
   };
 
   const getBackgroundColor = (roles) => {
-    if (roles.includes('Varich')) return 'bg-purple-200'; // Purple
-    if (roles.includes('King')) return 'bg-yellow-200'; // Gold
-    if (roles.includes('Hanxnakhumb')) return 'bg-sky-300'; // Blue
-    if (roles.includes('Antam')) return 'bg-green-200'; // Green
-    return 'bg-white'; // Default
+    if (roles.includes('Varich')) return 'bg-purple-200';
+    if (roles.includes('King')) return 'bg-yellow-200';
+    if (roles.includes('Hanxnakhumb')) return 'bg-sky-300';
+    if (roles.includes('Antam')) return 'bg-green-200';
+    return 'bg-white';
   };
 
   const rolePriority = {
@@ -111,7 +95,7 @@ const UsersList = () => {
   };
 
   const handleUserClick = (aaugUserId) => {
-    navigate('/ExpandProfile', { state: { aaugUserId, jwtToken } }); // Navigate to ExpandProfile with userId and jwtToken
+    navigate('/ExpandProfile', { state: { aaugUserId } });
   };
 
   if (loading) {
@@ -127,9 +111,9 @@ const UsersList = () => {
             key={user.id}
             onMouseEnter={() => handleExpand(user.userId)}
             onMouseLeave={handleCollapse}
-            onClick={() => handleUserClick(user.id)} // Add onClick to the entire card
+            onClick={() => handleUserClick(user.id)}
             className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out ${expandedUserId === user.userId ? 'h-44' : 'h-28'
-              } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`} // Added cursor-pointer for visual feedback
+              } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`}
           >
             <img
               src={getProfilePictureUrl(user.profilePictureFileId)}
@@ -140,7 +124,7 @@ const UsersList = () => {
             <div className="text-left flex-grow">
               <h2 className="text-black text-lg font-semibold flex items-center">
                 {`${user.name} ${user.lastName}`}
-                {user.role.includes('Antam') && ( // Conditionally render CheckBadgeIcon for 'Antam'
+                {user.role.includes('Antam') && (
                   <CheckBadgeIcon className="ml-2 h-8 w-8 text-white fill-blue-500" />
                 )}
               </h2>
@@ -154,14 +138,13 @@ const UsersList = () => {
                 }`}>
                 <ApproveButton
                   aaugUserId={user.id}
-                  jwtToken={jwtToken}
                   onUserApproved={handleUserApproved}
                   className="text-sm px-3 py-1"
-                  onClick={(e) => e.stopPropagation()} // Prevent propagation for Approve button
+                  onClick={(e) => e.stopPropagation()}
                 />
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent propagation for Assign Roles button
+                    e.stopPropagation();
                     handleAssignRolesClick(user.userId);
                   }}
                   className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
@@ -172,8 +155,6 @@ const UsersList = () => {
             )}
           </div>
         ))}
-
-
       </div>
 
       {showRolesModal && (
@@ -181,7 +162,6 @@ const UsersList = () => {
           userId={selectedUserId}
           roles={roles}
           onClose={() => setShowRolesModal(false)}
-          jwtToken={jwtToken}
           currentUserRoles={users.find(user => user.userId === selectedUserId)?.role || []}
         />
       )}

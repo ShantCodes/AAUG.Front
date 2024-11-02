@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getUserProfile, uploadProfilePicture } from '../../services/userService/userSerice';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 
 const UserProfileCard = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -9,13 +10,9 @@ const UserProfileCard = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserInfo(response.data);
-        setProfilePictureUrl(`http://localhost:37523/api/Media/DownloadFile/${response.data.profilePictureFileId}`);
+        const data = await getUserProfile();
+        setUserInfo(data);
+        setProfilePictureUrl(downloadFile(data.profilePictureFileId));
       } catch (error) {
         if (error.response && error.response.status === 401) {
           console.error('Unauthorized: Invalid or expired token.');
@@ -32,21 +29,14 @@ const UserProfileCard = () => {
     }
   }, [token]);
 
-  const handleProfilePictureChange = () => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentUserInfo', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserInfo(response.data);
-        setProfilePictureUrl(`http://localhost:37523/api/Media/DownloadFile/${response.data.profilePictureFileId}`);
-      } catch (error) {
-        console.error('Error fetching updated user info:', error);
-      }
-    };
-    fetchUserInfo();
+  const handleProfilePictureChange = async () => {
+    try {
+      const data = await getUserProfile();
+      setUserInfo(data);
+      setProfilePictureUrl(downloadFile(data.profilePictureFileId));
+    } catch (error) {
+      console.error('Error fetching updated user info:', error);
+    }
   };
 
   if (!userInfo) {
@@ -86,24 +76,14 @@ const UserProfileCard = () => {
 
 const UserPopUp = ({ userInfo, onProfilePictureChange }) => {
   const [file, setFile] = useState(null);
-  const uploadUrl = 'http://localhost:37523/api/AaugUser/InsertProfilePicture';
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-
-      const formData = new FormData();
-      formData.append('profilePictureFile', selectedFile);
-
       try {
         const token = localStorage.getItem('jwtToken');
-        await axios.put(uploadUrl, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+        await uploadProfilePicture(selectedFile, token);
         onProfilePictureChange();
         setFile(null);
       } catch (error) {

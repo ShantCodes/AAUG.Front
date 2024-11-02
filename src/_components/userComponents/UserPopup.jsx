@@ -1,31 +1,23 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { FaCrown, FaStar } from 'react-icons/fa';
 import DefaultPicture from '../../assets/polyforms-pfp.webp'; // Import the default picture
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
+import { uploadProfilePicture } from '../../services/userService/userSerice'; // Import the new service
 
 const UserPopUp = ({ userInfo, onProfilePictureChange }) => {
   const [file, setFile] = useState(null);
   const profilePictureUrl = userInfo?.profilePictureFileId
-    ? `http://localhost:37523/api/Media/DownloadFile/${userInfo.profilePictureFileId}`
+    ? downloadFile(userInfo.profilePictureFileId)
     : DefaultPicture;
-  const uploadUrl = 'http://localhost:37523/api/AaugUser/InsertProfilePicture';
 
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
 
-      const formData = new FormData();
-      formData.append('profilePictureFile', selectedFile);
-
       try {
         const token = localStorage.getItem('jwtToken');
-        await axios.put(uploadUrl, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+        await uploadProfilePicture(selectedFile, token); // Call the service method
         onProfilePictureChange();
         setFile(null);
       } catch (error) {
@@ -37,9 +29,7 @@ const UserPopUp = ({ userInfo, onProfilePictureChange }) => {
   return (
     <div
       className="bg-white rounded shadow-lg p-4 w-64 max-w-xs"
-      style={{
-        whiteSpace: 'nowrap',
-      }}
+      style={{ whiteSpace: 'nowrap' }}
     >
       <div className="flex items-center mb-2">
         <div className="relative">

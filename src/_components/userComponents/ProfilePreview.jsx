@@ -1,48 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ResetPasswordModal from '../loginComponents/ResetPasswordModal'; // Import the modal component
-import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import default profile picture if needed
+import ResetPasswordModal from '../loginComponents/ResetPasswordModal';
+import defaultProfilePic from '../../assets/polyforms-pfp.webp';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
+import { getCurrentUserFull } from '../../services/userService/userSerice';
+
 
 const ProfilePreview = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const jwtToken = localStorage.getItem("jwtToken");
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [fullScreenImage, setFullScreenImage] = useState(null); // State to control full-screen image
-    const [isResetPasswordModalOpen, setResetPasswordModalOpen] = useState(false); // Modal state
-    const jwtToken = localStorage.getItem("jwtToken");
+    const [fullScreenImage, setFullScreenImage] = useState(null);
+    const [isResetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`http://localhost:37523/api/AaugUser/GetCurrentAaugUserFull`, {
-                    headers: {
-                        Authorization: `Bearer ${jwtToken}`,
-                    },
-                });
-                setUser(response.data);
+                const userData = await getCurrentUserFull();
+                setUser(userData);
             } catch (err) {
-                setError('Failed to fetch user data.');
+                setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchUser();
-    }, [jwtToken, navigate]);
+    }, [navigate]);
 
     const getProfilePictureUrl = (fileId) => {
-        return fileId
-            ? `http://localhost:37523/api/Media/DownloadFile/${fileId}`
-            : defaultProfilePic; // Use default if no fileId
+        return fileId ? downloadFile(fileId) : defaultProfilePic;
     };
 
     const getFileUrl = (fileId) => {
-        return fileId
-            ? `http://localhost:37523/api/Media/DownloadFile/${fileId}`
-            : ''; // Return empty string if no fileId
+        return fileId ? downloadFile(fileId) : '';
     };
 
     const openImageFullScreen = (imageUrl) => {
@@ -68,7 +62,6 @@ const ProfilePreview = () => {
     return (
         <div className="max-w-5xl mx-auto p-4 bg-white text-black min-h-screen ">
             <div className="flex flex-col items-center mb-6">
-                {/* Profile Picture */}
                 <img
                     src={getProfilePictureUrl(user.profilePictureFileId)}
                     alt={`${user.name} ${user.lastName}`}
@@ -77,18 +70,16 @@ const ProfilePreview = () => {
                 <h1 className="text-4xl font-bold mb-2">{`${user.name} ${user.lastName}`}</h1>
                 <p className="text-lg text-gray-900 mb-4">User ID: {user.id}</p>
 
-                {/* Armenian Names */}
                 <p className="text-center max-w-2xl text-lg text-gray-950 mb-4">
                     {user.email} <br />
                     {user.lastNameArmenian} <br />
                     {user.nameArmenian} <br />
-                    Phone: +98 912 345 6789 {/* Replace with actual phone number if available */}
+                    Phone: +98 912 345 6789
                 </p>
             </div>
 
-            {/* Reset Password Button */}
             <button
-                onClick={() => setResetPasswordModalOpen(true)} // Open modal
+                onClick={() => setResetPasswordModalOpen(true)}
                 className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-red-700 mb-4"
             >
                 Reset Password
@@ -102,7 +93,6 @@ const ProfilePreview = () => {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-                {/* National Card */}
                 <div>
                     <p className="text-lg font-semibold mb-2">National Card:</p>
                     {user.nationalCardFileId ? (
@@ -117,7 +107,6 @@ const ProfilePreview = () => {
                     )}
                 </div>
 
-                {/* University Card */}
                 <div>
                     <p className="text-lg font-semibold mb-2">University Card:</p>
                     {user.universityCardFileId ? (
@@ -132,7 +121,6 @@ const ProfilePreview = () => {
                     )}
                 </div>
 
-                {/* Receipt */}
                 <div>
                     <p className="text-lg font-semibold mb-2">Receipt:</p>
                     {user.receiptFileId ? (
@@ -148,7 +136,6 @@ const ProfilePreview = () => {
                 </div>
             </div>
 
-            {/* Full-screen image preview */}
             {fullScreenImage && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
@@ -162,10 +149,9 @@ const ProfilePreview = () => {
                 </div>
             )}
 
-            {/* Reset Password Modal */}
             <ResetPasswordModal
                 isOpen={isResetPasswordModalOpen}
-                onClose={() => setResetPasswordModalOpen(false)} // Close modal
+                onClose={() => setResetPasswordModalOpen(false)}
                 jwtToken={jwtToken}
             />
         </div>

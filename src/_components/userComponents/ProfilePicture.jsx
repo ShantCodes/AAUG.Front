@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import UserPopUp from './UserPopUp';
 import DefaultPicture from '../../assets/polyforms-pfp.webp'; // Import the default picture
+import { downloadFile } from '../../services/downloadFileService/downloadFileService'
 
 const ProfilePicture = ({ userInfo }) => {
   const [profilePictureFileId, setProfilePictureFileId] = useState(userInfo?.profilePictureFileId || null);
@@ -29,11 +30,11 @@ const ProfilePicture = ({ userInfo }) => {
   };
 
   const profilePictureUrl = profilePictureFileId
-    ? `http://localhost:37523/api/Media/DownloadFile/${profilePictureFileId}`
+    ? downloadFile(profilePictureFileId)
     : DefaultPicture;
 
   return (
-    <div 
+    <div
       className="relative"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

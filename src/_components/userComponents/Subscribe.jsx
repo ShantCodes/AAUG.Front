@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getCurrentUserFull, updateSubscription } from '../../services/userService/userSerice';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 
 const SubscribeForm = () => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -11,18 +12,13 @@ const SubscribeForm = () => {
     // Fetch current user profile
     useEffect(() => {
         const fetchUserData = async () => {
-            const token = localStorage.getItem("jwtToken");
-
             try {
-                const response = await axios.get('http://localhost:37523/api/AaugUser/GetCurrentAaugUserFull', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-                const { receiptFileId } = response.data;
+                const data = await getCurrentUserFull();
+                const { receiptFileId } = data;
                 setReceiptFileId(receiptFileId);
+
                 if (receiptFileId) {
-                    const fileUrl = `http://localhost:37523/api/Media/DownloadFile/${receiptFileId}`;
+                    const fileUrl = downloadFile(receiptFileId);
                     setReceiptFileUrl(fileUrl);
                 }
             } catch (error) {
@@ -45,19 +41,8 @@ const SubscribeForm = () => {
             return;
         }
 
-        const token = localStorage.getItem("jwtToken");
-
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-
         try {
-            await axios.post('http://localhost:37523/api/AaugUser/UpdateSubscribtion', formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
+            await updateSubscription(selectedFile);
             setMessage('File uploaded successfully!');
         } catch (error) {
             setMessage('Failed to upload the file.');
@@ -75,12 +60,8 @@ const SubscribeForm = () => {
                 className="bg-white p-6 rounded-lg shadow-lg w-96"
             >
                 <h2 className="text-2xl font-semibold mb-4 text-center">Upload File</h2>
-                <p>
-                    GIVE ME YO MONEEEEEEEHHHHHHH
-                </p>
-                <p>
-                    1234 5678 91011 1213
-                </p>
+                <p>GIVE ME YO MONEEEEEEEHHHHHHH</p>
+                <p>1234 5678 91011 1213</p>
 
                 <div className="mb-4">
                     <label htmlFor="fileInput" className="block text-sm font-medium text-gray-700 mb-2">
@@ -108,7 +89,6 @@ const SubscribeForm = () => {
                 </p>
             )}
 
-            {/* Display receipt file */}
             {receiptFileUrl && (
                 <div className="mt-8">
                     <h3 className="text-xl font-semibold mb-4 text-center">Receipt File</h3>

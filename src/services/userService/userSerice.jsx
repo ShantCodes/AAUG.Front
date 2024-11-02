@@ -15,6 +15,19 @@ export const getUserProfile = async () => {
     return response.data;
 };
 
+export const getCurrentUserFull = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/GetCurrentAaugUserFull`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to fetch user data.');
+    }
+};
+
 export const fetchUserRole = async () => {
     if (!token) return null;
 
@@ -157,4 +170,76 @@ export const getNotApprovedUsers = async () => {
     }
 };
 
+export const getSubscribedNotSubApprovedUsers = async () => {
+    const response = await axios.get(`${BASE_URL}/GetSubscribedNotSubApprovedUsers`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+};
+
+export const getAllRoles = async () => {
+    const response = await axios.get(`${BASE_URL}/GetAllRoles`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+};
+
+
+export const getOtherUserProfile = async () => {
+    const response = await axios.get(`${BASE_URL}/GetUserProfile`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+};
+
+
+export const updateSubscription = async (file) => {
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await axios.post(`${BASE_URL}/UpdateSubscribtion`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to upload the file.');
+    }
+};
+
+
+export const getSubscribedUsers = async () => {
+    const response = await axios.get(`${BASE_URL}/GetIsSubApprovedUsers`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+};
+
+export const getApprovedUsers = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/GetApprovedUsers`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching approved users:', error);
+        throw error; // Re-throw error to handle it in the component
+    }
+};
+
+export const uploadProfilePicture = async (file, token) => {
+    const formData = new FormData();
+    formData.append('profilePictureFile', file);
+
+    return await axios.put(`${BASE_URL}/InsertProfilePicture`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+};
 
