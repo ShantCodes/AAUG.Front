@@ -1,15 +1,12 @@
+// src/components/ApproveSubButton.js
 import React from 'react';
-import axios from 'axios';
+import { approveSubscription } from '../../services/userService/userSerice';
 
-const ApproveSubButton = ({ aaugUserId, jwtToken, onUserApproved }) => {
+const ApproveSubButton = ({ aaugUserId, onUserApproved }) => {
   const handleApprove = async (isApproved) => {
     console.log('Approving user with ID:', aaugUserId, 'with status:', isApproved);
     try {
-      await axios.put(`http://localhost:37523/api/AaugUser/ApproveSubscribtion/${aaugUserId}/${isApproved}`, null, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
+      await approveSubscription(aaugUserId, isApproved);
       onUserApproved(aaugUserId, isApproved);
     } catch (error) {
       console.error('Error approving user:', error);

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import defaultProfilePic from '../../assets/polyforms-pfp.webp'; // Import default profile picture if needed
+import { getUserData } from '../../services/userService/userSerice';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
+import defaultProfilePic from '../../assets/polyforms-pfp.webp';
 
 const ExpandProfileForAdmins = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { aaugUserId, jwtToken } = location.state || {};
+  const { aaugUserId } = location.state || {};
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,18 +16,14 @@ const ExpandProfileForAdmins = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (!aaugUserId || !jwtToken) {
-        navigate('/'); // Redirect if userId or jwtToken is missing
+      if (!aaugUserId) {
+        navigate('/'); // Redirect if aaugUserId is missing
         return;
       }
 
       try {
-        const response = await axios.get(`http://localhost:37523/api/AaugUser/GetAaugUserFullByAaugUserId/${aaugUserId}`, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        });
-        setUser(response.data);
+        const userData = await getUserData(aaugUserId);
+        setUser(userData);
       } catch (err) {
         setError('Failed to fetch user data.');
       } finally {
@@ -35,18 +32,10 @@ const ExpandProfileForAdmins = () => {
     };
 
     fetchUser();
-  }, [aaugUserId, jwtToken, navigate]);
+  }, [aaugUserId, navigate]);
 
   const getProfilePictureUrl = (fileId) => {
-    return fileId
-      ? `http://localhost:37523/api/Media/DownloadFile/${fileId}`
-      : defaultProfilePic; // Use default if no fileId
-  };
-
-  const getFileUrl = (fileId) => {
-    return fileId
-      ? `http://localhost:37523/api/Media/DownloadFile/${fileId}`
-      : ''; // Return empty string if no fileId
+    return fileId ? downloadFile(fileId) : defaultProfilePic;
   };
 
   const openImageFullScreen = (imageUrl) => {
@@ -88,32 +77,18 @@ const ExpandProfileForAdmins = () => {
           {user.nameArmenian} <br />
           Phone: +98 912 345 6789 {/* Replace with actual phone number if available */}
         </p>
-
-        {/* Stats */}
-        
-
-        {/* Buttons */}
-        {/* <div className="flex gap-4 mb-8">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-            Edit Profile
-          </button>
-          <button className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600">
-            View Archive
-          </button>
-        </div> */}
       </div>
 
-      {/* User Details */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* National Card */}
         <div>
           <p className="text-lg font-semibold mb-2">National Card:</p>
           {user.nationalCardFileId ? (
             <img
-              src={getFileUrl(user.nationalCardFileId)}
+              src={downloadFile(user.nationalCardFileId)}
               alt="National Card"
               className="w-full h-auto border border-gray-500 rounded cursor-pointer"
-              onClick={() => openImageFullScreen(getFileUrl(user.nationalCardFileId))}
+              onClick={() => openImageFullScreen(downloadFile(user.nationalCardFileId))}
             />
           ) : (
             <p className="text-gray-500">N/A</p>
@@ -125,10 +100,10 @@ const ExpandProfileForAdmins = () => {
           <p className="text-lg font-semibold mb-2">University Card:</p>
           {user.universityCardFileId ? (
             <img
-              src={getFileUrl(user.universityCardFileId)}
+              src={downloadFile(user.universityCardFileId)}
               alt="University Card"
               className="w-full h-auto border border-gray-500 rounded cursor-pointer"
-              onClick={() => openImageFullScreen(getFileUrl(user.universityCardFileId))}
+              onClick={() => openImageFullScreen(downloadFile(user.universityCardFileId))}
             />
           ) : (
             <p className="text-gray-500">N/A</p>
@@ -140,10 +115,10 @@ const ExpandProfileForAdmins = () => {
           <p className="text-lg font-semibold mb-2">Receipt:</p>
           {user.receiptFileId ? (
             <img
-              src={getFileUrl(user.receiptFileId)}
+              src={downloadFile(user.receiptFileId)}
               alt="Receipt"
               className="w-full h-auto border border-gray-500 rounded cursor-pointer"
-              onClick={() => openImageFullScreen(getFileUrl(user.receiptFileId))}
+              onClick={() => openImageFullScreen(downloadFile(user.receiptFileId))}
             />
           ) : (
             <p className="text-gray-500">N/A</p>

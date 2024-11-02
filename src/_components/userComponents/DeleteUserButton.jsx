@@ -1,17 +1,13 @@
 import React from 'react';
-import axios from 'axios';
+import { deleteUser } from '../../services/userService/userSerice';
 
-const DeleteButton = ({ aaugUserId, jwtToken, onUserDeleted }) => {
+const DeleteButton = ({ aaugUserId, onUserDeleted }) => {
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:37523/api/AaugUser/DeleteUser/${aaugUserId}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
+      await deleteUser(aaugUserId);
       onUserDeleted(aaugUserId);
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deleting user:', error.message);
     }
   };
 

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { assignRoleToUser, unassignRoleFromUser } from '../../services/userService/userSerice';
 
-const AssignRolesModal = ({ userId, roles = [], onClose, jwtToken, currentUserRoles = [] }) => {
+const AssignRolesModal = ({ userId, roles = [], onClose, currentUserRoles = [] }) => {
   const [selectedRoleId, setSelectedRoleId] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [userRoles, setUserRoles] = useState([]);
 
   useEffect(() => {
-    // Initialize userRoles with currentUserRoles mapped to their IDs
     setUserRoles(currentUserRoles.map(roleName => {
       const role = roles.find(r => r.name === roleName);
       return role ? { id: role.id, name: role.name } : null;
@@ -26,24 +25,14 @@ const AssignRolesModal = ({ userId, roles = [], onClose, jwtToken, currentUserRo
     setError(null);
 
     try {
-      await axios.post(
-        `http://localhost:37523/api/AaugUser/AssignRolesToUser/${userId}/${selectedRoleId}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      // Find the role object to add to userRoles
+      await assignRoleToUser(userId, selectedRoleId);
       const assignedRole = roles.find(role => role.id === parseInt(selectedRoleId, 10));
       if (assignedRole) {
-        setUserRoles(prevRoles => [...prevRoles, assignedRole]); // Add role to userRoles
+        setUserRoles(prevRoles => [...prevRoles, assignedRole]);
       }
-      setSelectedRoleId(null); // Reset the dropdown
+      setSelectedRoleId(null);
     } catch (error) {
-      setError('Failed to assign role. Please try again.');
+      setError(error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -56,18 +45,10 @@ const AssignRolesModal = ({ userId, roles = [], onClose, jwtToken, currentUserRo
     setError(null);
 
     try {
-      await axios.delete(
-        `http://localhost:37523/api/AaugUser/UnAssignRolesToUser/${userId}/${roleId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      setUserRoles(prevRoles => prevRoles.filter(role => role.id !== roleId)); // Remove role from userRoles
+      await unassignRoleFromUser(userId, roleId);
+      setUserRoles(prevRoles => prevRoles.filter(role => role.id !== roleId));
     } catch (error) {
-      setError('Failed to unassign role. Please try again.');
+      setError(error.message);
     } finally {
       setIsSubmitting(false);
     }

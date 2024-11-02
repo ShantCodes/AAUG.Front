@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import defaultProfilePic from '../../assets/polyforms-pfp.webp';
+import { downloadFile } from '../../services/downloadFileService/downloadFileService';
+import { editUserProfile } from '../../services/userService/userSerice';
 
 const EditProfileForm = () => {
   const location = useLocation();
@@ -41,11 +42,7 @@ const EditProfileForm = () => {
     if (formData.receiptFileId) form.append('receiptFile', formData.receiptFileId);
 
     try {
-      await axios.put(
-        `http://localhost:37523/api/AaugUser/EditAaugUserFull`,
-        form,
-        { headers: { Authorization: `Bearer ${jwtToken}`, 'Content-Type': 'multipart/form-data' } }
-      );
+      await editUserProfile(form, jwtToken);
       navigate('/profile');
     } catch (err) {
       setError('Failed to update profile.');
@@ -55,7 +52,7 @@ const EditProfileForm = () => {
   };
 
   const getProfilePictureUrl = (fileId) => {
-    return fileId ? `http://localhost:37523/api/Media/DownloadFile/${fileId}` : defaultProfilePic;
+    return fileId ? downloadFile(fileId) : defaultProfilePic;
   };
 
   if (!user) {
@@ -111,14 +108,13 @@ const EditProfileForm = () => {
         </div>
 
         {/* File Inputs (Horizontal Layout) */}
-        {/* File Inputs with Image Preview */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
             <label className="w-1/4 text-lg">National Card</label>
             <input type="file" name="nationalCardFileId" onChange={handleFileChange} />
             {user.nationalCardFileId && (
               <img
-                src={`http://localhost:37523/api/Media/DownloadFile/${user.nationalCardFileId}`}
+                src={downloadFile(user.nationalCardFileId)}
                 alt="National Card"
                 className="w-24 h-24 object-cover border border-gray-300"
               />
@@ -130,7 +126,7 @@ const EditProfileForm = () => {
             <input type="file" name="universityCardFileId" onChange={handleFileChange} />
             {user.universityCardFileId && (
               <img
-                src={`http://localhost:37523/api/Media/DownloadFile/${user.universityCardFileId}`}
+                src={downloadFile(user.universityCardFileId)}
                 alt="University Card"
                 className="w-24 h-24 object-cover border border-gray-300"
               />
@@ -142,14 +138,13 @@ const EditProfileForm = () => {
             <input type="file" name="receiptFileId" onChange={handleFileChange} />
             {user.receiptFileId && (
               <img
-                src={`http://localhost:37523/api/Media/DownloadFile/${user.receiptFileId}`}
+                src={downloadFile(user.receiptFileId)}
                 alt="Receipt"
                 className="w-24 h-24 object-cover border border-gray-300"
               />
             )}
           </div>
         </div>
-
 
         {/* Submit Button */}
         <div className="text-center mt-6">

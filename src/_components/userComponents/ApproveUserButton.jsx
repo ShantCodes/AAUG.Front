@@ -1,16 +1,13 @@
+// src/components/ApproveButton.js
 import React from 'react';
-import axios from 'axios';
+import { approveAaugUser } from '../../services/userService/userSerice';
 
-const ApproveButton = ({ aaugUserId, jwtToken, onUserApproved }) => {
+const ApproveButton = ({ aaugUserId, onUserApproved }) => {
   const handleApprove = async (isApproved, e) => {
     e.stopPropagation(); // Stop event propagation when approving/disapproving
     console.log('Approving user with ID:', aaugUserId, 'with status:', isApproved);
     try {
-      await axios.put(`http://localhost:37523/api/AaugUser/ApproveAaugUser/${aaugUserId}/${isApproved}`, null, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
+      await approveAaugUser(aaugUserId, isApproved);
       onUserApproved(aaugUserId, isApproved);
     } catch (error) {
       console.error('Error approving user:', error);
