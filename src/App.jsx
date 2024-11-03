@@ -17,6 +17,7 @@ import SlideSelectionPage from './page/admin/SlideSelectionPage';
 import SlideSelection from './_components/slideShowComponents/SlideSelection';
 import NewsDetails from './_components/newsComponents/NewsDatails';
 import { SearchProvider } from './untils/SearchContext';
+import AddNews from './_components/newsComponents/AddNews';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -70,6 +71,7 @@ function App() {
         <Route path="/SlideSelectionPage" element={<SlideSelectionPage />} />
         <Route path="/news/:id" element={<NewsDetails />} />
         <Route path="/NewsDashboardPage" element={<NewsDetails />} />
+        <Route path="/AddNews" element={<AddNews />} />
 
       </Routes>
     </div>

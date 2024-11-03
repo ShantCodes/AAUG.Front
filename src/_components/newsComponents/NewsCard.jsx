@@ -22,7 +22,7 @@ const NewsCard = () => {
     }, []);
 
     const handleNavigate = () => {
-        navigate('/NewsDashboardPage');
+        navigate('/AddNews');
     };
 
     return (
