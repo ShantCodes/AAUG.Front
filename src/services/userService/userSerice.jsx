@@ -219,17 +219,17 @@ export const getSubscribedUsers = async () => {
     return response.data;
 };
 
-export const getApprovedUsers = async () => {
+export const getApprovedUsers = async (pageNumber, pageSize = 7) => {
     try {
-        const response = await axios.get(`${BASE_URL}/GetApprovedUsers`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        return response.data;
+      const response = await axios.get(`${BASE_URL}/GetApprovedUsers/${pageNumber}/${pageSize}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
     } catch (error) {
-        console.error('Error fetching approved users:', error);
-        throw error; // Re-throw error to handle it in the component
+      console.error('Error fetching approved users:', error);
+      throw error; // Re-throw error to handle it in the component
     }
-};
+  };
 
 export const uploadProfilePicture = async (file, token) => {
     const formData = new FormData();

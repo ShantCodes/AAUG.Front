@@ -10,7 +10,7 @@ const AdminPage = () => {
     const [activeTab, setActiveTab] = useState(1); // State to manage active tab
 
     return (
-        <div className="flex justify-center h-screen bg-gray-100 mt-16">
+        <div className="flex justify-center h-screen bg-gray-100 mt-16 ">
             <div className="z-50">
                 <NavMenu />
             </div>
@@ -18,7 +18,7 @@ const AdminPage = () => {
             {/* Main content container */}
             <div className="flex flex-col w-3/4 h-full">
                 {/* Tab buttons */}
-                <div className="flex border-b border-gray-300">
+                <div className="flex border-b border-gray-300 bg-white sticky top-0 z-10">
                     <button
                         className={`flex-1 py-2 text-center ${activeTab === 1 ? 'bg-white border-b-2 border-blue-500 font-semibold' : 'bg-gray-200'}`}
                         onClick={() => setActiveTab(1)}
@@ -34,11 +34,10 @@ const AdminPage = () => {
                 </div>
 
                 {/* Tab content */}
-                <div className="flex-grow flex h-full">
+                <div className="flex-grow flex h-full overflow-hidden">
                     {activeTab === 1 ? (
                         // Content for first tab (UsersList, NotApprovedEventsFeed, NotApprovedUserList)
                         <div className="flex w-full">
-                            
                             <div className="flex-1 flex justify-center items-center overflow-y-auto h-full">
                                 <div className="ml-10 w-full h-full overflow-y-auto">
                                     <UsersList />
