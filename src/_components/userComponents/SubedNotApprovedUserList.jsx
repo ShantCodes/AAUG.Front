@@ -5,7 +5,7 @@ import ApproveButton from './ApproveUserButton';
 import AssignRolesModal from './AssignRolesModal';
 import defaultProfilePic from '../../assets/polyforms-pfp.webp';
 import ApproveSubButton from './ApproveSubButton';
-import { getOtherUserProfile, getSubscribedNotSubApprovedUsers, getAllRoles } from '../../services/userService/userSerice';
+import { getOtherUserProfile, getSubscribedNotSubApprovedUsers } from '../../services/userService/userSerice';
 import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 
 const SubbedNotApprovedUserList = () => {
@@ -16,27 +16,24 @@ const SubbedNotApprovedUserList = () => {
   const [showRolesModal, setShowRolesModal] = useState(false);
   const [expandedUserId, setExpandedUserId] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [hasMoreUsers, setHasMoreUsers] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsersAndRoles = async () => {
       try {
-        // Fetch current user info
-        const userInfo = await getOtherUserProfile();
-        setCurrentUser(userInfo);
+        // const userInfo = await getOtherUserProfile();
+        // setCurrentUser(userInfo);
 
-        // Fetch users
-        const usersData = await getSubscribedNotSubApprovedUsers();
+        // Fetch initial users
+        const usersData = await getSubscribedNotSubApprovedUsers(pageNumber);
         setUsers(usersData);
+        setHasMoreUsers(usersData.length > 0);
 
         // Fetch roles
-        try {
-          const rolesData = await getAllRoles();
-          setRoles(rolesData);
-        } catch (error) {
-          console.warn('Error fetching roles:', error);
-          setRoles([]);
-        }
+        const rolesData = await getAllRoles();
+        setRoles(rolesData);
       } catch (error) {
         console.error('Error fetching users or current user info:', error);
       } finally {
@@ -45,7 +42,46 @@ const SubbedNotApprovedUserList = () => {
     };
 
     fetchUsersAndRoles();
-  }, []);
+  }, [pageNumber]);
+
+  const loadMoreUsers = async () => {
+    if (!hasMoreUsers || loading) return;
+
+    setLoading(true);
+    try {
+      const nextPageNumber = pageNumber + 1;
+      const moreUsers = await getSubscribedNotSubApprovedUsers(nextPageNumber);
+
+      if (moreUsers.length > 0) {
+        setUsers((prevUsers) => [
+          ...prevUsers,
+          ...moreUsers.filter((newUser) => !prevUsers.some((user) => user.id === newUser.id)),
+        ]);
+        setHasMoreUsers(moreUsers.length > 0);
+        setPageNumber(nextPageNumber);
+      } else {
+        setHasMoreUsers(false);
+      }
+    } catch (error) {
+      console.error('Error loading more users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 100 &&
+        hasMoreUsers && !loading
+      ) {
+        loadMoreUsers();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading, hasMoreUsers]);
 
   const handleUserDeleted = (aaugUserId) => {
     setUsers(users.filter(user => user.id !== aaugUserId));
@@ -93,19 +129,11 @@ const SubbedNotApprovedUserList = () => {
     setShowRolesModal(true);
   };
 
-  const handleExpand = (userId) => {
-    setExpandedUserId(userId);
-  };
-
-  const handleCollapse = () => {
-    setExpandedUserId(null);
-  };
-
   const handleUserClick = (aaugUserId) => {
     navigate('/ExpandProfile', { state: { aaugUserId } });
   };
 
-  if (loading) {
+  if (loading && users.length === 0) {
     return <p className="text-center text-gray-600">Loading users...</p>;
   }
 
@@ -116,8 +144,6 @@ const SubbedNotApprovedUserList = () => {
         {sortedUsers.map((user) => (
           <div
             key={user.id}
-            onMouseEnter={() => handleExpand(user.userId)}
-            onMouseLeave={handleCollapse}
             onClick={() => handleUserClick(user.id)}
             className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out ${expandedUserId === user.userId ? 'h-44' : 'h-28'
               } overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`}
@@ -134,8 +160,7 @@ const SubbedNotApprovedUserList = () => {
               <p className="text-gray-900">Email: {user.email || 'N/A'}</p>
             </div>
             {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && (
-              <div className={`absolute right-4 top-4 flex flex-col gap-2 transition-opacity duration-500 ease-in-out ${expandedUserId === user.userId ? 'opacity-100' : 'opacity-0'
-                }`}>
+              <div className={`absolute right-4 top-4 flex flex-col gap-2`}>
                 <ApproveSubButton aaugUserId={user.id} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
               </div>
             )}
@@ -151,6 +176,9 @@ const SubbedNotApprovedUserList = () => {
           currentUserRoles={users.find(user => user.userId === selectedUserId)?.role || []}
         />
       )}
+
+      {loading && <p>Loading more users...</p>}
+      {!hasMoreUsers && <p>No more users to load.</p>}
     </div>
   );
 };

@@ -156,12 +156,12 @@ export const getUserData = async (aaugUserId) => {
     }
 };
 
-export const getNotApprovedUsers = async () => {
+export const getNotApprovedUsers = async (pageNumber, pageSize = 7) => {
     try {
-        const response = await axios.get(`${BASE_URL}/GetNotApprovedUsers`, {
+        const response = await axios.get(`${BASE_URL}/GetNotApprovedUsers/${pageNumber}/${pageSize}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
-            }
+            },
         });
         return response.data;
     } catch (error) {
@@ -170,12 +170,20 @@ export const getNotApprovedUsers = async () => {
     }
 };
 
-export const getSubscribedNotSubApprovedUsers = async () => {
-    const response = await axios.get(`${BASE_URL}/GetSubscribedNotSubApprovedUsers`, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
+
+
+export const getSubscribedNotSubApprovedUsers = async (pageNumber, pageSize = 7) => {
+    try {
+        const response = await axios.get(`${BASE_URL}/GetSubscribedNotSubApprovedUsers/${pageNumber}/${pageSize}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching subscribed not sub-approved users:', error);
+        throw error;
+    }
 };
+
 
 export const getAllRoles = async () => {
     const response = await axios.get(`${BASE_URL}/GetAllRoles`, {
@@ -212,24 +220,30 @@ export const updateSubscription = async (file) => {
 };
 
 
-export const getSubscribedUsers = async () => {
-    const response = await axios.get(`${BASE_URL}/GetIsSubApprovedUsers`, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
+export const getSubscribedUsers = async (pageNumber, pageSize = 7) => {
+    try {
+        const response = await axios.get(`${BASE_URL}/GetIsSubApprovedUsers/${pageNumber}/${pageSize}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching subscribed users:', error);
+        throw error; // Re-throw error to handle it in the component
+    }
 };
+
 
 export const getApprovedUsers = async (pageNumber, pageSize = 7) => {
     try {
-      const response = await axios.get(`${BASE_URL}/GetApprovedUsers/${pageNumber}/${pageSize}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return response.data;
+        const response = await axios.get(`${BASE_URL}/GetApprovedUsers/${pageNumber}/${pageSize}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
     } catch (error) {
-      console.error('Error fetching approved users:', error);
-      throw error; // Re-throw error to handle it in the component
+        console.error('Error fetching approved users:', error);
+        throw error; // Re-throw error to handle it in the component
     }
-  };
+};
 
 export const uploadProfilePicture = async (file, token) => {
     const formData = new FormData();

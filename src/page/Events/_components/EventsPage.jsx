@@ -22,19 +22,21 @@ const DashboardPage = () => {
         </div>
 
         {/* Main Content Area */}
-        <div className="col-span-6">
-          <div className="flex flex-col items-center space-y-4 mt-16">
-            {/* Event Insert */}
+        <div className="col-span-6 flex flex-col items-center space-y-4 mt-16">
+          {/* Event Insert */}
+          <div className="w-full"> {/* Ensure EventInsert takes full width */}
             <EventInsert />
+          </div>
 
-            {/* Events Feed */}
+          {/* Events Feed */}
+          <div className="w-full"> {/* Ensure EventsFeed takes full width */}
             <EventsFeed />
           </div>
         </div>
 
         {/* Right Sidebar (SlideShow and Location) */}
         <div className="col-span-3 hidden lg:block">
-          <div className="sticky top-20 space-y-6"> {/* Add space between SlideShow and LocationCard */}
+          <div className="sticky top-20 space-y-6">
             {/* SlideShow Component */}
             <div className="mr-2">
               <SlideShow />

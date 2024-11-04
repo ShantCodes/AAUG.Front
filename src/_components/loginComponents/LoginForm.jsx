@@ -52,11 +52,17 @@ const LoginForm = () => {
                 <div className="flex justify-center mb-6">
                     <LoginButton />
                 </div>
-                <div className="text-center mt-4">
-                    <a href="/signup" className="text-blue-500 hover:underline">
+                <div className="text-center mt-4 space-y-2">
+                    <a href="/signup" className="text-blue-500 hover:underline underline-offset-2">
                         Don't have an account? Sign up
                     </a>
                 </div>
+                <div className="text-center mt-4 space-y-2">
+                    <a href="/ForgotPassword" className="text-orange-500 hover:underline underline-offset-2">
+                        Forgot Password? Click here!
+                    </a>
+                </div>
+
             </form>
         </div>
     );

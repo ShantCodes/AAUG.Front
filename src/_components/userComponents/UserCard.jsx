@@ -1,11 +1,11 @@
-// UserCard.js
 import React from 'react';
 import { CheckBadgeIcon } from '@heroicons/react/24/outline';
 import ApproveButton from './ApproveUserButton';
+import DeleteButton from './DeleteUserButton'; // Import the DeleteButton
 import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 import defaultProfilePic from '../../assets/polyforms-pfp.webp';
 
-const UserCard = ({ user, onUserApproved, onAssignRolesClick, currentUserRole }) => {
+const UserCard = ({ user, onUserApproved, onUserDeleted, onAssignRolesClick, currentUserRole }) => {
   const getProfilePictureUrl = (fileId) => {
     return fileId ? downloadFile(fileId) : defaultProfilePic;
   };
@@ -19,9 +19,7 @@ const UserCard = ({ user, onUserApproved, onAssignRolesClick, currentUserRole })
   };
 
   return (
-    <div
-      className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out h-28 overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`}
-    >
+    <div className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out h-28 overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`}>
       <img
         src={getProfilePictureUrl(user.profilePictureFileId)}
         alt={`${user.name} ${user.lastName}`}
@@ -47,15 +45,24 @@ const UserCard = ({ user, onUserApproved, onAssignRolesClick, currentUserRole })
             onUserApproved={onUserApproved}
             className="text-sm px-3 py-1"
           />
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAssignRolesClick(user.userId);
-            }}
-            className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
-          >
-            Assign Roles
-          </button>
+          {onUserDeleted && (
+            <DeleteButton
+              aaugUserId={user.id}
+              onUserDeleted={onUserDeleted}
+              className="text-sm px-3 py-1"
+            />
+          )}
+          {onAssignRolesClick && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAssignRolesClick(user.userId);
+              }}
+              className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
+            >
+              Assign Roles
+            </button>
+          )}
         </div>
       )}
     </div>

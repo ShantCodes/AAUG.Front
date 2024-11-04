@@ -11,7 +11,7 @@ const AdminPage = () => {
 
     return (
         <div className="flex justify-center h-screen bg-gray-100 mt-16 ">
-            <div className="z-50">
+            <div className="z-40">
                 <NavMenu />
             </div>
 
