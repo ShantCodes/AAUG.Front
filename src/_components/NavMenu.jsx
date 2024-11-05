@@ -44,7 +44,7 @@ const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
                     <span>Home</span>
                 </Link>
             </li>
-            <li>
+            {/* <li>
                 <Link
                     to="/events"
                     className={`flex items-center space-x-2 p-2 rounded-md cursor-pointer transition-colors duration-300 ${isActive(
@@ -55,7 +55,7 @@ const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
                     <AcademicCapIcon className="h-6 w-6 text-green-500 transition-colors duration-300" />
                     <span>Events</span>
                 </Link>
-            </li>
+            </li> */}
             <li>
                 <Link
                     to="/news"

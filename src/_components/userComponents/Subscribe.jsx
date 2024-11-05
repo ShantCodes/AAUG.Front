@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { getCurrentUserFull, updateSubscription } from '../../services/userService/userSerice';
+import { getCurrentUserFull, updateSubscription, updateSubscriptionWithCode } from '../../services/userService/userSerice';
 import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 
 const SubscribeForm = () => {
     const [selectedFile, setSelectedFile] = useState(null);
+    const [membershipCode, setMembershipCode] = useState('');
     const [message, setMessage] = useState('');
     const [receiptFileId, setReceiptFileId] = useState(null);
     const [receiptFileUrl, setReceiptFileUrl] = useState('');
     const [isExpanded, setIsExpanded] = useState(false);
 
-    // Fetch current user profile
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -31,21 +31,29 @@ const SubscribeForm = () => {
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
+        setMembershipCode('');
+    };
+
+    const handleCodeChange = (e) => {
+        setMembershipCode(e.target.value);
+        setSelectedFile(null);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!selectedFile) {
-            setMessage('Please select a file before uploading.');
-            return;
-        }
-
         try {
-            await updateSubscription(selectedFile);
-            setMessage('File uploaded successfully!');
+            if (membershipCode) {
+                await updateSubscriptionWithCode(membershipCode);
+                setMessage('Subscription updated successfully with code!');
+            } else if (selectedFile) {
+                await updateSubscription(selectedFile);
+                setMessage('File uploaded successfully!');
+            } else {
+                setMessage('Please enter a membership code or select a file to upload.');
+            }
         } catch (error) {
-            setMessage('Failed to upload the file.');
+            setMessage('Failed to update subscription.');
         }
     };
 
@@ -55,31 +63,47 @@ const SubscribeForm = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white p-6 rounded-lg shadow-lg w-96"
-            >
-                <h2 className="text-2xl font-semibold mb-4 text-center">Upload File</h2>
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-96">
+                <h2 className="text-2xl font-semibold mb-4 text-center">Update Subscription</h2>
+
                 <p>GIVE ME YO MONEEEEEEEHHHHHHH</p>
                 <p>1234 5678 91011 1213</p>
 
-                <div className="mb-4">
-                    <label htmlFor="fileInput" className="block text-sm font-medium text-gray-700 mb-2">
-                        Choose file:
-                    </label>
-                    <input
-                        type="file"
-                        id="fileInput"
-                        onChange={handleFileChange}
-                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                </div>
+                {selectedFile === null && (
+                    <div className="mb-4">
+                        <label htmlFor="membershipCode" className="block text-sm font-medium text-gray-700 mb-2">
+                            Membership Code:
+                        </label>
+                        <input
+                            type="text"
+                            id="membershipCode"
+                            value={membershipCode}
+                            onChange={handleCodeChange}
+                            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 p-2"
+                            placeholder="Enter your membership code"
+                        />
+                    </div>
+                )}
+
+                {membershipCode === '' && (
+                    <div className="mb-4">
+                        <label htmlFor="fileInput" className="block text-sm font-medium text-gray-700 mb-2">
+                            Choose file:
+                        </label>
+                        <input
+                            type="file"
+                            id="fileInput"
+                            onChange={handleFileChange}
+                            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 p-2"
+                        />
+                    </div>
+                )}
 
                 <button
                     type="submit"
                     className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
                 >
-                    Upload
+                    Submit
                 </button>
             </form>
 

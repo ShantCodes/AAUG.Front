@@ -13,10 +13,11 @@ const NewsBox = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchNewsAndRole = async () => {
+        const fetchNews = async () => {
             try {
-                const [newsData, role] = await Promise.all([getNewsTeaser(), fetchUserRole()]);
-                
+                // Fetch news data
+                const newsData = await getNewsTeaser();
+
                 // Map newsData to include image URLs from downloadFile function
                 const newsWithImages = await Promise.all(newsData.map(async (item) => ({
                     ...item,
@@ -24,14 +25,24 @@ const NewsBox = () => {
                 })));
 
                 setNews(newsWithImages);
-                setUserRole(role);
             } catch (error) {
-                console.error("Error fetching news or role:", error);
+                console.error("Error fetching news:", error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchNewsAndRole();
+
+        const fetchRole = async () => {
+            try {
+                const role = await fetchUserRole();
+                setUserRole(role);
+            } catch (error) {
+                console.error("Error fetching role:", error);
+            }
+        };
+
+        fetchNews();
+        fetchRole();
     }, []);
 
     const handleCardClick = (id) => {

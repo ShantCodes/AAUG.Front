@@ -1,4 +1,3 @@
-// SlideShow.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SlideShow.css";
@@ -6,6 +5,7 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { fetchSlidesWithTitle } from "../../services/slideShow/SlideShowService";
 import { downloadFile } from "../../services/downloadFileService/downloadFileService";
 import { fetchUserRole } from "../../services/userService/userSerice";
+import defaultImage from '../../assets/error-image-generic.png'; // Ensure you import your default image
 
 const SlideShow = () => {
   const [slides, setSlides] = useState([]);
@@ -16,6 +16,7 @@ const SlideShow = () => {
   const [modalIndex, setModalIndex] = useState(0);
   const [imageCache, setImageCache] = useState([]);
   const [userRole, setUserRole] = useState("");
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const SLIDE_DURATION = 4000;
   const PROGRESS_INTERVAL = 100;
@@ -28,11 +29,18 @@ const SlideShow = () => {
         setSlides(data.slideShowGetViewModels);
         setMainTitle(data.description);
 
-        const imagePromises = data.slideShowGetViewModels.map((slide) => downloadFile(slide.mediaFileId));
-        const cachedImages = await Promise.all(imagePromises);
-        setImageCache(cachedImages);
+        if (data.slideShowGetViewModels.length === 0) {
+          // No slides returned
+          setImageCache([defaultImage]); // Set default image in cache
+        } else {
+          const imagePromises = data.slideShowGetViewModels.map((slide) => downloadFile(slide.mediaFileId));
+          const cachedImages = await Promise.all(imagePromises);
+          setImageCache(cachedImages);
+        }
       } catch (error) {
         console.error("Error loading slides:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -44,6 +52,7 @@ const SlideShow = () => {
       try {
         const role = await fetchUserRole();
         setUserRole(role);
+        console.log(role);
       } catch (error) {
         console.error("Error fetching user role:", error);
       }
@@ -96,27 +105,44 @@ const SlideShow = () => {
     navigate("/SlideselectionPage");
   };
 
-  if (!slides.length || !imageCache.length) return <div>Loading slideshow...</div>;
+  if (loading) return <div>Loading slideshow...</div>; // Loading message until data is fetched
 
-  const { description } = slides[currentIndex];
-  const imageUrl = imageCache[currentIndex];
-
-  return (
-    <div className="w-full max-w-lg mx-auto p-2 border border-gray-200 bg-white shadow-md rounded-lg overflow-hidden z-50">
-      <div className="flex justify-between items-center mb-2">
-        <div className="title-container">
-          <h2 className="text-lg font-bold">{mainTitle}</h2>
-        </div>
+  if (!slides.length) {
+    return (
+      <div className="w-full max-w-lg mx-auto p-2 border border-gray-200 bg-white shadow-md rounded-lg overflow-hidden">
+        <h2 className="text-lg font-bold text-center">{mainTitle || "No Slides Available"}</h2>
+        <img src={defaultImage} alt="Default Slide" className="w-full h-48 object-cover" />
         {userRole === "King" || userRole === "Varich" ? (
           <button
             onClick={handleEdit}
-            className="border border-yellow-500 text-yellow-500 rounded px-2 py-1 hover:bg-yellow-100 transition flex items-center"
+            className="border border-yellow-500 text-yellow-500 rounded px-2 py-1 hover:bg-yellow-100 transition flex items-center mt-2"
           >
-            <PencilSquareIcon className="h-5 w-5 " />
+            <PencilSquareIcon className="h-5 w-5" />
           </button>
         ) : null}
       </div>
+    );
+  }
 
+  const { description } = slides[currentIndex];
+  const imageUrl = imageCache[currentIndex] || defaultImage; // Fallback to default image if necessary
+
+  return (
+    <div className="relative w-full max-w-lg mx-auto p-2 border border-gray-200 bg-white shadow-md rounded-lg overflow-hidden z-50">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-lg font-bold flex-grow text-center">{mainTitle}</h2>
+        
+        {/* Edit Button positioned in the top-right corner */}
+        {userRole === "King" || userRole === "Varich" ? (
+          <button
+            onClick={handleEdit}
+            className="absolute top-2 right-2 border border-yellow-500 text-yellow-500 rounded px-2 py-1 hover:bg-yellow-100 transition flex items-center"
+          >
+            <PencilSquareIcon className="h-5 w-5" />
+          </button>
+        ) : null}
+      </div>
+  
       <div className="relative w-full h-48 overflow-hidden rounded-lg">
         <img
           key={currentIndex}
@@ -150,8 +176,8 @@ const SlideShow = () => {
               &#10094;
             </button>
             <img
-              src={imageCache[modalIndex]}
-              alt={slides[modalIndex].description}
+              src={imageCache[modalIndex] || defaultImage}
+              alt={slides[modalIndex]?.description || "Slide Image"}
               className="max-w-full max-h-screen"
             />
             <button
@@ -168,6 +194,7 @@ const SlideShow = () => {
       )}
     </div>
   );
+  
 };
 
 export default SlideShow;

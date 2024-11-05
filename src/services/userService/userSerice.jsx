@@ -219,6 +219,20 @@ export const updateSubscription = async (file) => {
     }
 };
 
+export const updateSubscriptionWithCode = async (code) => {
+    try {
+        const response = await axios.put(`${BASE_URL}/UpdateSubscribtionWithCode/${code}`, null, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Failed to update subscription with code:", error);
+        throw error;
+    }
+};
+
 
 export const getSubscribedUsers = async (pageNumber, pageSize = 7) => {
     try {

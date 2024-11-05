@@ -70,12 +70,33 @@ const ProfilePreview = () => {
                 <h1 className="text-4xl font-bold mb-2">{`${user.name} ${user.lastName}`}</h1>
                 <p className="text-lg text-gray-900 mb-4">User ID: {user.id}</p>
 
-                <p className="text-center max-w-2xl text-lg text-gray-950 mb-4">
-                    {user.email} <br />
-                    {user.lastNameArmenian} <br />
-                    {user.nameArmenian} <br />
-                    Phone: +98 912 345 6789
-                </p>
+                <div className="text-center max-w-2xl text-lg text-gray-950 mb-4">
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">Email:</p>
+                        <p>{user.email}</p>
+                    </div>
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">Last Name (Armenian):</p>
+                        <p>{user.lastNameArmenian}</p>
+                    </div>
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">First Name (Armenian):</p>
+                        <p>{user.nameArmenian}</p>
+                    </div>
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">Membership Code:</p>
+                        <p>{user.membershipCode}</p>
+                    </div>
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">Phone:</p>
+                        <p>{user.phone}</p>
+                    </div>
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">Subscription Date:</p>
+                        <p>{user.subscribeDate}</p>
+                    </div>
+                </div>
+
             </div>
 
             <button
