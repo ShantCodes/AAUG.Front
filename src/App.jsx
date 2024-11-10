@@ -18,6 +18,7 @@ import SlideSelection from './_components/slideShowComponents/SlideSelection';
 import NewsDetails from './_components/newsComponents/NewsDatails';
 import { SearchProvider } from './untils/SearchContext';
 import AddNews from './_components/newsComponents/AddNews';
+import BankCard from './_components/BankCard';
 
 const NewsPage = () => <div>News Page</div>;
 

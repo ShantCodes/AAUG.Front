@@ -11,8 +11,11 @@ const EditProfileForm = () => {
 
   const [formData, setFormData] = useState({
     name: user.name || '',
+    nameArmenian: user.nameArmenian || '',
     lastName: user.lastName || '',
+    lastNameArmenian: user.lastNameArmenian || '',
     email: user.email || '',
+    bornDate: user.bornDate || '',
     nationalCardFileId: user.nationalCardFileId || null,
     universityCardFileId: user.universityCardFileId || null,
     receiptFileId: user.receiptFileId || null,
@@ -35,8 +38,11 @@ const EditProfileForm = () => {
 
     const form = new FormData();
     form.append('name', formData.name);
+    form.append('nameArmenian', formData.nameArmenian);
     form.append('lastName', formData.lastName);
+    form.append('lastNameArmenian', formData.lastNameArmenian);
     form.append('email', formData.email);
+    form.append('bornDate', formData.bornDate);
     if (formData.nationalCardFileId) form.append('nationalCardFile', formData.nationalCardFileId);
     if (formData.universityCardFileId) form.append('universityCardFile', formData.universityCardFileId);
     if (formData.receiptFileId) form.append('receiptFile', formData.receiptFileId);
@@ -83,6 +89,16 @@ const EditProfileForm = () => {
             placeholder="First Name"
             required
           />
+          <label className="text-lg">First Name Armenian</label>
+          <input
+            type="text"
+            name="nameArmenian"
+            value={formData.nameArmenian} // Ensure it is lowercase "n"
+            onChange={handleChange}
+            className="border rounded w-full px-2 py-1"
+            placeholder="First Name Armenian"
+            required
+          />
 
           <label className="text-lg">Last Name</label>
           <input
@@ -94,6 +110,17 @@ const EditProfileForm = () => {
             placeholder="Last Name"
             required
           />
+          <label className="text-lg">Last Name Armenian</label>
+          <input
+            type="text"
+            name="lastNameArmenian"
+            value={formData.lastNameArmenian}
+            onChange={handleChange}
+            className="border rounded w-full px-2 py-1"
+            placeholder="Last Name Armenian"
+            required
+          />
+
 
           <label className="text-lg">Email</label>
           <input
@@ -103,6 +130,16 @@ const EditProfileForm = () => {
             onChange={handleChange}
             className="border rounded w-full px-2 py-1"
             placeholder="Email"
+            required
+          />
+          <label className="text-lg">Born Date</label>
+          <input
+            type="date"
+            name="bornDate"
+            value={formData.bornDate}
+            onChange={handleChange}
+            className="border rounded w-full px-2 py-1"
+            placeholder="Born Date"
             required
           />
         </div>
@@ -133,7 +170,7 @@ const EditProfileForm = () => {
             )}
           </div>
 
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <label className="w-1/4 text-lg">Receipt</label>
             <input type="file" name="receiptFileId" onChange={handleFileChange} />
             {user.receiptFileId && (
@@ -143,7 +180,7 @@ const EditProfileForm = () => {
                 className="w-24 h-24 object-cover border border-gray-300"
               />
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* Submit Button */}

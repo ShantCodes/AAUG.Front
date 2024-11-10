@@ -62,8 +62,8 @@ const SubscribeForm = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <div className="flex flex-col items-center justify-center  bg-gray-100">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-semibold mb-4 text-center">Update Subscription</h2>
 
                 <p>GIVE ME YO MONEEEEEEEHHHHHHH</p>

@@ -5,7 +5,6 @@ import defaultProfilePic from '../../assets/polyforms-pfp.webp';
 import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 import { getCurrentUserFull } from '../../services/userService/userSerice';
 
-
 const ProfilePreview = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -47,6 +46,21 @@ const ProfilePreview = () => {
         setFullScreenImage(null);
     };
 
+    const calculateAge = (bornDate) => {
+        if (!bornDate) return 'N/A';
+        const birthDate = new Date(bornDate);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+
+        // Adjust age if the birthday hasn't occurred yet this year
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return age;
+    };
+
     if (loading) {
         return <p className="text-center text-gray-600">Loading user profile...</p>;
     }
@@ -80,8 +94,16 @@ const ProfilePreview = () => {
                         <p>{user.lastNameArmenian}</p>
                     </div>
                     <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">Last Name:</p>
+                        <p>{user.lastName}</p>
+                    </div>
+                    <div className="flex justify-start">
                         <p className="font-semibold w-40 text-right mr-4">First Name (Armenian):</p>
                         <p>{user.nameArmenian}</p>
+                    </div>
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">First Name:</p>
+                        <p>{user.name}</p>
                     </div>
                     <div className="flex justify-start">
                         <p className="font-semibold w-40 text-right mr-4">Membership Code:</p>
@@ -90,6 +112,14 @@ const ProfilePreview = () => {
                     <div className="flex justify-start">
                         <p className="font-semibold w-40 text-right mr-4">Phone:</p>
                         <p>{user.phone}</p>
+                    </div>
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">Born:</p>
+                        <p>{user.bornDate}</p>
+                    </div>
+                    <div className="flex justify-start">
+                        <p className="font-semibold w-40 text-right mr-4">Age:</p>
+                        <p>{calculateAge(user.bornDate)}</p>
                     </div>
                     <div className="flex justify-start">
                         <p className="font-semibold w-40 text-right mr-4">Subscription Date:</p>

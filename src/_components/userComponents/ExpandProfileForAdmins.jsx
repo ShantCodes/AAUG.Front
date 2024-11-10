@@ -46,6 +46,19 @@ const ExpandProfileForAdmins = () => {
     setFullScreenImage(null);
   };
 
+  // Function to calculate age based on the born date
+  const calculateAge = (bornDate) => {
+    if (!bornDate) return 'N/A';
+    const birthDate = new Date(bornDate);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
   if (loading) {
     return <p className="text-center text-gray-600">Loading user profile...</p>;
   }
@@ -96,9 +109,15 @@ const ExpandProfileForAdmins = () => {
             <p className="font-semibold w-40 text-right mr-4">Subscription Date:</p>
             <p>{user.subscribeDate}</p>
           </div>
+          <div className="flex justify-start">
+            <p className="font-semibold w-40 text-right mr-4">Born Date:</p>
+            <p>{user.bornDate}</p>
+          </div>
+          <div className="flex justify-start">
+            <p className="font-semibold w-40 text-right mr-4">Age:</p>
+            <p>{calculateAge(user.bornDate)}</p>
+          </div>
         </div>
-
-
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
