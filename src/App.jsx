@@ -31,6 +31,12 @@ function App() {
     setIsNavMenuOpen(!isNavMenuOpen);
   };
 
+  const PrivateRoute = ({ element: Component, ...rest }) => {
+    const token = localStorage.getItem('jwtToken');
+
+    return token ? <Component {...rest} /> : <Navigate to="/login" />;
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
@@ -64,7 +70,10 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/Present" element={<EventInsert />} />
         <Route path="/Admin" element={<AdminPage />} />
-        <Route path="/Subscribe" element={<SubscribePage />} />
+        <Route
+          path="/Subscribe"
+          element={<PrivateRoute element={SubscribePage} />}
+        />
         <Route path="/Menu" element={<NavMenu />} />
         <Route path="/Profile" element={<ProfilePage />} />
         <Route path="/ExpandProfile" element={<ExpandProfileForAdmins />} />

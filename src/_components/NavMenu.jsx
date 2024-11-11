@@ -89,7 +89,7 @@ const NavMenu = ({ isNavMenuOpen, toggleNavMenu }) => {
                     onClick={toggleNavMenu}
                 >
                     <FireIcon className="h-6 w-6 text-red-500 transition-colors duration-300" />
-                    <span>Subscribe</span>
+                    <span>Անդամակցել</span>
                 </Link>
             </li>
             <li>

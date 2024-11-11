@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import { getCurrentUserFull, updateSubscription, updateSubscriptionWithCode } from '../../services/userService/userSerice';
 import { downloadFile } from '../../services/downloadFileService/downloadFileService';
+import { CheckBadgeIcon } from '@heroicons/react/24/outline';
 
 const SubscribeForm = () => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -9,13 +11,22 @@ const SubscribeForm = () => {
     const [receiptFileId, setReceiptFileId] = useState(null);
     const [receiptFileUrl, setReceiptFileUrl] = useState('');
     const [isExpanded, setIsExpanded] = useState(false);
+    const [subscribeDate, setSubscribeDate] = useState(null);
+    const [subscriptionStatus, setSubscriptionStatus] = useState('');
+    const [userAge, setUserAge] = useState(null);
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const data = await getCurrentUserFull();
-                const { receiptFileId } = data;
+                const { receiptFileId, subscribeDate, bornDate } = data;
+
                 setReceiptFileId(receiptFileId);
+                setSubscribeDate(subscribeDate);
+
+                // Calculate age from bornDate
+                const age = dayjs().diff(dayjs(bornDate), 'year');
+                setUserAge(age);
 
                 if (receiptFileId) {
                     const fileUrl = downloadFile(receiptFileId);
@@ -28,6 +39,33 @@ const SubscribeForm = () => {
 
         fetchUserData();
     }, []);
+
+    useEffect(() => {
+        if (subscribeDate) {
+            const currentDate = dayjs();
+            const subscriptionStart = dayjs(subscribeDate);
+            const diffInMonths = currentDate.diff(subscriptionStart, 'month');
+            const diffInDays = currentDate.diff(subscriptionStart, 'day') % 30;
+
+            if (diffInMonths < 12) {
+                setSubscriptionStatus(
+                    <div className="flex flex-col items-center justify-center">
+                        <CheckBadgeIcon className="h-20 w-20 text-green-500" />
+                        <span className="text-green-500 text-4xl font-bold">Subscribed</span>
+                        <span className="text-green-500 text-xl font-medium">
+                            {diffInMonths} months and {diffInDays} days
+                        </span>
+                    </div>
+                );
+            } else {
+                setSubscriptionStatus(
+                    <span className="text-red-500 font-bold">
+                        X - Not Subscribed
+                    </span>
+                );
+            }
+        }
+    }, [subscribeDate]);
 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
@@ -62,12 +100,17 @@ const SubscribeForm = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center  bg-gray-100">
+        <div className="flex flex-col items-center justify-center bg-gray-100">
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg">
-                <h2 className="text-2xl font-semibold mb-4 text-center">Update Subscription</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-center">Անդամակցել</h2>
 
-                <p>GIVE ME YO MONEEEEEEEHHHHHHH</p>
-                <p>1234 5678 91011 1213</p>
+                {subscriptionStatus && (
+                    <div className="mb-4 text-center">
+                        {subscriptionStatus}
+                    </div>
+                )}
+
+                <p>For subscription, enter your membership code or upload a file.</p>
 
                 {selectedFile === null && (
                     <div className="mb-4">
@@ -82,6 +125,12 @@ const SubscribeForm = () => {
                             className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 p-2"
                             placeholder="Enter your membership code"
                         />
+                    </div>
+                )}
+
+                {userAge !== null && (
+                    <div className="mb-2 text-center font-bold">
+                        {userAge < 30 ? "50,000 تومان" : "100,000 تومان"}
                     </div>
                 )}
 
