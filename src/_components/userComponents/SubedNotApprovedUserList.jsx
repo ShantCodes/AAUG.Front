@@ -124,7 +124,8 @@ const SubbedNotApprovedUserList = () => {
 
   const sortedUsers = [...users].sort((a, b) => getUserRolePriority(a.role) - getUserRolePriority(b.role));
 
-  const handleAssignRolesClick = (userId) => {
+  const handleAssignRolesClick = (userId, event) => {
+    event.stopPropagation();
     setSelectedUserId(userId);
     setShowRolesModal(true);
   };
@@ -161,7 +162,7 @@ const SubbedNotApprovedUserList = () => {
             </div>
             {currentUser?.role?.toLowerCase() !== 'hanxnakhumb' && (
               <div className={`absolute right-4 top-4 flex flex-col gap-2`}>
-                <ApproveSubButton aaugUserId={user.id} onUserApproved={handleUserApproved} className="text-sm px-3 py-1" />
+                <ApproveSubButton aaugUserId={user.id} onUserApproved={handleUserApproved} onClick={(e) => e.stopPropagation()} className="text-sm px-3 py-1" />
               </div>
             )}
           </div>

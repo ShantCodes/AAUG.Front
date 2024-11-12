@@ -18,7 +18,8 @@ import SlideSelection from './_components/slideShowComponents/SlideSelection';
 import NewsDetails from './_components/newsComponents/NewsDatails';
 import { SearchProvider } from './untils/SearchContext';
 import AddNews from './_components/newsComponents/AddNews';
-import BankCard from './_components/BankCard';
+import { Navigate } from 'react-router-dom';
+import AboutUs from './page/aboutUs/AboutUs';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -75,13 +76,14 @@ function App() {
           element={<PrivateRoute element={SubscribePage} />}
         />
         <Route path="/Menu" element={<NavMenu />} />
-        <Route path="/Profile" element={<ProfilePage />} />
+        <Route path="/Profile" element={<PrivateRoute element={ProfilePage} />} />
         <Route path="/ExpandProfile" element={<ExpandProfileForAdmins />} />
         <Route path="/EditProfile" element={<EditProfileForm />} />
         <Route path="/SlideSelectionPage" element={<SlideSelectionPage />} />
         <Route path="/news/:id" element={<NewsDetails />} />
         <Route path="/NewsDashboardPage" element={<NewsDetails />} />
         <Route path="/AddNews" element={<AddNews />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
 
       </Routes>
     </div>
