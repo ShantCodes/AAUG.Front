@@ -75,6 +75,7 @@ const NewsBox = () => {
                         onMouseLeave={() => setHoveredIndex(null)}
                         onClick={() => handleCardClick(item.id)}
                     >
+
                         <div
                             className="absolute inset-0 bg-cover bg-center filter blur-sm opacity-50"
                             style={{
@@ -103,7 +104,7 @@ const NewsBox = () => {
 
                         {hoveredIndex === index && (
                             <p
-                                className="text-sm mt-2 relative z-10 text-white"
+                                className="text-sm mt-2 relative z-10 text-white duration-700"
                                 style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }}
                             >
                                 {item.newsDetails.substring(0, 50)}...
