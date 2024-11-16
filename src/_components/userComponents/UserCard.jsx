@@ -19,7 +19,7 @@ const UserCard = ({ user, onUserApproved, onUserDeleted, onAssignRolesClick, cur
   };
 
   return (
-    <div className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out h-28 overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`}>
+    <div className={`relative flex items-center rounded-lg shadow p-4 transition-all duration-500 ease-in-out h-32 overflow-hidden hover:bg-gray-200 ${getBackgroundColor(user.role)} cursor-pointer`}>
       <img
         src={getProfilePictureUrl(user.profilePictureFileId)}
         alt={`${user.name} ${user.lastName}`}
@@ -58,7 +58,7 @@ const UserCard = ({ user, onUserApproved, onUserDeleted, onAssignRolesClick, cur
                 e.stopPropagation();
                 onAssignRolesClick(user.userId);
               }}
-              className="bg-purple-500 text-white text-sm px-3 py-1 rounded-md shadow-md hover:bg-purple-600 transition-colors"
+              className="bg-purple-500 text-white text-sm px-3 py-1 rounded shadow-md hover:bg-purple-600 transition-colors"
             >
               Assign Roles
             </button>

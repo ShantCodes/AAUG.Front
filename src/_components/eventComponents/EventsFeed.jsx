@@ -133,6 +133,7 @@ const EventsFeed = () => {
           currentInfo={currentInfo}
           userRole={userRole}
           onRemove={handleRemoveEvent}
+          eventDate={event.eventDate}
         />
       ))}
       {loadingEvents && <p>Loading more events...</p>}

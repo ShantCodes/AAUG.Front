@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './_components/navbar';
 import LoginPage from './page/auth/LoginPage';
 import SignupForm from './_components/loginComponents/SignupForm';
 import EventInsert from './_components/eventComponents/EventInsert';
-
 import NavMenu from './_components/NavMenu';
 import MainPage from './page/Events/_components/EventsPage';
 import AdminPage from './page/admin/AdminPage';
@@ -18,7 +17,6 @@ import SlideSelection from './_components/slideShowComponents/SlideSelection';
 import NewsDetails from './_components/newsComponents/NewsDatails';
 import { SearchProvider } from './untils/SearchContext';
 import AddNews from './_components/newsComponents/AddNews';
-import { Navigate } from 'react-router-dom';
 import AboutUs from './page/aboutUs/AboutUs';
 
 const NewsPage = () => <div>News Page</div>;
@@ -34,7 +32,6 @@ function App() {
 
   const PrivateRoute = ({ element: Component, ...rest }) => {
     const token = localStorage.getItem('jwtToken');
-
     return token ? <Component {...rest} /> : <Navigate to="/login" />;
   };
 
@@ -42,10 +39,8 @@ function App() {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
     };
-
     window.addEventListener('resize', handleResize);
     handleResize(); // Initial check
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -71,10 +66,7 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/Present" element={<EventInsert />} />
         <Route path="/Admin" element={<AdminPage />} />
-        <Route
-          path="/Subscribe"
-          element={<PrivateRoute element={SubscribePage} />}
-        />
+        <Route path="/Subscribe" element={<PrivateRoute element={SubscribePage} />} />
         <Route path="/Menu" element={<NavMenu />} />
         <Route path="/Profile" element={<PrivateRoute element={ProfilePage} />} />
         <Route path="/ExpandProfile" element={<ExpandProfileForAdmins />} />
@@ -85,6 +77,8 @@ function App() {
         <Route path="/AddNews" element={<AddNews />} />
         <Route path="/AboutUs" element={<AboutUs />} />
 
+        {/* Redirect /AAUG to the main page */}
+        <Route path="/AAUG" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );

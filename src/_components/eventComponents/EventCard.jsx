@@ -7,7 +7,7 @@ import Popup from './Popup';
 import EventEdit from './EventEdit';
 
 
-const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, initialLikes, imageUrl, isLiked: initialIsLiked, currentInfo, userRole, onRemove }) => {
+const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, initialLikes, imageUrl, isLiked: initialIsLiked, currentInfo, userRole, onRemove, eventDate }) => {
   const [likes, setLikes] = useState(initialLikes);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isHovered, setIsHovered] = useState(false);
@@ -54,7 +54,8 @@ const EventCard = ({ eventId, title, presenter, caption, presentatorUserId, init
     >
       <div className="mb-4">
         <h3 className="text-lg font-bold text-center mb-1 text-gray-900">{title}</h3>
-        <p className="text-gray-700 text-left">{presenter}</p>
+        <p className="text-gray-700 text-left mb-2">{presenter}</p>
+        <p className="text-gray-700 text-left">{eventDate}</p>
       </div>
       <img
         src={imageUrl}

@@ -3,7 +3,7 @@ import { approveEvent, deleteEvent } from '../../services/eventsService/eventsSe
 import EventEdit from './EventEdit';
 import { TrashIcon, HandThumbUpIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 
-const NotApprovedEvents = ({ eventId, title, presenter, caption, imageUrl, initialIsLiked, onRemove }) => {
+const NotApprovedEvents = ({ eventId, title, presenter, caption, imageUrl, initialIsLiked, onRemove, eventDate }) => {
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isHovered, setIsHovered] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -46,7 +46,8 @@ const NotApprovedEvents = ({ eventId, title, presenter, caption, imageUrl, initi
     >
       <div className="mb-4">
         <h3 className="text-lg font-bold text-center mb-1 text-gray-900">{title}</h3>
-        <p className="text-gray-700 text-left">{presenter}</p>
+        <p className="text-gray-700 mb-2 text-left">{presenter}</p>
+        <p className="text-gray-700 text-left">{eventDate}</p>
       </div>
       <img
         src={imageUrl}
@@ -61,26 +62,23 @@ const NotApprovedEvents = ({ eventId, title, presenter, caption, imageUrl, initi
       <div className="flex justify-between items-center mt-4">
         <div className="flex">
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition flex items-center"
+            className="border border-green-500 text-green-500 px-4 py-2 rounded hover:bg-green-100 transition flex items-center"
             onClick={handleApprove}
           >
-            Approve
-            <HandThumbUpIcon className="h-5 w-5 ml-2" />
+            <HandThumbUpIcon className="h-5 w-5 " />
           </button>
           <button
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition ml-2 flex items-center"
+            className="border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-100 transition flex items-center"
             onClick={handleDelete}
           >
-            Delete
-            <TrashIcon className="h-5 w-5 ml-2" />
+            <TrashIcon className="h-5 w-5 " />
           </button>
         </div>
         <button
-          className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition flex items-center"
+          className="border border-yellow-500 text-yellow-500 px-4 py-2 rounded hover:bg-yellow-100 transition flex items-center"
           onClick={() => setShowEdit(true)}
         >
-          Edit
-          <PencilSquareIcon className="h-5 w-5 ml-2" />
+          <PencilSquareIcon className="h-5 w-5 " />
         </button>
       </div>
 

@@ -12,6 +12,24 @@ const getHeaders = () => {
     };
 };
 
+export const saveSelectedSlides = async (selectedSlideIds) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    };
+  
+    try {
+      const response = await axios.put(`${BASE_URL}/SelectSlides`, selectedSlideIds, config);
+      console.log('Slides saved successfully:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error saving slides:', error.response ? error.response.data : error.message);
+      throw error;
+    }
+  };
+
 export const deleteSlide = async (slideId) => {
 
     const config = {

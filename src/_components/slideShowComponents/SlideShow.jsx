@@ -128,7 +128,7 @@ const SlideShow = () => {
   const imageUrl = imageCache[currentIndex] || defaultImage; // Fallback to default image if necessary
 
   return (
-    <div className="relative w-full max-w-lg mx-auto p-2 border border-gray-200 bg-white shadow-md rounded-lg overflow-hidden z-50">
+    <div className="relative w-full max-w-lg mx-auto p-2 border border-gray-200 bg-white shadow-md rounded-lg overflow-hidden z-40">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-lg font-bold flex-grow text-center">{mainTitle}</h2>
         

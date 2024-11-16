@@ -45,6 +45,7 @@ const NotApprovedEventsFeed = () => {
                         eventId={event.id}
                         title={event.eventTitle}
                         presenter={event.presentator}
+                        eventDate={event.eventDate}
                         caption={event.eventDetails}
                         initialLikes={event.likeCount}
                         presenterUserId={event.presentatorUserId}

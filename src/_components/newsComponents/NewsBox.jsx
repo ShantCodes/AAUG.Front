@@ -63,7 +63,7 @@ const NewsBox = () => {
     if (loading) return <p>Loading news...</p>;
 
     return (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 sticky top-16">
             {news.length === 0 ? (
                 <p>No news available</p>
             ) : (

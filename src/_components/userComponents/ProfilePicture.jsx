@@ -45,7 +45,7 @@ const ProfilePicture = ({ userInfo }) => {
         className="w-10 h-10 rounded-full object-cover cursor-pointer"
       />
       {isHovered && (
-        <div className="absolute left-0 top-full mt-2 transition-opacity duration-300 opacity-100">
+        <div className="absolute right-0 top-full mt-2 transition-opacity duration-300 opacity-100">
           <UserPopUp userInfo={userInfo} onProfilePictureChange={handleProfilePictureChange} />
         </div>
       )}
