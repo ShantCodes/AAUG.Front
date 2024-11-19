@@ -94,7 +94,7 @@ const EventInsert = () => {
 
 
   return (
-    <div className="pt-4 w-full"> {/* Make sure this wrapper div is full width */}
+    <div className="pt-2 w-full"> {/* Make sure this wrapper div is full width */}
       <div className={`shadow-md border bg-white border-gray-200 rounded-lg p-6 bg-${submissionSuccess ? 'white' : 'gray-100'} w-full`}>
         {submissionSuccess && (
           <div className="text-center mb-4 text-green-600 font-bold">

@@ -52,6 +52,18 @@ export const resetPassword = async (jwtToken, currentPassword, newPassword, conf
     return response.data;
 };
 
+export const forgotPassword = async (email) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/Forgotpassword`, {
+            email,
+        });
+        return response.data; // Return the response data
+    } catch (err) {
+        // Throw the error for handling in the component
+        throw err.response?.data?.message || "Something went wrong. Please try again later.";
+    }
+};
+
 export const signup = async (formData) => {
     const signupData = new FormData();
     signupData.append("Username", formData.username);
@@ -68,4 +80,7 @@ export const signup = async (formData) => {
             "Content-Type": "multipart/form-data",
         },
     });
+
+
+    
 };

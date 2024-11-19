@@ -16,28 +16,38 @@ export const getUserProfile = async () => {
 };
 
 export const getCurrentUserFull = async () => {
-    try {
-        const response = await axios.get(`${BASE_URL}/GetCurrentAaugUserFull`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        throw new Error('Failed to fetch user data.');
+    if (token) {
+        try {
+            const response = await axios.get(`${BASE_URL}/GetCurrentAaugUserFull`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            throw new Error('Failed to fetch user data.');
+        }
+    }
+    else {
+        console.log('helllloooooo');
     }
 };
 
 export const fetchUserRole = async () => {
-    if (!token) return null;
-
-    try {
-        const response = await axios.get(`${BASE_URL}/GetCurrentUserInfo`, getHeaders());
-        return response.data.role;
-    } catch (error) {
-        console.error("Error fetching user role:", error);
-        throw error;
+    if (token) {
+        try {
+            const response = await axios.get(`${BASE_URL}/GetCurrentUserInfo`, getHeaders());
+            return response.data.role;
+        } catch (error) {
+            console.error("Error fetching user role:", error);
+            throw error;
+        }
     }
+    else{
+        return null;
+    }
+
+
 };
 
 export const getHeaders = () => {

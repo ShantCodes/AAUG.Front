@@ -5,12 +5,17 @@ import NavMenu from "../../_components/NavMenu";
 import NotApprovedUserList from "../../_components/userComponents/NotApprovedUserList";
 import SubscribedUserList from "../../_components/userComponents/SubscribedUserList";
 import SubbedNotApprovedUserList from "../../_components/userComponents/SubedNotApprovedUserList";
+import MobileNavMenu from "../../_components/MobileNavMenu";
 
 const AdminPage = () => {
     const [activeTab, setActiveTab] = useState(1); // State to manage active tab
 
     return (
         <div className="flex justify-center h-screen bg-gray-100 mt-16 ">
+            {/* Mobile Navigation Menu */}
+            <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+                <MobileNavMenu />
+            </div>
             <div className="z-40">
                 <NavMenu />
             </div>

@@ -46,13 +46,13 @@ const SlideShowCircle = () => {
                 {imageCache.map((imageUrl, index) => (
                     <div
                         key={index}
-                        className="flex-shrink-0 w-24 h-24 rounded-full border-2 border-gray-300 overflow-hidden cursor-pointer"
+                        className="flex-shrink-0 w-24 h-24 rounded-full border-2 p-1 border-orange-600 overflow-hidden cursor-pointer"
                         onClick={() => handleImageClick(imageUrl || defaultImage)}
                     >
                         <img
                             src={imageUrl || defaultImage}
                             alt={`Slide ${index + 1}`}
-                            className="object-cover w-full h-full"
+                            className="object-cover w-full h-full rounded-full"
                         />
                     </div>
                 ))}

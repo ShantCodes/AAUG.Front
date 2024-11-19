@@ -6,6 +6,7 @@ import NewsCard from '../../../_components/newsComponents/NewsCard';
 import NavMenu from '../../../_components/NavMenu';
 import SlideShow from '../../../_components/slideShowComponents/SlideShow';
 import SlideShowCircle from '../../../_components/slideShowComponents/SlideShowCircle';
+import MobileNavMenu from '../../../_components/MobileNavMenu';
 
 const DashboardPage = () => {
   return (
@@ -13,12 +14,10 @@ const DashboardPage = () => {
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-4 bg-stone-50 shadow-md shadow-gray-200">
 
         {/* Left Sidebar */}
-        {/* Left Sidebar */}
-        <div className="col-span-3 hidden lg:block relative z-10">
-          <div className="space-y-0 pt-5 mt-14">
-            <div className="navmenu-container">
-              <NavMenu />
-            </div>
+        <div className="col-span-3 relative z-10">
+          {/* NavMenu for large screens */}
+          <div className="hidden lg:block space-y-0 pt-5 mt-14">
+            <NavMenu />
             <NewsCard />
             <div className="mt-4 text-center text-gray-500 text-sm">
               <p>Developed by Shant</p>
@@ -35,8 +34,12 @@ const DashboardPage = () => {
               </p>
             </div>
           </div>
-        </div>
 
+          {/* MobileNavMenu for mobile screens */}
+          <div className="lg:hidden">
+            <MobileNavMenu />
+          </div>
+        </div>
 
         {/* Main Content */}
         <div className="col-span-6 flex flex-col mt-16 p-2">

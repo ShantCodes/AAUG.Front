@@ -18,6 +18,8 @@ import NewsDetails from './_components/newsComponents/NewsDatails';
 import { SearchProvider } from './untils/SearchContext';
 import AddNews from './_components/newsComponents/AddNews';
 import AboutUs from './page/aboutUs/AboutUs';
+import ForgotPassword from './_components/loginComponents/ForgotPassword';
+import MobileNavMenu from './_components/MobileNavMenu';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -76,6 +78,8 @@ function App() {
         <Route path="/NewsDashboardPage" element={<NewsDetails />} />
         <Route path="/AddNews" element={<AddNews />} />
         <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/Mobile" element={<MobileNavMenu />} />
+        {/* <Route path="/ForgotPassword" element={<ForgotPassword />} /> */}
 
         {/* Redirect /AAUG to the main page */}
         <Route path="/AAUG" element={<Navigate to="/" replace />} />
