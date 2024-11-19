@@ -3,6 +3,7 @@ import NewsBox from "./NewsBox";
 import { BookOpenIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from "../../services/userService/userSerice";
+import MobileNavMenu from "../MobileNavMenu";
 
 const NewsCard = () => {
     const [userRole, setUserRole] = useState(null);
@@ -27,6 +28,10 @@ const NewsCard = () => {
 
     return (
         <div className="p-4 max-w-sm mx-auto rounded-lg sticky">
+             {/* Mobile Navigation Menu */}
+             <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+                <MobileNavMenu />
+            </div>
             <h1 className="text-2xl font-bold text-left text-gray-900 mb-6 flex items-center">
                 News
                 <BookOpenIcon className="w-6 h-6 ml-2 text-red-600" />

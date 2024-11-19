@@ -7,6 +7,7 @@ import {
     InformationCircleIcon,
     Cog6ToothIcon,
     NumberedListIcon,
+    NewspaperIcon,
 } from '@heroicons/react/24/outline';
 import { getUserProfile } from '../services/userService/userSerice';
 
@@ -44,6 +45,7 @@ const MobileNavMenu = () => {
 
     const menuItems = [
         { to: '/', icon: <HomeIcon className="h-6 w-6" />, color: 'text-blue-500' },
+        { to: '/News', icon: <NewspaperIcon className="h-6 w-6" />, color: 'text-blue-500' },
         { to: '/profile', icon: <UserIcon className="h-6 w-6" />, color: 'text-red-500' },
         { to: '/subscribe', icon: <FireIcon className="h-6 w-6" />, color: 'text-orange-500' },
         { to: '/aboutus', icon: <InformationCircleIcon className="h-6 w-6" />, color: 'text-yellow-500' },

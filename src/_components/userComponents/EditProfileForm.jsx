@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import defaultProfilePic from '../../assets/polyforms-pfp.webp';
 import { downloadFile } from '../../services/downloadFileService/downloadFileService';
 import { editUserProfile } from '../../services/userService/userSerice';
+import MobileNavMenu from '../MobileNavMenu';
 
 const EditProfileForm = () => {
   const location = useLocation();
@@ -67,6 +68,10 @@ const EditProfileForm = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-4 bg-white text-black min-h-screen mt-16">
+       {/* Mobile Navigation Menu */}
+       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+                <MobileNavMenu />
+            </div>
       <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto">
         {/* Profile Picture */}
         <div className="text-center mb-6">

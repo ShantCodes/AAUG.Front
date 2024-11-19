@@ -8,19 +8,34 @@ import MobileNavMenu from '../../_components/MobileNavMenu';
 const AboutUs = () => {
   return (
     <div className="bg-gray-100 py-10 px-4 mt-20">
-       {/* Mobile Navigation Menu */}
-       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+      {/* Mobile Navigation Menu */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
         <MobileNavMenu />
       </div>
       {/* Header Section */}
-      <div className="text-center mb-20 flex flex-col items-center md:flex-row md:justify-center relative">
+      <div className="text-center mb-10 flex flex-col items-center md:flex-row md:justify-center relative">
         <img src={aaugLogo} className="w-1/3 max-w-xs md:w-1/6 md:mr-4" alt="AAUG Logo" />
         <h1 className="text-2xl md:text-4xl font-bold text-blue-600 text-center mt-4 md:mt-0">
           Հայ Համալսարանականների Ընդհանուր Միութիւն
         </h1>
       </div>
+      <div className="mt-4 text-center text-gray-500 text-sm mb-3">
+        <p>Developed by Shant</p>
+        <p>
+          Source:
+          <a
+            href="https://github.com/ShantCodes"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            https://github.com/ShantCodes
+          </a>
+        </p>
+      </div>
 
       {/* History Section */}
+
       <div className="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-md overflow-hidden mb-10">
         <div className="w-full md:w-1/2 p-6">
           <h2 className="text-xl md:text-3xl font-semibold text-blue-600 mb-4">Մեր Պատմութիւնը</h2>
