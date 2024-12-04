@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import UserCard from './UserCard'; // Update the import
 import { getUserProfile, getNotApprovedUsers } from '../../services/userService/userSerice';
 import defaultProfilePic from '../../assets/polyforms-pfp.webp';
+import { useNavigate } from 'react-router-dom';
 
 const NotApprovedUserList = () => {
   const [users, setUsers] = useState([]);
@@ -9,13 +10,14 @@ const NotApprovedUserList = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [hasMoreUsers, setHasMoreUsers] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userInfo = await getUserProfile();
         setCurrentUser(userInfo);
-        
+
         // Fetch users for the initial page (1)
         const usersData = await getNotApprovedUsers(1);
         setUsers(usersData);
@@ -29,6 +31,10 @@ const NotApprovedUserList = () => {
 
     fetchData();
   }, []);
+
+  const handleUserClick = (aaugUserId) => {
+    navigate('/ExpandProfile', { state: { aaugUserId } });
+  };
 
   const loadMoreUsers = async () => {
     if (!hasMoreUsers || loading) return; // Prevent loading if there's no more data or already loading
@@ -87,13 +93,15 @@ const NotApprovedUserList = () => {
       <h1 className="text-2xl font-bold mb-6">New signed up</h1>
       <div className="flex flex-col gap-4">
         {users.map((user) => (
-          <UserCard
-            key={user.id}
-            user={user}
-            onUserApproved={handleUserApproved}
-            onUserDeleted={handleUserDeleted} // Pass the delete handler
-            currentUserRole={currentUser?.role}
-          />
+          <div key={user.id} onClick={() => handleUserClick(user.id)}>
+            <UserCard
+              key={user.id}
+              user={user}
+              onUserApproved={handleUserApproved}
+              onUserDeleted={handleUserDeleted} // Pass the delete handler
+              currentUserRole={currentUser?.role}
+            />
+          </div>
         ))}
       </div>
       {loading && <p>Loading more users...</p>}

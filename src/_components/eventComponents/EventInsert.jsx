@@ -13,6 +13,7 @@ import { insertEvent, getReservedDates } from '../../services/eventsService/even
 import { getUserProfile } from '../../services/userService/userSerice';
 import { getProfilePictureUrl } from '../../services/downloadFileService/downloadFileService';
 import { format } from 'date-fns';
+import NotificationComponent from '../NotificationComponent';
 
 const EventInsert = () => {
   const [eventTitle, setEventTitle] = useState('');
@@ -126,7 +127,7 @@ const EventInsert = () => {
             className="py-2 px-3 border border-gray-300 rounded-full w-32 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             disabled={submissionSuccess}
           />
-  
+
           <div className="flex flex-col items-center">
             <label className="flex items-center text-gray-700 hover:text-blue-500 focus:outline-none cursor-pointer">
               <PhotoIcon className="w-6 h-6" />
@@ -139,13 +140,16 @@ const EventInsert = () => {
               />
             </label>
             {thumbnailFile && (
-              <span className="text-sm text-gray-500 mt-1 text-center">
-                {thumbnailFile.name}
+              <span className="text-sm text-gray-500 mt-1 text-center truncate max-w-[40px]">
+                {thumbnailFile.name.length > 20
+                  ? `${thumbnailFile.name.slice(0, 15)}...${thumbnailFile.name.split('.').pop()}`
+                  : thumbnailFile.name}
               </span>
             )}
             {errors.thumbnailFile && <p className="text-red-500 text-sm">{errors.thumbnailFile}</p>}
           </div>
-  
+
+
           <div className="flex flex-col items-center">
             <label className="flex items-center text-gray-700 hover:text-blue-500 focus:outline-none cursor-pointer">
               <CalendarIcon className="w-6 h-6" />
@@ -164,6 +168,7 @@ const EventInsert = () => {
                 }
                 disabled={submissionSuccess}
                 className="hidden"
+                popperPlacement="bottom-end"
               />
             </label>
             {eventDate && (
@@ -173,7 +178,7 @@ const EventInsert = () => {
             )}
             {errors.eventDate && <p className="text-red-500 text-sm">{errors.eventDate}</p>}
           </div>
-  
+
           <button
             type="button"
             onClick={() => setDescriptionExpanded(!descriptionExpanded)}
@@ -184,7 +189,7 @@ const EventInsert = () => {
             <span className="hidden sm:inline mt-1">Description</span>
           </button>
         </div>
-  
+
         {descriptionExpanded && (
           <textarea
             placeholder="Write your description here..."
@@ -196,8 +201,11 @@ const EventInsert = () => {
           ></textarea>
         )}
         {errors.eventDetails && <p className="text-red-500 text-sm">{errors.eventDetails}</p>}
-  
-        <div className="flex items-center justify-center mt-4">
+
+        <div className="relative flex items-center justify-center mt-4">
+          <div className="absolute left-0">
+            <NotificationComponent />
+          </div>
           <button
             type="submit"
             onClick={handleSubmit}
@@ -208,10 +216,12 @@ const EventInsert = () => {
             <RocketLaunchIcon className="w-5 h-5 ml-3" />
           </button>
         </div>
+
+
       </div>
     </div>
   );
-  
+
 };
 
 export default EventInsert;

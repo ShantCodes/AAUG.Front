@@ -143,7 +143,7 @@ const SlideShow = () => {
         ) : null}
       </div>
   
-      <div className="relative w-full h-48 overflow-hidden rounded-lg">
+      <div className="relative w-full h-48 overflow-hidden rounded-sm">
         <img
           key={currentIndex}
           src={imageUrl}

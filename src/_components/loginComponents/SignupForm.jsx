@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SignupButton from "./SignupButton";
 import { signup, login } from "../../services/authService/authService"; // Import the service functions
+import MobileNavMenu from "../MobileNavMenu";
 
 const SignupForm = () => {
     const [formData, setFormData] = useState({
@@ -51,7 +52,11 @@ const SignupForm = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-700">
+        <div className="flex items-center justify-center min-h-screen bg-gray-700 mt-16">
+            {/* MobileNavMenu for mobile screens */}
+            <div className="lg:hidden">
+                <MobileNavMenu />
+            </div>
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-10 w-80 h-auto">
                 <h2 className="text-2xl font-bold text-center mb-8">Signup</h2>
                 {error && <p className="text-red-500 mb-4">{error}</p>}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getNewsById } from "../../services/newsService/NewsService";
 import { downloadFile } from "../../services/downloadFileService/downloadFileService";
+import MobileNavMenu from "../MobileNavMenu";
 
 const NewsDetails = () => {
     const { id } = useParams();
@@ -24,6 +25,10 @@ const NewsDetails = () => {
 
     return (
         <div className="relative w-full">
+            {/* MobileNavMenu for mobile screens */}
+            <div className="lg:hidden">
+                <MobileNavMenu />
+            </div>
             {newsItem.newsFileId && (
                 <>
                     {/* Blurred Background Image */}

@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { fetchSlidesWithTitle } from "../../services/slideShow/SlideShowService";
 import { downloadFile } from "../../services/downloadFileService/downloadFileService";
-import defaultImage from "../../assets/error-image-generic.png"; // Ensure default image is imported
+import { fetchUserRole } from "../../services/userService/userSerice";
+import { useNavigate } from "react-router-dom";
+import defaultImage from "../../assets/error-image-generic.png";
+import { FolderPlusIcon } from "@heroicons/react/24/outline";
 
 const SlideShowCircle = () => {
     const [slides, setSlides] = useState([]);
     const [imageCache, setImageCache] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalImage, setModalImage] = useState("");
+    const [showGreenCircle, setShowGreenCircle] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchSlides = async () => {
+        const fetchSlidesAndRole = async () => {
             try {
+                // Fetch slides
                 const data = await fetchSlidesWithTitle();
                 setSlides(data.slideShowGetViewModels || []);
                 const imagePromises = data.slideShowGetViewModels?.map((slide) =>
@@ -19,12 +25,18 @@ const SlideShowCircle = () => {
                 );
                 const cachedImages = imagePromises ? await Promise.all(imagePromises) : [];
                 setImageCache(cachedImages);
+
+                // Fetch user role
+                const role = await fetchUserRole();
+                if (role === "King" || role === "Varich") {
+                    setShowGreenCircle(true);
+                }
             } catch (error) {
-                console.error("Error loading slides:", error);
+                console.error("Error loading data:", error);
             }
         };
 
-        fetchSlides();
+        fetchSlidesAndRole();
     }, []);
 
     const handleImageClick = (imageUrl) => {
@@ -37,12 +49,26 @@ const SlideShowCircle = () => {
         setIsModalOpen(false);
     };
 
+    const handleGreenCircleClick = () => {
+        navigate("/slideSelectionPage"); // Navigate to SlideSelectionPage
+    };
+
     if (!slides.length) return null; // If no slides, don't render the component
 
     return (
         <div className="flex flex-col">
             {/* Image Circle List */}
             <div className="flex justify-start space-x-4 overflow-x-auto scrollbar-hide lg:hidden">
+                {showGreenCircle && (
+                    <div
+                        className="flex-shrink-0 w-24 h-24 rounded-full border-2 p-1 border-green-600 bg-green-100 overflow-hidden cursor-pointer"
+                        onClick={handleGreenCircleClick}
+                    >
+                        <div className="w-full h-full flex items-center justify-center text-green-800 text-4xl font-bold">
+                            <FolderPlusIcon className="w-10 h-10"/>
+                        </div>
+                    </div>
+                )}
                 {imageCache.map((imageUrl, index) => (
                     <div
                         key={index}

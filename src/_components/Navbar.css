@@ -1,0 +1,44 @@
+.navbar {
+    position: relative;
+    background: linear-gradient(to bottom, #0d47a1, #001f3f); /* Dark blue gradient */
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 50;
+  }
+  
+  .snow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Cover the entire navbar */
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+  }
+  
+  .snowflake {
+    position: absolute;
+    top: -10px; /* Start just above the navbar */
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: fall 10s linear infinite; /* Default duration increased to 10s */
+  }
+  
+  @keyframes fall {
+    0% {
+      transform: translateY(0); /* Start at top */
+      opacity: 1; /* Fully visible */
+    }
+    100% {
+      transform: translateY(100vh); /* End at bottom of the viewport */
+      opacity: 0.3; /* Fade out slightly */
+    }
+  }
+  
+  

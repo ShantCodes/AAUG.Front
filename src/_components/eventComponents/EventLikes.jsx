@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getEventLikes } from '../../services/eventsService/eventsService';
 import { getProfilePictureUrl } from '../../services/downloadFileService/downloadFileService'; // Import the getProfilePictureUrl function
 import defaultProfilePicture from '../../assets/polyforms-pfp.webp';
+import { Atom } from 'react-loading-indicators';
 
 const EventLikes = ({ eventId, onClose }) => {
   const [likes, setLikes] = useState([]);
@@ -24,7 +25,14 @@ const EventLikes = ({ eventId, onClose }) => {
   }, [eventId]);
 
   if (loading) {
-    return <p>Loading likes...</p>;
+    return (
+      <div
+        className="fixed inset-0 bg-transparent flex justify-center items-center"
+        onClick={onClose}
+      >
+        <Atom color="#aaffd2" size="medium" />
+      </div>
+    );
   }
 
   if (error) {
@@ -34,11 +42,11 @@ const EventLikes = ({ eventId, onClose }) => {
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-lg flex justify-center items-center"
-      onClick={onClose} 
+      onClick={onClose}
     >
       <div
         className="bg-transparent p-6 rounded-lg relative"
-        onClick={(e) => e.stopPropagation()} 
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"

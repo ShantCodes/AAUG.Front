@@ -1,5 +1,6 @@
 import React from "react";
 import Location from "../Location";
+import { SocialIcon } from "react-social-icons";
 
 const LocationCard = () => {
     return (
@@ -9,11 +10,40 @@ const LocationCard = () => {
             </div>
             <div className="text-gray-800">
                 <h2 className="font-bold text-lg">Հասցէ</h2>
-                <p className="mb-4">Բահար պող., Բահարմասթեան փողոց, համար 60</p>
+                <p className="mb-1">Բահար պող., Բահարմասթեան փողոց, համար 60</p>
                 <h2 className="font-bold text-lg">Հեռախօս</h2>
                 <p className="mb-1">+98 21 888 44 300</p>
                 <p>+98 21 888 20 899</p>
+                <h2 className="font-bold text-lg">Email</h2>
+                <p>Info@aaug.ir</p>
             </div>
+            <div className="flex space-x-4 justify-end">
+                <div className="mt-4 flex justify-center">
+                    <SocialIcon
+                        url="https://www.instagram.com/aaug1943/"
+                        network="instagram"
+                        bgColor="#FFFFFF" // Background color to white
+                        fgColor="#fc4103" // Icon color to orange
+                        style={{
+                            height: 45, // Larger size
+                            width: 45, // Larger size   
+                        }}
+                    />
+                </div>
+                <div className="mt-4 flex justify-center">
+                    <SocialIcon
+                        url="https://t.me/AAUG1943"
+                        network="telegram"
+                        bgColor="#FFFFFF" // Background color to white
+                        fgColor="#0088CC" // Icon color to blue
+                        style={{
+                            height: 45, // Larger size
+                            width: 45, // Larger size   
+                        }}
+                    />
+                </div>
+            </div>
+
         </div>
     );
 };

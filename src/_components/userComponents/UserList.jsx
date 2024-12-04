@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AssignRolesModal from './AssignRolesModal';
 import UserCard from './UserCard';
 import { getApprovedUsers, getAllRoles, getUserProfile } from '../../services/userService/userSerice';
+import { Atom } from 'react-loading-indicators';
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
@@ -96,7 +97,12 @@ const UsersList = () => {
   };
 
   if (loading && users.length === 0) {
-    return <p className="text-center text-gray-600">Loading users...</p>;
+    return <div
+      className="fixed inset-0 bg-transparent flex justify-center items-center"
+
+    >
+      <Atom color="#6a7bfb" size="medium" />
+    </div>;
   }
 
   return (

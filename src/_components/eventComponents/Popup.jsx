@@ -7,7 +7,7 @@ const Popup = ({ children, onClose }) => {
       onClick={onClose} // Close the popup when clicking on the overlay
     >
       <div
-        className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative"
+        className=" p-6 rounded-lg shadow-lg max-w-lg w-full relative"
         onClick={(e) => e.stopPropagation()} // Prevent clicks inside the content from closing the popup
       >
         <button

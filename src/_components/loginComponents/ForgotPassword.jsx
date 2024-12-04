@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { forgotPassword } from "../../services/authService/authService"; // Adjust the path as necessary
+import MobileNavMenu from "../MobileNavMenu";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
@@ -21,6 +22,10 @@ const ForgotPassword = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-700">
+            {/* MobileNavMenu for mobile screens */}
+            <div className="lg:hidden">
+                <MobileNavMenu />
+            </div>
             <form className="bg-white shadow-md rounded-lg p-10 w-80 h-auto" onSubmit={handleForgotPassword}>
                 <h2 className="text-2xl font-bold text-center mb-8">Forgot Password</h2>
                 {message && <p className="text-green-500 mb-4">{message}</p>}

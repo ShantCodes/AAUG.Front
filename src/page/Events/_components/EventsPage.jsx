@@ -7,14 +7,16 @@ import NavMenu from '../../../_components/NavMenu';
 import SlideShow from '../../../_components/slideShowComponents/SlideShow';
 import SlideShowCircle from '../../../_components/slideShowComponents/SlideShowCircle';
 import MobileNavMenu from '../../../_components/MobileNavMenu';
+import NotificationComponent from '../../../_components/NotificationComponent';
 
 const DashboardPage = () => {
   return (
-    <div className="flex justify-center lg:px-4">
-      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-4 bg-stone-50 shadow-md shadow-gray-200">
+    <div className="flex justify-center lg:px-4 ">
+      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-4 bg-stone-50 shadow-gray-200">
 
         {/* Left Sidebar */}
-        <div className="col-span-3 relative z-10">
+        <div className="col-span-3 relative z-10">        
+          
           {/* NavMenu for large screens */}
           <div className="hidden lg:block space-y-0 pt-5 mt-14">
             <NavMenu />
@@ -51,7 +53,9 @@ const DashboardPage = () => {
           {/* Event Insert */}
           <div className="w-full mb-2">
             <EventInsert />
+            
           </div>
+          
 
           {/* Events Feed */}
           <div className="w-full">

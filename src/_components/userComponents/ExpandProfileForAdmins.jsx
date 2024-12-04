@@ -183,7 +183,7 @@ const ExpandProfileForAdmins = () => {
 
       <div className="mt-8 text-center">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/Admin')}
           className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition-colors"
         >
           Back to Users List

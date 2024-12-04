@@ -1,4 +1,3 @@
-// SlideSelectionPage.js
 import React, { useState } from 'react';
 import SlideSelection from '../../_components/slideShowComponents/SlideSelection';
 import SaveSlideButton from '../../_components/slideShowComponents/SaveSlideButton';
@@ -27,25 +26,36 @@ const SlideSelectionPage = () => {
   };
 
   return (
-    <div className="">
-      <div className="flex justify-center mb-4 mt-20 items-center space-x-4">
+    <div className="p-4 md:p-8">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 mb-4 mt-20">
+        {/* Save Button */}
         <SaveSlideButton
           selectedSlideIds={selectedSlideIds}
           onSave={handleSave}
+          className="w-full md:w-auto"
         />
-        <button onClick={togglePopup} className="bg-green-500 text-white p-2 rounded">
+        {/* Insert Slide Button */}
+        <button
+          onClick={togglePopup}
+          className="bg-green-500 text-white p-2 rounded w-full md:w-auto"
+        >
           Insert Slide
         </button>
-        <SlideShowTitleInput className="ml-4" />
+        {/* Slide Show Title Input */}
+        <SlideShowTitleInput className="w-full md:w-auto" />
       </div>
-      <SlideSelection
-        selectedSlideIds={selectedSlideIds}
-        setSelectedSlideIds={setSelectedSlideIds}
-      />
-      <InsertSlidePopup
-        isOpen={isPopupOpen}
-        onClose={togglePopup}
-      />
+
+      {/* Slide Selection Section */}
+      <div className="mt-4">
+        <SlideSelection
+          selectedSlideIds={selectedSlideIds}
+          setSelectedSlideIds={setSelectedSlideIds}
+        />
+      </div>
+
+      {/* Insert Slide Popup */}
+      <InsertSlidePopup isOpen={isPopupOpen} onClose={togglePopup} />
     </div>
   );
 };

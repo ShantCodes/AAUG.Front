@@ -4,6 +4,7 @@ import { getEvents } from '../../services/eventsService/eventsService';
 import { getUserProfile } from '../../services/userService/userSerice';
 import { SearchContext } from '../../untils/SearchContext';
 import { downloadFile } from '../../services/downloadFileService/downloadFileService';
+import { Atom } from 'react-loading-indicators';
 
 const EventsFeed = () => {
   const [events, setEvents] = useState([]);
@@ -47,27 +48,28 @@ const EventsFeed = () => {
 
   // Fetch additional events for infinite scrolling
   useEffect(() => {
-    if (hasMoreEvents && pageNumber > 1 && !searchResults) {
-      const loadMoreEvents = async () => {
-        setLoadingEvents(true);
-        try {
-          const moreEvents = await getEvents(pageNumber);
-          setEvents((prevEvents) => [
-            ...prevEvents,
-            ...moreEvents.filter((event) => !prevEvents.some((e) => e.id === event.id)),
-          ]);
-          setHasMoreEvents(moreEvents.length > 0);
-        } catch (error) {
-          console.error('Error loading more events:', error);
-          setError('Error loading more events. Please try again later.');
-        } finally {
-          setLoadingEvents(false);
-        }
-      };
+    const loadMoreEvents = async () => {
+      setLoadingEvents(true);
+      try {
+        const moreEvents = await getEvents(pageNumber);
+        setEvents((prevEvents) => [
+          ...prevEvents,
+          ...moreEvents.filter((event) => !prevEvents.some((e) => e.id === event.id)),
+        ]);
+        setHasMoreEvents(moreEvents.length > 0); // Check if more events are available
+      } catch (error) {
+        console.error('Error loading more events:', error);
+        setError('Error loading more events. Please try again later.');
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
 
+    if (pageNumber > 1) {
       loadMoreEvents();
     }
-  }, [pageNumber, searchResults, hasMoreEvents]);
+  }, [pageNumber]);
+
 
   // Load current user information
   useEffect(() => {
@@ -92,9 +94,11 @@ const EventsFeed = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + document.documentElement.scrollTop + 100 >= document.documentElement.offsetHeight &&
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100 &&
         !loadingEvents &&
-        (!searchResults || searchResults.length === 0)
+        hasMoreEvents &&
+        (!searchResults || searchResults.length === 0) // Ensure searchResults are not interfering
       ) {
         setPageNumber((prevPage) => prevPage + 1);
       }
@@ -102,7 +106,14 @@ const EventsFeed = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loadingEvents, searchResults]);
+  }, [loadingEvents, hasMoreEvents, searchResults]);
+
+  useEffect(() => {
+    if (searchResults === null) {
+      setPageNumber(1);
+      setHasMoreEvents(true);
+    }
+  }, [searchResults]);
 
   // Handle event removal
   const handleRemoveEvent = (eventId) => {
@@ -111,7 +122,12 @@ const EventsFeed = () => {
 
 
   if (loadingEvents && events.length === 0) {
-    return <p>Loading events...</p>;
+    return <div
+      className="fixed inset-0 bg-transparent flex justify-center items-center"
+
+    >
+      <Atom color="#6a7bfb" size="medium" />
+    </div>;
   }
 
   if (error) {
@@ -136,7 +152,9 @@ const EventsFeed = () => {
           eventDate={event.eventDate}
         />
       ))}
-      {loadingEvents && <p>Loading more events...</p>}
+      {loadingEvents && <div className="flex justify-center items-center">
+        <Atom color="#6a7bfb" size="medium" />
+      </div>}
       {!hasMoreEvents && !searchResults && <p>No more events to load.</p>}
     </div>
   );

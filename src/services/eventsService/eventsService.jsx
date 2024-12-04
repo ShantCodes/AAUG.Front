@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 
 
 const BASE_URL = `${BASE_API_URL}/Events`;
+const token = localStorage.getItem("jwtToken");
 
 export const getEvents = async (pageNumber, pageSize = 4) => {
   try {
@@ -39,6 +40,21 @@ export const getNotApprovedEvents = async () => {
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch events');
+  }
+};
+
+export const checkIfLiked = async (keyWord) => {
+  if (token != null) {
+    try {
+      const response = await axios.get(`${BASE_URL}/CheckIfLiked/${keyWord}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error('Failed to fetch IsLikes');
+    }
   }
 };
 

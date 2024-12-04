@@ -20,6 +20,8 @@ import AddNews from './_components/newsComponents/AddNews';
 import AboutUs from './page/aboutUs/AboutUs';
 import ForgotPassword from './_components/loginComponents/ForgotPassword';
 import MobileNavMenu from './_components/MobileNavMenu';
+import { Workbox } from 'workbox-window';
+import NotificationComponent from './_components/NotificationComponent';
 
 const NewsPage = () => <div>News Page</div>;
 
@@ -27,6 +29,36 @@ function App() {
   const location = useLocation();
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+
+  // useEffect(() => {
+  //   if (Notification.permission === 'default') {
+  //     Notification.requestPermission().then((permission) => {
+  //       console.log('Notification Permission:', permission);
+  //     });
+  //   }
+  // }, []);
+  
+
+  // const createNotification = () => {
+  //   if (Notification.permission === 'granted') {
+  //     new Notification('Hello, this is a test notification!');
+  //   } else {
+  //     alert('Notification permission not granted.');
+  //   }
+  // };
+  
+
+  if ('service-worker' in navigator) {
+    // The service worker is in the public folder, so it's available at /service-worker.js
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => {
+        console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch((error) => {
+        console.log('Service Worker registration failed:', error);
+      });
+  }
 
   const toggleNavMenu = () => {
     setIsNavMenuOpen(!isNavMenuOpen);
@@ -79,7 +111,9 @@ function App() {
         <Route path="/AddNews" element={<AddNews />} />
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/Mobile" element={<MobileNavMenu />} />
-        {/* <Route path="/ForgotPassword" element={<ForgotPassword />} /> */}
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
+        <Route path="/notif" element={<NotificationComponent />} />
+        {/* <Route path="/notif" element={<NotificationComponent />} /> */}
 
         {/* Redirect /AAUG to the main page */}
         <Route path="/AAUG" element={<Navigate to="/" replace />} />

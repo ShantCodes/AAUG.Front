@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getSlidesForAdmin } from '../../services/slideShow/SlideShowService'; // Adjust import based on your file structure
 import DeleteButton from './DeleteSlideButton';
 import { downloadFile } from '../../services/downloadFileService/downloadFileService';
+import MobileNavMenu from '../MobileNavMenu';
 
 const SlideSelection = ({ selectedSlideIds, setSelectedSlideIds }) => {
   const [slides, setSlides] = useState([]);
@@ -40,6 +41,10 @@ const SlideSelection = ({ selectedSlideIds, setSelectedSlideIds }) => {
 
   return (
     <div className="container mx-auto p-4">
+      {/* MobileNavMenu for mobile screens */}
+      <div className="lg:hidden">
+        <MobileNavMenu />
+      </div>
       {loading ? (
         <p>Loading slides...</p>
       ) : (
